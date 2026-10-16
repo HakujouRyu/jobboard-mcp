@@ -173,6 +173,9 @@ for one, links to `http://www.circleci.com/careers/...`.
 - `fingerprint` is the first 16 hex characters of a SHA-1 of the normalized company, title, and
   sorted locations (lowercased, punctuation removed, "Sr." → "senior"). It identifies the same
   role across boards and sources, for `exclude_fingerprints`.
+- Because locations are part of the fingerprint, one role posted twice with different locations
+  ("Remote" and "Remote US") gets two fingerprints. That's on purpose: companies often post one
+  requisition per location, and merging them would hide real differences.
 
 ## Sweep filters
 
