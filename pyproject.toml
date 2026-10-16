@@ -39,6 +39,10 @@ select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
 # Real postings use en/em dashes and other look-alike characters; we match them on purpose.
 ignore = ["RUF001", "RUF002", "RUF003"]
 
+[tool.ruff.lint.per-file-ignores]
+# Fixture strings copied from real pages are left unwrapped.
+"tests/*" = ["E501"]
+
 [tool.pyright]
 include = ["src", "tests"]
 pythonVersion = "3.12"

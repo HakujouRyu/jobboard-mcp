@@ -27,6 +27,10 @@ class PostingRef:
 class Adapter(Protocol):
     ats: Ats
 
+    def list_url(self, token: str) -> str:
+        """The board's public list endpoint."""
+        ...
+
     async def list_jobs(
         self, http: HttpClient, company: str, token: str, *, refresh: bool = False
     ) -> BoardListing:

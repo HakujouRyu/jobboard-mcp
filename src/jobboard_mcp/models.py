@@ -128,3 +128,80 @@ class SweepResult(BaseModel):
 def raw_json(value: Any) -> str:
     """Compact, stable JSON for pay_raw and similar audit fields."""
     return json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+
+
+# --------------------------------------------------------------------------- M2 results
+
+
+class Confidence(StrEnum):
+    HIGH = "high"  # careers page links to the board, or the board names the company
+    MEDIUM = "medium"  # a guessed token returned a non-empty board
+    LOW = "low"  # a guessed token exists but the board is empty
+
+
+class BoardCandidate(BaseModel):
+    ats: Ats
+    token: str
+    jobs: int
+    confidence: Confidence
+    evidence: list[str] = Field(default_factory=list)
+
+
+class Resolution(BaseModel):
+    ats: Ats | None = None
+    token: str | None = None
+    confidence: Confidence | None = None
+    jobs: int | None = Field(default=None, description="Jobs on the board when checked")
+    evidence: list[str] = Field(default_factory=list)
+    alternatives: list[BoardCandidate] = Field(
+        default_factory=list, description="Other boards that also answered"
+    )
+    pages_checked: list[str] = Field(default_factory=list)
+
+
+class PostingMatch(BaseModel):
+    score: float = Field(description="0-100; title similarity, adjusted for location if given")
+    title_score: float
+    location_score: float | None = None
+    job: Job
+
+
+class FindResult(BaseModel):
+    company: str
+    title: str
+    board_found: bool
+    ats: Ats | None = None
+    token: str | None = None
+    resolution: Resolution | None = Field(
+        default=None, description="Present when the board was not on the watchlist"
+    )
+    candidates: list[PostingMatch] = Field(default_factory=list)
+
+
+class LiveResult(BaseModel):
+    live: bool
+    checked_at: datetime
+    reason: str
+    ats: Ats
+    token: str
+    job_id: str
+    from_cache: bool = Field(description="Answered from the cache rather than a new request")
+
+
+class BoardCheck(BaseModel):
+    status: CompanyStatus
+    jobs: int = 0
+    error: str | None = None
+
+
+class WatchlistView(BaseModel):
+    companies: list[WatchlistEntry]
+    total: int
+    readonly: bool
+
+
+class WatchlistChange(BaseModel):
+    entry: WatchlistEntry
+    board_check: BoardCheck | None = Field(
+        default=None, description="Live check of the board, when one is set"
+    )
