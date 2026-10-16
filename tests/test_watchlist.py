@@ -88,6 +88,18 @@ def test_update_fills_board_in_field_order(store: WatchlistStore) -> None:
     assert store.find("Posit") == updated
 
 
+def test_update_appending_last_field_keeps_entry_spacing(store: WatchlistStore) -> None:
+    store.update("GitLab", {"interview_note": "Coding exercise"})  # inserted before notes
+    store.update("Posit", {"notes": "Old name RStudio"})  # new last key, before the comments
+    text = store.path.read_text(encoding="utf-8")
+    assert "  interview_note: Coding exercise\n  notes: >-\n" in text
+    assert "    spans two lines.\n\n- company: Posit\n" in text
+    assert (
+        "  interview_note: Take-home project\n  notes: Old name RStudio\n\n# Dropped on review:\n"
+        in text
+    )
+
+
 def test_update_validates(store: WatchlistStore) -> None:
     with pytest.raises(WatchlistError, match="unknown watchlist fields"):
         store.update("GitLab", {"color": "blue"})

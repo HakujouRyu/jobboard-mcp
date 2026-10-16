@@ -169,6 +169,13 @@ class WatchlistStore:
                 # Keep the usual field order: insert after the fields that precede it.
                 earlier = set(_FIELDS[: _FIELDS.index(field)])
                 pos = sum(1 for k in item if k in earlier)
+                last = next(reversed(item), None)
                 item.insert(pos, field, value)
+                if pos == len(item) - 1 and last is not None:
+                    # The blank line (or comment block) after an entry is attached to its last
+                    # key; move it so it still follows the entry instead of splitting it.
+                    trailing = item.ca.items.pop(last, None)
+                    if trailing is not None:
+                        item.ca.items[field] = trailing
         self._write_doc(y, doc)
         return merged
