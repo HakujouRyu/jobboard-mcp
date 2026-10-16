@@ -1,0 +1,81 @@
+"""Settings from environment variables, and structured JSON logging to stderr.
+
+stdout belongs to the MCP stdio transport, so nothing here may write to it.
+"""
+
+from __future__ import annotations
+
+import json
+import logging
+import os
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+
+from jobboard_mcp import __version__
+
+REPO_URL = "https://github.com/HakujouRyu/jobboard-mcp"
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+
+def _int(name: str, default: int) -> int:
+    raw = os.environ.get(name)
+    return int(raw) if raw not in (None, "") else default
+
+
+def _bool(name: str, default: bool) -> bool:
+    raw = os.environ.get(name)
+    if raw in (None, ""):
+        return default
+    return raw.strip().lower() in ("1", "true", "yes", "on")
+
+
+@dataclass(frozen=True)
+class Settings:
+    watchlist_path: Path = _PROJECT_ROOT / "data" / "watchlist.yaml"
+    cache_ttl_seconds: int = 3 * 60 * 60
+    max_concurrency: int = 8
+    per_host_concurrency: int = 4
+    timeout_seconds: float = 15.0
+    max_retries: int = 2
+    log_level: str = "INFO"
+    user_agent: str = f"jobboard-mcp/{__version__} (+{REPO_URL})"
+    watchlist_readonly: bool = False  # used by the M2 watchlist tools
+
+    @classmethod
+    def from_env(cls) -> Settings:
+        d = cls()
+        return cls(
+            watchlist_path=Path(os.environ.get("WATCHLIST_PATH") or d.watchlist_path),
+            cache_ttl_seconds=_int("CACHE_TTL_SECONDS", d.cache_ttl_seconds),
+            max_concurrency=_int("MAX_CONCURRENCY", d.max_concurrency),
+            per_host_concurrency=_int("PER_HOST_CONCURRENCY", d.per_host_concurrency),
+            timeout_seconds=float(os.environ.get("HTTP_TIMEOUT_SECONDS") or d.timeout_seconds),
+            log_level=(os.environ.get("LOG_LEVEL") or d.log_level).upper(),
+            watchlist_readonly=_bool("WATCHLIST_READONLY", d.watchlist_readonly),
+        )
+
+
+class JsonFormatter(logging.Formatter):
+    def format(self, record: logging.LogRecord) -> str:
+        entry: dict[str, object] = {
+            "ts": self.formatTime(record, "%Y-%m-%dT%H:%M:%S"),
+            "level": record.levelname,
+            "logger": record.name,
+            "msg": record.getMessage(),
+        }
+        fields = getattr(record, "fields", None)
+        if isinstance(fields, dict):
+            entry.update(fields)
+        if record.exc_info:
+            entry["exc"] = self.formatException(record.exc_info)
+        return json.dumps(entry, default=str)
+
+
+def configure_logging(level: str = "INFO") -> None:
+    handler = logging.StreamHandler(sys.stderr)
+    handler.setFormatter(JsonFormatter())
+    root = logging.getLogger("jobboard_mcp")
+    root.handlers[:] = [handler]
+    root.setLevel(level)
+    root.propagate = False
