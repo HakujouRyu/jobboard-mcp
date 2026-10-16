@@ -273,7 +273,7 @@ classDiagram
         posted_at, updated_at: date?
         date_source: str?
         pay_min, pay_max: int?
-        pay_currency, pay_interval, pay_raw
+        pay_currency, pay_posted_interval, pay_raw
         pay_source: PaySource
         url, apply_url
         description_text: str?

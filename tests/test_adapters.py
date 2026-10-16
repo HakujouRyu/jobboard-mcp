@@ -78,7 +78,7 @@ async def test_greenhouse_detail_structured_pay(http: HttpClient) -> None:
     job = await GH.get_job(http, "GitLab", "gitlab", str(detail["id"]))
     assert job.pay_source is PaySource.STRUCTURED
     assert (job.pay_min, job.pay_max) == (139_200, 235_200)
-    assert job.pay_currency == "USD" and job.pay_interval == "year"
+    assert job.pay_currency == "USD" and job.pay_posted_interval == "year"
     assert job.pay_raw and "United States Salary Range" in job.pay_raw
     assert job.description_text and "&lt;" not in job.description_text
     assert "<p>" not in job.description_text
@@ -180,7 +180,7 @@ async def test_lever_outreach(http: HttpClient) -> None:
 
     cam = by_title(jobs, "Customer Advocacy Manager")
     assert (cam.pay_min, cam.pay_max, cam.pay_source) == (70_000, 110_000, PaySource.STRUCTURED)
-    assert cam.pay_interval == "year" and cam.remote is Remote.REMOTE_US
+    assert cam.pay_posted_interval == "year" and cam.remote is Remote.REMOTE_US
     assert cam.employment_type is EmploymentType.FULL_TIME and cam.date_source == "createdAt"
     assert cam.url.startswith("https://jobs.lever.co/outreach/")
     assert cam.apply_url and cam.apply_url.endswith("/apply")

@@ -53,7 +53,7 @@ class Pay(BaseModel):
     min: int | None = None
     max: int | None = None
     currency: str | None = None
-    interval: str | None = None
+    interval: str | None = None  # as posted: year / hour / month / week / mixed
     raw: str | None = None
     source: PaySource = PaySource.NONE
 
@@ -73,10 +73,22 @@ class Job(BaseModel):
     posted_at: date | None = None
     updated_at: date | None = None
     date_source: str | None = None
-    pay_min: int | None = Field(default=None, description="Annual USD; null if unknown or non-USD")
-    pay_max: int | None = Field(default=None, description="Annual USD; null if unknown or non-USD")
+    pay_min: int | None = Field(
+        default=None,
+        description="Annual USD (hourly pay x 2080, monthly x 12); null if unknown or non-USD",
+    )
+    pay_max: int | None = Field(
+        default=None,
+        description="Annual USD (hourly pay x 2080, monthly x 12); null if unknown or non-USD",
+    )
     pay_currency: str | None = None
-    pay_interval: str | None = None
+    pay_posted_interval: str | None = Field(
+        default=None,
+        description=(
+            "How the pay was posted: year, hour, month, week, or mixed. "
+            "pay_min and pay_max are always annualized."
+        ),
+    )
     pay_raw: str | None = None
     pay_source: PaySource = PaySource.NONE
     url: str
@@ -91,7 +103,7 @@ class Job(BaseModel):
 
     def set_pay(self, pay: Pay) -> None:
         self.pay_min, self.pay_max = pay.min, pay.max
-        self.pay_currency, self.pay_interval = pay.currency, pay.interval
+        self.pay_currency, self.pay_posted_interval = pay.currency, pay.interval
         self.pay_raw, self.pay_source = pay.raw, pay.source
 
 

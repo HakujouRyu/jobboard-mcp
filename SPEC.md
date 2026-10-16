@@ -59,7 +59,7 @@ Stretch (v2): Workable, SmartRecruiters, Recruitee, and Workday (Workday's endpo
 | `updated_at` | date or null | |
 | `date_source` | str | Which raw field `posted_at` came from |
 | `pay_min`, `pay_max` | int or null | Annual USD only. Convert hourly at 2080 hours. Leave null for non-USD. |
-| `pay_currency`, `pay_interval` | str or null | As posted |
+| `pay_currency`, `pay_posted_interval` | str or null | As posted (`pay_min`/`pay_max` are always annualized) |
 | `pay_raw` | str or null | Original text or structure, for auditing |
 | `pay_source` | enum | `structured`, `parsed_from_text`, `none` |
 | `url` | str | Human-readable posting URL |

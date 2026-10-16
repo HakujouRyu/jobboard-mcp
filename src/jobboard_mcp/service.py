@@ -42,7 +42,14 @@ from jobboard_mcp.watchlist import WatchlistError, WatchlistStore
 
 log = logging.getLogger(__name__)
 
-_PAY_FIELDS = ("pay_min", "pay_max", "pay_currency", "pay_interval", "pay_raw", "pay_source")
+_PAY_FIELDS = (
+    "pay_min",
+    "pay_max",
+    "pay_currency",
+    "pay_posted_interval",
+    "pay_raw",
+    "pay_source",
+)
 
 
 @dataclass

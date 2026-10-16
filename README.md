@@ -84,8 +84,9 @@ returns this (abridged):
   "Remote" is `unknown`. Unknown jobs are kept and flagged `remote_unknown` (pass
   `include_unknown_remote: false` to drop them).
 - **Pay:** structured fields first, then ranges parsed from the description. `pay_min` /
-  `pay_max` are annual USD only (hourly × 2080). Non-USD pay keeps its currency and raw text but
-  has no numbers. Multi-tier pay reports the overall range.
+  `pay_max` are annual USD only (hourly × 2080), and `pay_posted_interval` says how the pay was
+  posted. Non-USD pay keeps its currency and raw text but has no numbers. Multi-tier pay reports
+  the overall range.
 - **Titles:** plain filter terms match whole words plus a plural, so the default `intern`
   exclude keeps "Internal Tools Engineer". Prefix a term with `re:` for a regex.
 - **Missing data** never silently drops a job. It's kept and flagged `pay_unknown` or

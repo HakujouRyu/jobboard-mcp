@@ -78,7 +78,7 @@ Example result, abridged. The job is real (from the recorded GitLab fixture). Th
       "pay_min": 126400,
       "pay_max": 213600,
       "pay_currency": "USD",
-      "pay_interval": "year",
+      "pay_posted_interval": "year",
       "pay_raw": "$126,400–$213,600 USD",
       "pay_source": "parsed_from_text",
       "url": "https://job-boards.greenhouse.io/gitlab/jobs/8710061002",

@@ -15,6 +15,11 @@ All notable changes are recorded here. The format follows
   write tools off.
 - An example watchlist, copied to `data/watchlist.yaml` on first run.
 
+### Changed
+
+- `pay_interval` is now `pay_posted_interval`, so it isn't read as the unit of `pay_min` and
+  `pay_max`. Those are always annual.
+
 ### Security
 
 - Careers-page fetches (`resolve_board`, `find_company_posting`) only go to public addresses

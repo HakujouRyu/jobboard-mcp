@@ -84,12 +84,15 @@ flowchart TD
     ranges --> usd{"any USD range?"}
     usd -- no --> nonusd(["currency and pay_raw kept,<br/>pay_min / pay_max null"])
     usd -- yes --> ann["annualize each USD range:<br/>hour × 2080, month × 12, week × 52"]
-    ann --> combine(["pay_min = lowest min<br/>pay_max = highest max<br/>interval: as posted, or 'mixed'"])
+    ann --> combine(["pay_min = lowest min<br/>pay_max = highest max (both annual)<br/>pay_posted_interval: as posted, or 'mixed'"])
 ```
 
 Rules:
 
 - `pay_min` and `pay_max` are **annual USD or null**. Nothing is converted between currencies.
+- `pay_posted_interval` is how the pay was posted (`year`, `hour`, `month`, `week`, or `mixed`
+  across tiers). An hourly posting has `pay_posted_interval: "hour"` and annualized numbers:
+  $56.07/hour gives `pay_min: 116626`.
 - Multi-tier pay (by region or level) reports the overall range, with every tier in `pay_raw`.
 - Only base salary counts. Ashby `Bonus`, `Commission`, and `EquityCashValue` components are
   skipped.
