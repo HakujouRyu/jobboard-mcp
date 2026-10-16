@@ -21,7 +21,7 @@ pytestmark = pytest.mark.live
 ROOT = Path(__file__).resolve().parents[1]
 ACCEPTANCE = {
     "title_include": ["engineer", "sre", "product"],
-    "remote": [Remote.REMOTE_US],
+    "remote": [Remote.REMOTE_US, Remote.REMOTE_GLOBAL],
     "min_pay": 100_000,
     "posted_within_days": 21,
 }

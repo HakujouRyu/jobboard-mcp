@@ -138,7 +138,7 @@ async def test_sweep_acceptance_filters(
         "sweep_boards",
         {
             "title_include": ["engineer", "sre", "product"],
-            "remote": ["remote_us"],
+            "remote": ["remote_us", "remote_global"],
             "min_pay": 100_000,
             "posted_within_days": 60,
         },
@@ -148,7 +148,7 @@ async def test_sweep_acceptance_filters(
     pattern = re.compile(r"\b(engineers?|sres?|products?)\b", re.I)
     for j in jobs:
         assert pattern.search(j["title"]), j["title"]
-        assert j["remote"] in ("remote_us", "unknown")
+        assert j["remote"] in ("remote_us", "remote_global", "unknown")
         assert j["pay_max"] is None or j["pay_max"] >= 100_000
         assert j["posted_at"] is None or j["posted_at"] >= "2026-08-16"
         if j["pay_max"] is None:

@@ -189,7 +189,7 @@ tests/
 - Adapter tests against recorded fixtures for each ATS, including an empty board and a 404 token.
 - Sweep test: about 15 watched companies, all fixtures, completing in under 1s offline.
 - **Live smoke test** (opt-in, `pytest -m live`): sweep the real watchlist and assert at least 80% of companies return `ok`.
-- **Acceptance:** `sweep_boards` over the current watchlist with filters `title_include=["engineer","sre","product"]`, `remote=["remote_us"]`, `min_pay=100000`, `posted_within_days=21` returns in under 20s cold and under 2s warm, with no truncated boards.
+- **Acceptance:** `sweep_boards` over the current watchlist with filters `title_include=["engineer","sre","product"]`, `remote=["remote_us","remote_global"]`, `min_pay=100000`, `posted_within_days=21` returns in under 20s cold and under 2s warm, with no truncated boards.
 - An MCP Inspector session shows all tools with clear descriptions and input schemas.
 
 ## 10. Milestones
