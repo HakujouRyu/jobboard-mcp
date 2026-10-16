@@ -113,6 +113,7 @@ descriptions cheap to scan. It recognizes:
 | `$75/hr`, `$60 - $80 per hour` | hourly, annualized × 2080 |
 | `CA$120,000 - CA$140,000`, `C$...` | CAD (no USD numbers) |
 | `£60,000 - £80,000` | GBP (no USD numbers) |
+| `€68.000–€91.000` | EUR, year. A dot before exactly three digits is a thousands separator, but `$56.07` is still cents |
 
 Matches are thrown out when they don't look like pay: a figure followed by "million" or "bn", or
 a range outside salary sizes (an annual range has to fall between $10,000 and $2,000,000), so a

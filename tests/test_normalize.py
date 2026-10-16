@@ -178,6 +178,28 @@ def test_parse_pay_text_currency_prefixes(text: str, currency: str) -> None:
     assert parse_pay_text(text).currency == currency
 
 
+@pytest.mark.parametrize(
+    ("text", "currency", "interval"),
+    [
+        # Mozilla: European thousands separators are not decimals, so this isn't hourly
+        ("€68.000–€91.000 EUR", "EUR", "year"),
+        ("Gehalt: 58.000 € bis €77.000,00", "EUR", None),  # leading figure has no symbol
+        ("€55.000,50 - €70.000,00", "EUR", "year"),
+    ],
+)
+def test_parse_pay_text_dot_thousands(text: str, currency: str, interval: str | None) -> None:
+    pay = parse_pay_text(text)
+    assert pay.interval == interval
+    if interval is not None:
+        assert pay.currency == currency
+
+
+def test_parse_pay_text_cents_are_not_thousands() -> None:
+    # Wikimedia: an hourly range written with cents
+    pay = parse_pay_text("$56.07 to US$87.13")
+    assert (pay.min, pay.max, pay.interval) == (116_626, 181_230, "hour")
+
+
 def test_parse_pay_text_non_usd_only() -> None:
     pay = parse_pay_text("Salary £70,000 - £90,000")
     assert (pay.min, pay.max, pay.currency) == (None, None, "GBP")

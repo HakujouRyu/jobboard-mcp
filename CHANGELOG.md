@@ -20,6 +20,10 @@ All notable changes are recorded here. The format follows
 - `pay_interval` is now `pay_posted_interval`, so it isn't read as the unit of `pay_min` and
   `pay_max`. Those are always annual.
 
+### Fixed
+
+- Pay written with dots as thousands separators (`€68.000–€91.000`) was read as hourly.
+
 ### Security
 
 - Careers-page fetches (`resolve_board`, `find_company_posting`) only go to public addresses

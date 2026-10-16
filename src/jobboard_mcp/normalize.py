@@ -240,7 +240,9 @@ _SYMBOL_CURRENCY = {"$": "USD", "£": "GBP", "€": "EUR", "₹": "INR"}
 _DOLLAR_PREFIX = {"US": "USD", "CA": "CAD", "C": "CAD", "AU": "AUD", "A": "AUD", "S": "SGD"}
 _CODES = "USD|CAD|GBP|EUR|AUD|INR|SGD|NZD|CHF|JPY|MXN|BRL"
 _SYMBOL = re.compile(r"[$£€₹]")
-_NUM = r"\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?"
+# "150,000", "68.000" (European thousands), "75", "56.07".
+_NUM = r"\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d{1,3}(?:\.\d{3})+(?!\d)(?:,\d{1,2})?|\d+(?:\.\d+)?"
+_DOT_THOUSANDS = re.compile(r"\d{1,3}(?:\.\d{3})+(?:,\d+)?")
 _INTERVAL = (
     r"(?P<interval>\s?(?:/|per|an|a)\s?(?:hour|hr|year|yr|annum|month|mo|week|wk)\b"
     r"|\s?(?:annually|hourly|yearly)\b)?"
@@ -320,7 +322,10 @@ def combine_ranges(ranges: Sequence[PayRange], raw: str | None, source: PaySourc
 
 
 def _num(match: re.Match[str], p: str) -> float:
-    value = float(match.group(f"{p}num").replace(",", ""))
+    raw = match.group(f"{p}num")
+    if _DOT_THOUSANDS.fullmatch(raw):
+        raw = raw.replace(".", "").replace(",", ".")
+    value = float(raw.replace(",", ""))
     if match.group(f"{p}k"):
         value *= 1000
     return value
