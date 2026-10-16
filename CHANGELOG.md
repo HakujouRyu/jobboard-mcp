@@ -23,6 +23,8 @@ All notable changes are recorded here. The format follows
   `remote_other` instead of `unknown`, so they no longer show up in US-remote sweeps.
 - A bracketed remote hint in a title ("(US Remote)", "(remote)") counts as remote evidence when
   the ATS gives no workplace type.
+- `employment_type` is `contract` when the title marks the role as one ("(Contract)",
+  "Contract Software Engineer").
 
 ### Fixed
 

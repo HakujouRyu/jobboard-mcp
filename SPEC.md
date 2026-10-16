@@ -54,7 +54,7 @@ Stretch (v2): Workable, SmartRecruiters, Recruitee, and Workday (Workday's endpo
 | `team` | str or null | Department or team when given |
 | `locations` | list[str] | Raw location strings |
 | `remote` | enum | `remote_us`, `remote_global`, `remote_other`, `hybrid`, `onsite`, `unknown` |
-| `employment_type` | enum or null | `full_time`, `part_time`, `contract`, `intern`, `unknown` |
+| `employment_type` | enum or null | `full_time`, `part_time`, `contract`, `intern`, `unknown`. A title marked "(Contract)" means `contract` |
 | `posted_at` | date or null | Best available first-published date |
 | `updated_at` | date or null | |
 | `date_source` | str | Which raw field `posted_at` came from |

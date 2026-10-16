@@ -147,6 +147,13 @@ temporary, freelance, fixed-term), then full-time (also permanent, regular). It'
 the ATS gives nothing and `unknown` when it gives something unrecognizable, such as Lever's
 `commitment: "Remote"`.
 
+The title can also mark a contract role. When it does, `contract` replaces a missing, `unknown`,
+or `full_time` value (intern and part-time are kept). It counts when the word is in brackets
+("Senior Software Engineer, Android (Contract)"), at the end after a dash or comma ("Data
+Engineer - Contractor"), or at the start ("Contract Software Engineer"). A leading "Contract"
+followed by a role like Manager, Specialist, or Analyst is a job that handles contracts, so it
+doesn't count.
+
 ## Descriptions
 
 HTML is unescaped (Greenhouse escapes it twice), `<script>` and `<style>` are removed, block

@@ -411,8 +411,35 @@ def parse_pay_text(text: str | None) -> Pay:
 # --------------------------------------------------------------------------- employment type
 
 
-def employment_type(value: str | None) -> EmploymentType | None:
-    """None when the ATS gives nothing; UNKNOWN when it gives something unrecognizable."""
+_CONTRACT_WORD = r"(?:contract(?:or)?|temporary|temp|freelance|fixed[- ]term)"
+# "Contract Manager" and similar are roles that handle contracts, not contract roles.
+_CONTRACT_ROLE = (
+    r"(?:manager|management|administrator|administration|admin|specialist|analyst|negotiator|"
+    r"attorney|counsel|lawyer|paralegal|coordinator|officer|associate|operations|compliance)"
+)
+_CONTRACT_TITLE = re.compile(
+    rf"[(\[][^)\]]*\b{_CONTRACT_WORD}\b[^)\]]*[)\]]"  # "(Contract)", "[Contract, 6 months]"
+    rf"|[-–—,|:]\s*{_CONTRACT_WORD}\s*$"  # "Android Engineer - Contract"
+    rf"|^\s*(?:contract|freelance|temporary)\s+(?!{_CONTRACT_ROLE}\b)",  # "Contract Engineer"
+    re.I,
+)
+
+
+def employment_type(value: str | None, title: str = "") -> EmploymentType | None:
+    """None when the ATS gives nothing; UNKNOWN when it gives something unrecognizable.
+
+    A title that marks the role as a contract ("(Contract)", "Contract Software Engineer")
+    wins over a missing, unrecognized, or full-time value.
+    """
+    base = _employment_value(value)
+    if base in (None, EmploymentType.UNKNOWN, EmploymentType.FULL_TIME) and (
+        _CONTRACT_TITLE.search(title)
+    ):
+        return EmploymentType.CONTRACT
+    return base
+
+
+def _employment_value(value: str | None) -> EmploymentType | None:
     if value is None or not value.strip():
         return None
     s = re.sub(r"[^a-z]", "", value.lower())

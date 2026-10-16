@@ -84,7 +84,9 @@ class GreenhouseAdapter:
             locations=locations,
             team=departments[0].get("name") if departments else None,
             remote=classify_remote(locations, None, title=title),
-            employment_type=employment_type(meta_value if isinstance(meta_value, str) else None),
+            employment_type=employment_type(
+                meta_value if isinstance(meta_value, str) else None, title
+            ),
             posted_at=parse_date(posted),
             updated_at=parse_date(raw.get("updated_at")),
             date_source=source if posted else None,

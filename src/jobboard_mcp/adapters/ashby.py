@@ -94,7 +94,7 @@ class AshbyAdapter:
             locations=locations,
             team=raw.get("team") or raw.get("department"),
             remote=classify_remote(locations, workplace, countries, title),
-            employment_type=employment_type(raw.get("employmentType")),
+            employment_type=employment_type(raw.get("employmentType"), title),
             posted_at=parse_date(published),
             date_source="publishedAt" if published else None,
             url=raw.get("jobUrl") or f"https://jobs.ashbyhq.com/{token}/{raw['id']}",

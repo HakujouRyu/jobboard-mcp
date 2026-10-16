@@ -88,6 +88,8 @@ returns this (abridged):
   `pay_max` are annual USD only (hourly × 2080), and `pay_posted_interval` says how the pay was
   posted. Non-USD pay keeps its currency and raw text but has no numbers. Multi-tier pay reports
   the overall range.
+- **Employment type:** from the ATS field, or `contract` when the title says so ("(Contract)",
+  "Contract Software Engineer").
 - **Titles:** plain filter terms match whole words plus a plural, so the default `intern`
   exclude keeps "Internal Tools Engineer". Prefix a term with `re:` for a regex.
 - **Missing data** never silently drops a job. It's kept and flagged `pay_unknown` or

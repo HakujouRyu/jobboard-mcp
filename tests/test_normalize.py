@@ -308,6 +308,33 @@ def test_employment_type(value: str | None, expected: EmploymentType | None) -> 
     assert employment_type(value) == expected
 
 
+@pytest.mark.parametrize(
+    ("value", "title", "expected"),
+    [
+        # Wikimedia and Mozilla titles
+        (None, "Senior Software Engineer, Android (Contract)", EmploymentType.CONTRACT),
+        (None, "Contract Staff Software Engineer-FireFox Layout", EmploymentType.CONTRACT),
+        ("Full-time", "Communications Lead, Wikimedia Enterprise (Contract)",
+         EmploymentType.CONTRACT),
+        (None, "Backend Engineer [Contract, 6 months]", EmploymentType.CONTRACT),
+        (None, "Data Engineer - Contractor", EmploymentType.CONTRACT),
+        (None, "Freelance Technical Writer", EmploymentType.CONTRACT),
+        ("Remote", "QA Engineer (Fixed-Term)", EmploymentType.CONTRACT),
+        # Roles that handle contracts are not contract roles
+        (None, "Contract Manager", None),
+        (None, "Contracts Specialist", None),
+        ("Full-time", "Senior Contract Negotiator", EmploymentType.FULL_TIME),
+        # Intern and part-time are more specific and are kept
+        ("Intern", "Software Engineering Intern (Temporary)", EmploymentType.INTERN),
+        ("Full-time", "Senior Software Engineer", EmploymentType.FULL_TIME),
+    ],
+)  # fmt: skip
+def test_employment_type_from_title(
+    value: str | None, title: str, expected: EmploymentType | None
+) -> None:
+    assert employment_type(value, title) == expected
+
+
 # ------------------------------------------------------------------ html
 
 

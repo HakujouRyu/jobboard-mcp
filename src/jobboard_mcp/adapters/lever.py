@@ -87,7 +87,7 @@ class LeverAdapter:
             remote=classify_remote(
                 locations, raw.get("workplaceType"), [raw.get("country") or ""], title
             ),
-            employment_type=employment_type(cats.get("commitment")),
+            employment_type=employment_type(cats.get("commitment"), title),
             posted_at=parse_date(created),
             date_source="createdAt" if created is not None else None,
             url=raw.get("hostedUrl") or f"https://jobs.lever.co/{token}/{raw['id']}",
