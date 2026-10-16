@@ -37,13 +37,15 @@ flowchart TD
     wt -- hybrid --> H(["hybrid"])
     wt -- onsite --> O(["onsite"])
     wt -- remote --> region
-    wt -- "unspecified / none" --> word{"a location says remote,<br/>anywhere, WFH, distributed?"}
+    wt -- "unspecified / none" --> word{"a location, or a bracketed title part,<br/>says remote, anywhere, WFH, distributed?"}
     word -- yes --> region
     word -- no --> hyb{"a location says hybrid?"}
     hyb -- yes --> H
     hyb -- no --> city{"the ATS has no such field (Greenhouse),<br/>and a location names a city?"}
     city -- yes --> O
-    city -- no --> U(["unknown"])
+    city -- no --> nonus{"every location is a country or region,<br/>and all of them are outside the US?"}
+    nonus -- yes --> RO
+    nonus -- no --> U(["unknown"])
 
     region["find a region for each location segment<br/>and each structured country"] --> us{"any segment is US?<br/>US, USA, United States, a state name<br/>or code like TX, North America, AMER"}
     us -- yes --> RUS(["remote_us"])
@@ -64,9 +66,18 @@ Details:
   because it's also Canada's country code. "California" spelled out does count.
 - **A bare "Remote" is `unknown`.** Many boards mean "remote in our home country", and that
   country often isn't the US.
-- **Country- or region-only locations aren't on-site.** On a remote-first Greenhouse board, a
-  location of "United States" or "EMEA" usually means remote. With no remote word, these come out
-  `unknown`, not `onsite`.
+- **Country- or region-only locations aren't on-site.** On a remote-first board, a location of
+  "United States" or "EMEA" usually means remote. With no remote word, US ones ("United States",
+  "AMER", "Texas") come out `unknown`, not `onsite`, because there's no positive evidence of
+  remote work.
+- **Non-US country- or region-only locations are `remote_other`.** "Portugal", "ANZ Region",
+  "United Kingdom, Ireland or Poland", or a list of EU countries names no office, and whatever the
+  arrangement, a US-based worker isn't eligible. Labeling them `unknown` would keep them in
+  US-remote sweeps. A mix that includes the US ("United States; Portugal") stays `unknown`.
+- **Bracketed title hints count as location text.** "Engineer (US Remote)" or "QA Engineer
+  (remote)" supply the remote word when the ATS gives none. ClickHouse's Ashby board leaves
+  `workplaceType` empty on many jobs and says "remote" only in the title. Unbracketed words don't
+  count, so "Remote Sensing Engineer" isn't a remote job. A structured `workplaceType` still wins.
 - Lever's `workplaceType: "unspecified"` counts as having no structured signal, but it doesn't
   allow the "city means on-site" rule, which only applies when the ATS has no such field.
 - Ashby's `isRemote` is used only when `workplaceType` is missing. Ashby marks some hybrid roles

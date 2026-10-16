@@ -74,6 +74,7 @@ class AshbyAdapter:
         return f"{API}/{token}?includeCompensation=true"
 
     def to_job(self, raw: dict[str, Any], company: str, token: str) -> Job:
+        title = raw.get("title") or ""
         secondary = raw.get("secondaryLocations") or []
         locations = dedupe([raw.get("location") or "", *(s.get("location", "") for s in secondary)])
         countries = dedupe(
@@ -89,10 +90,10 @@ class AshbyAdapter:
             token=token,
             native_id=raw["id"],
             company=company,
-            title=raw.get("title") or "",
+            title=title,
             locations=locations,
             team=raw.get("team") or raw.get("department"),
-            remote=classify_remote(locations, workplace, countries),
+            remote=classify_remote(locations, workplace, countries, title),
             employment_type=employment_type(raw.get("employmentType")),
             posted_at=parse_date(published),
             date_source="publishedAt" if published else None,

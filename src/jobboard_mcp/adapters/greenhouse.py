@@ -60,6 +60,7 @@ class GreenhouseAdapter:
         return f"{API}/{token}/jobs/{job_id}?pay_transparency=true"
 
     def to_job(self, raw: dict[str, Any], company: str, token: str) -> Job:
+        title = raw.get("title") or ""
         location = (raw.get("location") or {}).get("name") or ""
         locations = dedupe(location.split(";"))
         departments = raw.get("departments") or []
@@ -79,10 +80,10 @@ class GreenhouseAdapter:
             token=token,
             native_id=raw["id"],
             company=company,
-            title=raw.get("title") or "",
+            title=title,
             locations=locations,
             team=departments[0].get("name") if departments else None,
-            remote=classify_remote(locations, None),
+            remote=classify_remote(locations, None, title=title),
             employment_type=employment_type(meta_value if isinstance(meta_value, str) else None),
             posted_at=parse_date(posted),
             updated_at=parse_date(raw.get("updated_at")),

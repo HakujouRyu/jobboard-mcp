@@ -19,6 +19,10 @@ All notable changes are recorded here. The format follows
 
 - `pay_interval` is now `pay_posted_interval`, so it isn't read as the unit of `pay_min` and
   `pay_max`. Those are always annual.
+- Locations that name only non-US countries or regions ("Portugal", "ANZ Region", "EMEA") are
+  `remote_other` instead of `unknown`, so they no longer show up in US-remote sweeps.
+- A bracketed remote hint in a title ("(US Remote)", "(remote)") counts as remote evidence when
+  the ATS gives no workplace type.
 
 ### Fixed
 

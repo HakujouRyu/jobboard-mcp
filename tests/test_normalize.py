@@ -53,16 +53,23 @@ from jobboard_mcp.normalize import (
         ("Remote - Worldwide", Remote.REMOTE_GLOBAL),
         ("Hybrid - New York", Remote.HYBRID),
         ("San Francisco, CA", Remote.ONSITE),
-        # Country/region-only locations are not on-site evidence (Mattermost, Buildkite):
-        # they stay unknown rather than being guessed either way.
+        # Country/region-only locations are not on-site evidence (Mattermost, Buildkite).
+        # US ones stay unknown; non-US ones can't be remote_us, so they're remote_other.
         ("United States", Remote.UNKNOWN),
         ("United States - West Coast", Remote.UNKNOWN),
-        ("ANZ Region", Remote.UNKNOWN),
-        ("United Kingdom, Ireland or Poland", Remote.UNKNOWN),
-        ("Australia - WA", Remote.UNKNOWN),
-        ("Ontario, Canada", Remote.UNKNOWN),
         ("Texas", Remote.UNKNOWN),
         ("Pacific Time", Remote.UNKNOWN),
+        ("AMER", Remote.UNKNOWN),
+        ("ANZ Region", Remote.REMOTE_OTHER),
+        ("United Kingdom, Ireland or Poland", Remote.REMOTE_OTHER),
+        ("Australia - WA", Remote.REMOTE_OTHER),
+        ("Ontario, Canada", Remote.REMOTE_OTHER),
+        ("EMEA", Remote.REMOTE_OTHER),
+        ("APJ", Remote.REMOTE_OTHER),
+        ("The Netherlands; Portugal; United Kingdom; Spain", Remote.REMOTE_OTHER),
+        ("Singapore", Remote.REMOTE_OTHER),
+        ("UAE", Remote.REMOTE_OTHER),
+        ("United States; Portugal", Remote.UNKNOWN),
         # A city anywhere in the list is on-site evidence
         ("Ontario, Canada; Toronto, Ontario, Canada", Remote.ONSITE),
         ("Tokyo, Japan", Remote.ONSITE),
@@ -75,6 +82,28 @@ def test_classify_remote_text_only(location: str, expected: Remote) -> None:
 
 def test_classify_remote_no_locations_is_unknown() -> None:
     assert classify_remote([]) is Remote.UNKNOWN
+
+
+@pytest.mark.parametrize(
+    ("locations", "title", "expected"),
+    [
+        # ClickHouse (Ashby, no workplaceType): the title carries the remote signal
+        (["AMER", "United States"], "Senior Software Engineer - Cloud Infrastructure - (US Remote)",
+         Remote.REMOTE_US),
+        (["EMEA"], "QA Engineer - Core Database (remote)", Remote.REMOTE_OTHER),
+        (["Singapore", "Australia"], "Senior Site Reliability Engineer- (APJ-Remote)",
+         Remote.REMOTE_OTHER),
+        # Brackets without a remote word, or "remote" outside brackets, are ignored
+        (["AMER"], "Senior Software Engineer (Backend)", Remote.UNKNOWN),
+        (["San Francisco, CA"], "Remote Sensing Engineer", Remote.ONSITE),
+    ],
+)  # fmt: skip
+def test_classify_remote_title_hint(locations: list[str], title: str, expected: Remote) -> None:
+    assert classify_remote(locations, None, title=title) is expected
+
+
+def test_title_hint_does_not_beat_structured_workplace() -> None:
+    assert classify_remote(["Austin, TX"], "Hybrid", title="Engineer (Remote)") is Remote.HYBRID
 
 
 # ------------------------------------------------------------------ remote: structured fields

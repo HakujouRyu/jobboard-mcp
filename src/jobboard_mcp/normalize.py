@@ -100,13 +100,17 @@ _GLOBAL = re.compile(r"\b(anywhere|worldwide|world[- ]wide|global(ly)?|any locat
 # Places that are unambiguously outside the US. Not exhaustive: unrecognized places simply
 # contribute no region, which keeps them out of remote_us.
 _NON_US = re.compile(
-    r"\b(canada|mexico|brazil|argentina|colombia|chile|peru|latam|latin america|"
-    r"europe|european union|emea|eu|uk|united kingdom|england|scotland|wales|ireland|"
-    r"germany|france|spain|portugal|italy|netherlands|belgium|poland|sweden|norway|denmark|"
-    r"finland|switzerland|austria|czech(ia| republic)?|romania|greece|israel|turkey|"
-    r"india|bangalore|bengaluru|hyderabad|pune|apac|asia|singapore|japan|tokyo|korea|china|"
-    r"hong kong|taiwan|philippines|vietnam|thailand|indonesia|malaysia|australia|"
-    r"new zealand|south africa|nigeria|kenya|egypt|uae|dubai|saudi arabia|"
+    r"\b(canada|mexico|brazil|argentina|colombia|chile|peru|costa rica|latam|latin america|"
+    r"south america|central america|europe|european union|emea|eu|eea|uk|united kingdom|"
+    r"great britain|england|scotland|wales|ireland|germany|france|spain|portugal|italy|"
+    r"netherlands|belgium|luxembourg|poland|sweden|norway|denmark|finland|iceland|nordics|"
+    r"dach|benelux|switzerland|austria|czech(ia| republic)?|slovakia|hungary|romania|"
+    r"bulgaria|greece|croatia|serbia|slovenia|estonia|latvia|lithuania|ukraine|israel|turkey|"
+    r"middle east|mea|africa|india|bangalore|bengaluru|hyderabad|pune|pakistan|bangladesh|"
+    r"sri lanka|apac|apj|asean|anz|asia|singapore|japan|tokyo|korea|china|hong kong|taiwan|"
+    r"philippines|vietnam|thailand|indonesia|malaysia|australia|new zealand|oceania|nigeria|"
+    r"kenya|egypt|uae|united arab emirates|dubai|saudi arabia|ksa|qatar|ontario|quebec|"
+    r"british columbia|alberta|manitoba|nova scotia|"
     r"london|berlin|paris|amsterdam|dublin|toronto|vancouver|montreal|sydney|melbourne)\b",
     re.I,
 )
@@ -128,13 +132,14 @@ _COUNTRIES = {
 }  # fmt: skip
 _REGION_TERMS = {
     "north america", "south america", "latin america", "central america", "americas", "amer",
-    "namer", "noram", "latam", "emea", "apac", "anz", "apj", "europe", "european union", "eu",
-    "eea", "asia", "asia pacific", "middle east", "africa", "oceania", "nordics", "dach",
-    "benelux", "region", "regions", "west", "east", "north", "south", "central", "western",
-    "eastern", "northern", "southern", "coast", "time", "zone", "zones", "timezone", "pacific",
-    "mountain", "atlantic", "est", "pst", "cst", "mst", "et", "pt", "ct", "cet", "gmt", "utc",
-    "or", "and", "only", "based", "the", "of", "in", "any", "state", "states", "province",
-    "ontario", "quebec", "british columbia", "alberta", "manitoba", "nova scotia",
+    "namer", "noram", "latam", "emea", "mea", "apac", "anz", "apj", "asean", "europe",
+    "european union", "eu", "eea", "asia", "asia pacific", "middle east", "africa", "oceania",
+    "nordics", "dach", "benelux", "region", "regions", "west", "east", "north", "south",
+    "central", "western", "eastern", "northern", "southern", "coast", "time", "zone", "zones",
+    "timezone", "pacific", "mountain", "atlantic", "est", "pst", "cst", "mst", "et", "pt", "ct",
+    "cet", "gmt", "utc", "or", "and", "only", "based", "the", "of", "in", "any", "state",
+    "states", "province", "ontario", "quebec", "british columbia", "alberta", "manitoba",
+    "nova scotia",
 }  # fmt: skip
 _PLACE_PHRASES = sorted(
     _COUNTRIES | _REGION_TERMS | _US_STATES | {"district of columbia"}, key=len, reverse=True
@@ -147,6 +152,8 @@ _STATE_CODE = re.compile(
 _REMOTE_WORD = re.compile(r"\b(remote|anywhere|work from home|wfh|distributed)\b", re.I)
 _HYBRID_WORD = re.compile(r"\bhybrid\b", re.I)
 _US_COUNTRY = {"us", "usa", "united states", "united states of america"}
+# A bracketed part of a title: "(US Remote)", "[Remote - EMEA]".
+_TITLE_PART = re.compile(r"[(\[]([^)\]]*)[)\]]")
 
 
 def _segments(locations: Iterable[str]) -> list[str]:
@@ -192,19 +199,30 @@ def _region_only(segment: str) -> bool:
     return not re.search(r"[A-Za-z]{2,}", rest)
 
 
+def _title_hints(title: str) -> list[str]:
+    """Bracketed title parts that mention remote work, read as extra location text."""
+    return [p for p in _TITLE_PART.findall(title) if _REMOTE_WORD.search(p)]
+
+
+def _regions(segments: Sequence[str], countries: Sequence[str]) -> set[str | None]:
+    return {_region(s) for s in segments} | {_country_region(c) for c in countries if c}
+
+
 def classify_remote(
     locations: Sequence[str],
     workplace_type: str | None = None,
     countries: Sequence[str] = (),
+    title: str = "",
 ) -> Remote:
     """Classify remote status.
 
     ``workplace_type`` is the ATS's structured field, lowercased: remote / hybrid / onsite /
     unspecified, or None when the ATS has no such field at all (Greenhouse). ``countries`` are
-    structured country names or ISO codes for the job's locations.
+    structured country names or ISO codes for the job's locations. A bracketed remote hint in
+    ``title`` ("(US Remote)") counts as location text.
     """
     wt = (workplace_type or "").lower().replace("-", "").replace("_", "").replace(" ", "")
-    segs = _segments(locations)
+    segs = _segments([*locations, *_title_hints(title)])
     text_remote = any(_REMOTE_WORD.search(s) for s in segs)
     text_hybrid = any(_HYBRID_WORD.search(s) for s in segs)
 
@@ -220,10 +238,13 @@ def classify_remote(
         # a city. Country- or region-only locations are common on remote-first boards.
         if workplace_type is None and segs and not all(_region_only(s) for s in segs):
             return Remote.ONSITE
+        # Only non-US countries or regions ("Portugal", "ANZ Region"): no office is named, and
+        # whatever the arrangement, a US-based worker isn't eligible.
+        if segs and all(_region_only(s) for s in segs) and _regions(segs, countries) == {"other"}:
+            return Remote.REMOTE_OTHER
         return Remote.UNKNOWN
 
-    regions = {_region(s) for s in segs}
-    regions |= {_country_region(c) for c in countries if c}
+    regions = _regions(segs, countries)
     if "us" in regions:
         return Remote.REMOTE_US
     if "global" in regions:

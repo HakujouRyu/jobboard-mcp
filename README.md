@@ -81,8 +81,9 @@ returns this (abridged):
 ### Normalization in brief
 
 - **Remote:** `remote_us` needs positive evidence that a US-based worker is eligible. A bare
-  "Remote" is `unknown`. Unknown jobs are kept and flagged `remote_unknown` (pass
-  `include_unknown_remote: false` to drop them).
+  "Remote" is `unknown`, and so is "United States" with no remote signal. Locations that name
+  only non-US countries or regions ("Portugal", "ANZ Region") are `remote_other`. Unknown jobs
+  are kept and flagged `remote_unknown` (pass `include_unknown_remote: false` to drop them).
 - **Pay:** structured fields first, then ranges parsed from the description. `pay_min` /
   `pay_max` are annual USD only (hourly × 2080), and `pay_posted_interval` says how the pay was
   posted. Non-USD pay keeps its currency and raw text but has no numbers. Multi-tier pay reports

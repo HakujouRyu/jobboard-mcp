@@ -70,6 +70,7 @@ class LeverAdapter:
         return f"{API}/{token}/{job_id}?mode=json"
 
     def to_job(self, raw: dict[str, Any], company: str, token: str) -> Job:
+        title = raw.get("text") or ""
         cats = raw.get("categories") or {}
         locations = dedupe(cats.get("allLocations") or [cats.get("location") or ""])
         created = raw.get("createdAt")
@@ -80,10 +81,12 @@ class LeverAdapter:
             token=token,
             native_id=raw["id"],
             company=company,
-            title=raw.get("text") or "",
+            title=title,
             locations=locations,
             team=cats.get("team") or cats.get("department"),
-            remote=classify_remote(locations, raw.get("workplaceType"), [raw.get("country") or ""]),
+            remote=classify_remote(
+                locations, raw.get("workplaceType"), [raw.get("country") or ""], title
+            ),
             employment_type=employment_type(cats.get("commitment")),
             posted_at=parse_date(created),
             date_source="createdAt" if created is not None else None,
