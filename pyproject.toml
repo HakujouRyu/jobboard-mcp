@@ -10,7 +10,8 @@ dependencies = [
     "httpx>=0.28.1",
     "mcp>=2.3.0",
     "pydantic>=2.14.1",
-    "pyyaml>=6.0.3",
+    "rapidfuzz>=3.14.6",
+    "ruamel-yaml>=0.19.1",
 ]
 
 [project.scripts]
@@ -50,5 +51,4 @@ dev = [
     "pytest-asyncio>=1.4.0",
     "respx>=0.23.1",
     "ruff>=0.17.1",
-    "types-pyyaml>=6.0.12.20260906",
 ]
