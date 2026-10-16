@@ -182,29 +182,34 @@ def classify_remote(
 
 # --------------------------------------------------------------------------- pay
 
-_SYMBOL_CURRENCY = {"$": "USD", "us$": "USD", "£": "GBP", "€": "EUR", "c$": "CAD", "ca$": "CAD",
-                    "a$": "AUD", "au$": "AUD", "₹": "INR", "s$": "SGD"}  # fmt: skip
+_SYMBOL_CURRENCY = {"$": "USD", "£": "GBP", "€": "EUR", "₹": "INR"}
+# Letters glued to a "$": "US$", "CA$", "C$", "AU$", "A$", "S$".
+_DOLLAR_PREFIX = {"US": "USD", "CA": "CAD", "C": "CAD", "AU": "AUD", "A": "AUD", "S": "SGD"}
 _CODES = "USD|CAD|GBP|EUR|AUD|INR|SGD|NZD|CHF|JPY|MXN|BRL"
-_SYM = r"US\$|CA\$|C\$|AU\$|A\$|S\$|\$|£|€|₹"
+_SYMBOL = re.compile(r"[$£€₹]")
 _NUM = r"\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?"
 _INTERVAL = (
     r"(?P<interval>\s?(?:/|per|an|a)\s?(?:hour|hr|year|yr|annum|month|mo|week|wk)\b"
     r"|\s?(?:annually|hourly|yearly)\b)?"
 )
+# Both patterns are matched only at currency-symbol positions (see parse_pay_text), which
+# keeps scanning long descriptions cheap. A currency code before the symbol is checked
+# separately by _PREFIX.
 _RANGE = re.compile(
-    rf"(?:(?P<pre>{_CODES})\s?)?(?P<asym>{_SYM})\s?(?P<anum>{_NUM})\s?(?P<ak>[kK]\b)?"
+    rf"(?P<asym>[$£€₹])\s?(?P<anum>{_NUM})\s?(?P<ak>[kK]\b)?"
     rf"\s*(?:-|–|—|to)\s*"
-    rf"(?:(?:{_CODES})\s?)?(?:{_SYM})?\s?(?P<bnum>{_NUM})\s?(?P<bk>[kK]\b)?"
+    rf"(?:(?:{_CODES})\s?)?(?:[A-Z]{{0,2}}[$£€₹])?\s?(?P<bnum>{_NUM})\s?(?P<bk>[kK]\b)?"
     rf"(?:\s?(?P<code>{_CODES})\b)?" + _INTERVAL,
     re.I,
 )
 _SINGLE = re.compile(
-    rf"(?:(?P<pre>{_CODES})\s?)?(?P<asym>{_SYM})\s?(?P<anum>{_NUM})\s?(?P<ak>[kK]\b)?"
+    rf"(?P<asym>[$£€₹])\s?(?P<anum>{_NUM})\s?(?P<ak>[kK]\b)?"
     rf"(?:\s?(?P<code>{_CODES})\b)?"
     r"(?P<interval>\s?(?:/|per|an|a)\s?(?:hour|hr)\b|\s?hourly\b)",
     re.I,
 )
-_BIG_UNIT = re.compile(r"^\s?(million|billion|mm|bn|m\b|b\b)", re.I)
+_PREFIX = re.compile(rf"(?:\b(?P<code>{_CODES})\s?|\b(?P<glued>US|CA|C|AU|A|S))$", re.I)
+_BIG_UNIT = re.compile(r"\s?(million|billion|mm|bn|m\b|b\b)", re.I)
 
 
 def interval_from_label(label: str | None) -> str | None:
@@ -268,11 +273,16 @@ def _num(match: re.Match[str], p: str) -> float:
     return value
 
 
-def _currency(match: re.Match[str]) -> str:
-    code = match.group("code") or match.group("pre")
-    if code:
-        return code.upper()
-    return _SYMBOL_CURRENCY.get(match.group("asym").lower(), "USD")
+def _currency(match: re.Match[str], text: str) -> str:
+    if match.group("code"):
+        return match.group("code").upper()
+    start = match.start()
+    pre = _PREFIX.search(text[max(0, start - 6) : start])
+    if pre and pre.group("code"):
+        return pre.group("code").upper()
+    if pre and pre.group("glued") and match.group("asym") == "$":
+        return _DOLLAR_PREFIX[pre.group("glued").upper()]
+    return _SYMBOL_CURRENCY[match.group("asym")]
 
 
 def _plausible(lo: float, hi: float, interval: str | None) -> bool:
@@ -288,30 +298,32 @@ def _plausible(lo: float, hi: float, interval: str | None) -> bool:
 
 def parse_pay_text(text: str | None) -> Pay:
     """Find pay ranges ("$150,000 - $180,000", "$150K–$180K USD", "$75/hr") in free text."""
-    if not text:
+    if not text or not _SYMBOL.search(text):
         return Pay()
     flat = re.sub(r"\s+", " ", text)
     found: list[PayRange] = []
     snippets: list[str] = []
-    taken: list[tuple[int, int]] = []
-    for m in _RANGE.finditer(flat):
-        if _BIG_UNIT.match(flat[m.end() :]):
+    consumed = 0
+    for sym in _SYMBOL.finditer(flat):
+        pos = sym.start()
+        if pos < consumed:
             continue
-        lo, hi = _num(m, "a"), _num(m, "b")
-        interval = interval_from_label(m.group("interval")) or ("hour" if hi < 1000 else None)
-        if not _plausible(lo, hi, interval):
-            continue
-        found.append(PayRange(lo, hi, _currency(m), interval or "year"))
-        snippets.append(m.group(0).strip())
-        taken.append(m.span())
-    for m in _SINGLE.finditer(flat):
-        if any(a <= m.start() < b for a, b in taken):
-            continue
-        v = _num(m, "a")
-        if not _plausible(v, v, "hour"):
-            continue
-        found.append(PayRange(v, v, _currency(m), "hour"))
-        snippets.append(m.group(0).strip())
+        m = _RANGE.match(flat, pos)
+        if m is not None and not _BIG_UNIT.match(flat, m.end()):
+            lo, hi = _num(m, "a"), _num(m, "b")
+            interval = interval_from_label(m.group("interval")) or ("hour" if hi < 1000 else None)
+            if _plausible(lo, hi, interval):
+                found.append(PayRange(lo, hi, _currency(m, flat), interval or "year"))
+                snippets.append(m.group(0).strip())
+                consumed = m.end()
+                continue
+        m = _SINGLE.match(flat, pos)
+        if m is not None:
+            v = _num(m, "a")
+            if _plausible(v, v, "hour"):
+                found.append(PayRange(v, v, _currency(m, flat), "hour"))
+                snippets.append(m.group(0).strip())
+                consumed = m.end()
     if not found:
         return Pay()
     return combine_ranges(found, " | ".join(dict.fromkeys(snippets)), PaySource.PARSED_FROM_TEXT)

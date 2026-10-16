@@ -139,6 +139,23 @@ def test_parse_pay_text_mixed_currency_keeps_only_usd() -> None:
     assert pay.raw is not None and "CAD" in pay.raw
 
 
+@pytest.mark.parametrize(
+    ("text", "currency"),
+    [
+        ("Base pay: C$120,000 - C$150,000", "CAD"),
+        ("CA$120,000 - 150,000", "CAD"),
+        ("CAD $120,000 - $150,000", "CAD"),
+        ("USD $120,000 - $150,000", "USD"),
+        ("US$120,000 - US$150,000", "USD"),
+        ("AU$120,000 - AU$150,000", "AUD"),
+        ("€80,000 – €95,000", "EUR"),
+        ("pays a $120,000 - $150,000 salary", "USD"),  # the word "a" is not a prefix
+    ],
+)
+def test_parse_pay_text_currency_prefixes(text: str, currency: str) -> None:
+    assert parse_pay_text(text).currency == currency
+
+
 def test_parse_pay_text_non_usd_only() -> None:
     pay = parse_pay_text("Salary £70,000 - £90,000")
     assert (pay.min, pay.max, pay.currency) == (None, None, "GBP")
