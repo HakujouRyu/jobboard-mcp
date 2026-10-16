@@ -95,8 +95,57 @@ async def test_live_stdio_roundtrip() -> None:
     ):
         await session.initialize()
         tools = await session.list_tools()
-        assert {t.name for t in tools.tools} == {"sweep_boards", "get_posting"}
+        assert {"sweep_boards", "get_posting", "add_company"} <= {t.name for t in tools.tools}
         result = await session.call_tool("sweep_boards", {"companies": ["Linear"]})
         assert isinstance(result, CallToolResult) and not result.is_error
         assert result.structured_content is not None
         assert result.structured_content["per_company"][0]["status"] == "ok"
+
+
+# ------------------------------------------------------------------ M2
+
+
+async def test_live_resolve_posit_old_name_token(service: JobBoardService) -> None:
+    r = await service.resolve_board("Posit", "https://posit.co/careers/")
+    assert (r.ats, r.token) == (Ats.GREENHOUSE, "rstudio")
+    assert r.confidence is not None and r.confidence.value == "high"
+
+
+async def test_live_find_company_posting_round_trip(service: JobBoardService) -> None:
+    from jobboard_mcp.adapters import ADAPTERS
+
+    listing = await ADAPTERS[Ats.ASHBY].list_jobs(service.http, "Linear", "linear")
+    target = listing.jobs[0]
+    found = await service.find_company_posting("Linear", target.title)
+    assert found.board_found
+    assert target.title in {c.job.title for c in found.candidates}
+    assert found.candidates[0].score >= 90
+
+
+async def test_live_is_posting_live(service: JobBoardService) -> None:
+    from jobboard_mcp.adapters import ADAPTERS
+
+    for ats, token in [(Ats.GREENHOUSE, "gitlab"), (Ats.ASHBY, "linear"), (Ats.LEVER, "outreach")]:
+        job = (await ADAPTERS[ats].list_jobs(service.http, token, token)).jobs[0]
+        assert (await service.is_posting_live(url=job.url)).live, job.url
+    gone = await service.is_posting_live(ats=Ats.GREENHOUSE, token="gitlab", job_id="1")
+    assert gone.live is False
+
+
+async def test_live_stdio_readonly_hides_write_tools() -> None:
+    import os
+
+    params = StdioServerParameters(
+        command=sys.executable,
+        args=["-m", "jobboard_mcp.server"],
+        cwd=str(ROOT),
+        env={**os.environ, "WATCHLIST_READONLY": "true", "LOG_LEVEL": "WARNING"},
+    )
+    async with (
+        stdio_client(params) as (read, write),
+        ClientSession(read, write) as session,
+    ):
+        await session.initialize()
+        names = {t.name for t in (await session.list_tools()).tools}
+        assert "add_company" not in names and "update_company" not in names
+        assert {"sweep_boards", "find_company_posting", "list_watchlist"} <= names
