@@ -8,7 +8,7 @@ from typing import Any, Protocol
 
 from jobboard_mcp.http import HttpClient
 from jobboard_mcp.models import FLAG_REMOTE_UNKNOWN, Ats, Job, Remote
-from jobboard_mcp.normalize import fingerprint
+from jobboard_mcp.normalize import fingerprint, https_url
 
 
 @dataclass(frozen=True)
@@ -77,6 +77,10 @@ def build_job(
 ) -> Job:
     nid = str(native_id)
     title = " ".join(title.split())
+    for key in ("url", "apply_url"):
+        value = fields.get(key)
+        if isinstance(value, str):
+            fields[key] = https_url(value)
     if fields.get("remote") is Remote.UNKNOWN:
         fields.setdefault("flags", [FLAG_REMOTE_UNKNOWN])
     return Job.model_validate(

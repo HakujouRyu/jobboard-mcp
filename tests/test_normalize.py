@@ -11,6 +11,7 @@ from jobboard_mcp.normalize import (
     employment_type,
     fingerprint,
     html_to_text,
+    https_url,
     interval_from_label,
     parse_date,
     parse_pay_text,
@@ -360,3 +361,15 @@ def test_fingerprint_normalizes_title_and_location_order() -> None:
     b = fingerprint("gitlab", "Senior Backend Engineer", ["Remote, Canada", "Remote, US"])
     assert a == b
     assert a != fingerprint("GitLab", "Staff Backend Engineer", ["Remote, US"])
+
+
+# ------------------------------------------------------------------ urls
+
+
+def test_https_url() -> None:
+    # CircleCI's Greenhouse board links to http://www.circleci.com/careers/jobs/...
+    assert https_url("http://www.circleci.com/careers/jobs/1/?gh_jid=1") == (
+        "https://www.circleci.com/careers/jobs/1/?gh_jid=1"
+    )
+    assert https_url("HTTP://example.com/x") == "https://example.com/x"
+    assert https_url("https://jobs.lever.co/a/b") == "https://jobs.lever.co/a/b"

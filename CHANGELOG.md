@@ -26,6 +26,7 @@ All notable changes are recorded here. The format follows
 - `employment_type` is `contract` when the title marks the role as one ("(Contract)",
   "Contract Software Engineer").
 - `get_posting` sets the `remote_unknown` flag too, matching `sweep_boards`.
+- Posting links are upgraded from `http://` to `https://`.
 
 ### Fixed
 

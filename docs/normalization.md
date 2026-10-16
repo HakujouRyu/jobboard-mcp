@@ -161,6 +161,11 @@ tags and `<br>` become line breaks, `<li>` becomes `- `, the remaining tags are 
 whitespace is collapsed. Lever descriptions combine `descriptionPlain`, each `lists` section,
 and `additionalPlain`.
 
+## Links
+
+`url` and `apply_url` are upgraded from `http://` to `https://`. CircleCI's Greenhouse board,
+for one, links to `http://www.circleci.com/careers/...`.
+
 ## Identity
 
 - `id` is `{ats}:{token}:{native_id}`. It's unique and stable, and the input format for

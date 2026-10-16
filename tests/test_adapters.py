@@ -271,3 +271,28 @@ async def test_listing_memo_reuses_jobs_while_cached(http: HttpClient) -> None:
     fresh = await LEVER.list_jobs(http, "Outreach", "outreach", refresh=True)
     assert fresh.jobs is not first.jobs and fresh.jobs == first.jobs
     assert route.call_count == 2
+
+
+# ------------------------------------------------------------------ shared job building
+
+
+def test_build_job_flags_urls_and_title_signals() -> None:
+    # Shaped like Wikimedia's and CircleCI's live postings (2026-10-16)
+    raw = {
+        "id": 8268142,
+        "title": "Senior Software Engineer, Android (Contract)",
+        "location": {"name": "Remote"},
+        "absolute_url": "http://www.circleci.com/careers/jobs/8268142/?gh_jid=8268142",
+        "content": "<p>$56.07 to US$87.13 hourly</p>",
+    }
+    job = GH.to_job(raw, "Wikimedia Foundation", "wikimedia")
+    assert job.url.startswith("https://www.circleci.com/")
+    assert job.employment_type is EmploymentType.CONTRACT
+    # remote_unknown is set when the job is built, so get_posting and sweeps agree
+    assert job.remote is Remote.UNKNOWN and job.flags == ["remote_unknown"]
+    assert (job.pay_min, job.pay_posted_interval) == (116_626, "hour")
+
+
+def test_build_job_known_remote_has_no_flags() -> None:
+    raw = {"id": 1, "title": "Engineer", "location": {"name": "Remote, US"}}
+    assert GH.to_job(raw, "Acme", "acme").flags == []

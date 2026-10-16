@@ -454,6 +454,16 @@ def _employment_value(value: str | None) -> EmploymentType | None:
     return EmploymentType.UNKNOWN
 
 
+# --------------------------------------------------------------------------- urls
+
+
+def https_url(url: str) -> str:
+    """Upgrade ``http://`` posting links (CircleCI's board serves them) to ``https://``."""
+    if url[:7].lower() == "http://":
+        return "https://" + url[7:]
+    return url
+
+
 # --------------------------------------------------------------------------- fingerprint
 
 _ABBREV = [
