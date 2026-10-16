@@ -119,7 +119,7 @@ class SweepResult(BaseModel):
     jobs: list[Job]
     per_company: list[CompanyResult]
     fetched_at: datetime
-    cache_hits: int
+    cache_hits: int = Field(description="Boards served from cache instead of refetched")
     flag_counts: dict[str, int] = Field(
         default_factory=dict, description="How many returned jobs carry each flag"
     )
