@@ -48,6 +48,13 @@ class _Entry:
 
 
 @dataclass(frozen=True)
+class TextPage:
+    url: str  # final URL after redirects
+    status: int
+    text: str
+
+
+@dataclass(frozen=True)
 class Fetched:
     data: Any
     cache_hit: bool
@@ -96,7 +103,16 @@ class HttpClient:
     async def get_json(self, url: str, *, refresh: bool = False) -> Fetched:
         """GET a JSON document. Fresh cache entries are served without a request; stale ones
         are revalidated with If-None-Match / If-Modified-Since. ``refresh`` skips the TTL."""
-        entry = self._cache.get(url)
+        return await self._get(url, "json", refresh)
+
+    async def get_text(self, url: str, *, refresh: bool = False) -> Fetched:
+        """GET a web page. ``data`` is a TextPage; 4xx pages are returned (not raised) because
+        even an error page can link to the right place. Only 2xx pages are cached."""
+        return await self._get(url, "text", refresh)
+
+    async def _get(self, url: str, kind: str, refresh: bool) -> Fetched:
+        key = f"{kind} {url}"
+        entry = self._cache.get(key)
         if (
             entry is not None
             and not refresh
@@ -104,11 +120,11 @@ class HttpClient:
         ):
             return Fetched(entry.data, cache_hit=True)
         # Share one request between concurrent callers of the same URL.
-        task = self._inflight.get(url)
+        task = self._inflight.get(key)
         if task is None:
-            task = asyncio.ensure_future(self._fetch(url, entry))
-            self._inflight[url] = task
-            task.add_done_callback(lambda _t: self._inflight.pop(url, None))
+            task = asyncio.ensure_future(self._fetch(url, key, kind, entry))
+            self._inflight[key] = task
+            task.add_done_callback(lambda _t: self._inflight.pop(key, None))
         return await asyncio.shield(task)
 
     def _host_sem(self, url: str) -> asyncio.Semaphore:
@@ -118,8 +134,10 @@ class HttpClient:
             sem = self._hosts[host] = asyncio.Semaphore(self._settings.per_host_concurrency)
         return sem
 
-    async def _fetch(self, url: str, entry: _Entry | None) -> Fetched:
+    async def _fetch(self, url: str, key: str, kind: str, entry: _Entry | None) -> Fetched:
         headers: dict[str, str] = {}
+        if kind == "text":
+            headers["Accept"] = "text/html,application/xhtml+xml;q=0.9,*/*;q=0.5"
         if entry is not None:
             if entry.etag:
                 headers["If-None-Match"] = entry.etag
@@ -153,15 +171,21 @@ class HttpClient:
             if status == 304 and entry is not None:
                 entry.stored_at = self._clock()
                 return Fetched(entry.data, cache_hit=True)
-            if status in (404, 410):
-                raise NotFound(url, f"HTTP {status}", status)
-            if status >= 400:
-                raise FetchError(url, f"HTTP {status}", status)
-            try:
-                data = response.json()
-            except ValueError as exc:
-                raise FetchError(url, "response was not valid JSON", status) from exc
-            self._cache[url] = _Entry(
+            if kind == "text":
+                page = TextPage(url=str(response.url), status=status, text=response.text)
+                if status >= 400:
+                    return Fetched(page, cache_hit=False)
+                data: Any = page
+            else:
+                if status in (404, 410):
+                    raise NotFound(url, f"HTTP {status}", status)
+                if status >= 400:
+                    raise FetchError(url, f"HTTP {status}", status)
+                try:
+                    data = response.json()
+                except ValueError as exc:
+                    raise FetchError(url, "response was not valid JSON", status) from exc
+            self._cache[key] = _Entry(
                 data=data,
                 etag=response.headers.get("ETag"),
                 last_modified=response.headers.get("Last-Modified"),

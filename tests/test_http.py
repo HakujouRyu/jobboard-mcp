@@ -158,3 +158,25 @@ async def test_per_host_concurrency_cap() -> None:
     finally:
         await client.aclose()
     assert peak == 2
+
+
+@respx.mock
+async def test_get_text_returns_pages_and_error_pages(client: HttpClient) -> None:
+    respx.get("https://co.test/careers").mock(
+        return_value=httpx.Response(200, text="<a href='/jobs'>Jobs</a>")
+    )
+    respx.get("https://co.test/gone").mock(return_value=httpx.Response(404, text="<p>moved</p>"))
+    page = (await client.get_text("https://co.test/careers")).data
+    assert (page.status, page.url) == (200, "https://co.test/careers") and "Jobs" in page.text
+    assert respx.calls.last.request.headers["Accept"].startswith("text/html")
+    assert (await client.get_text("https://co.test/careers")).cache_hit
+    gone = await client.get_text("https://co.test/gone")
+    assert gone.data.status == 404 and "moved" in gone.data.text and not gone.cache_hit
+
+
+@respx.mock
+async def test_text_and_json_cache_separately(client: HttpClient) -> None:
+    respx.get(URL).mock(return_value=httpx.Response(200, json={"a": 1}))
+    assert (await client.get_json(URL)).data == {"a": 1}
+    text = await client.get_text(URL)
+    assert not text.cache_hit and '"a"' in text.data.text
