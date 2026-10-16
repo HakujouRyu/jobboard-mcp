@@ -1,14 +1,15 @@
 # jobboard-mcp — Design Spec
 
-**Owner:** Clay Roberts (Gnome) · **Status:** Draft v1 · **Date:** 2026-10-15
+**Status:** Draft v1 · **Date:** 2026-10-15
+
+This is the original design. Where the code has since moved on, [docs/](docs/) describes what it
+actually does.
 
 ## 1. Purpose
 
 A small, read-only MCP server that searches public applicant-tracking-system (ATS) job boards for a set of watched companies and returns clean, normalized, filtered job data.
 
-It replaces the slowest and least reliable part of Claude's job search, which today fetches each company's board one at a time with a generic web fetch. Large boards come back truncated, and parsing dates, pay, and remote status is redone (inconsistently) every run.
-
-Secondary goal: a clean, well-tested portfolio project relevant to AI-infrastructure and developer-tools roles.
+It replaces the slowest and least reliable part of a job search run through an AI assistant, which otherwise fetches each company's board one at a time with a generic web fetch. Large boards come back truncated, and parsing dates, pay, and remote status is redone (inconsistently) every run.
 
 ## 2. Goals and non-goals
 
@@ -20,10 +21,10 @@ Secondary goal: a clean, well-tested portfolio project relevant to AI-infrastruc
 - Tested offline against recorded fixtures.
 
 **Non-goals**
-- No scraping of LinkedIn, Indeed, WorkSource Georgia, Glassdoor, or any site whose terms forbid it, and no HTML scraping of careers pages beyond detecting which ATS they link to.
-- No writes to Job Search HQ or anywhere else holding Gnome's data. The server touches public data only.
+- No scraping of LinkedIn, Indeed, Glassdoor, or any site whose terms forbid it, and no HTML scraping of careers pages beyond detecting which ATS they link to.
+- No writes anywhere except the server's own watchlist file. The server touches public data only.
 - No accounts, credentials, résumés, or applying to jobs.
-- No judging fit or legitimacy. That stays with Claude and the find-jobs skill.
+- No judging fit or legitimacy. That stays with the MCP client and its user.
 
 ## 3. Supported job boards (v1)
 
@@ -67,7 +68,7 @@ Stretch (v2): Workable, SmartRecruiters, Recruitee, and Workday (Workday's endpo
 
 ### 4.2 Watchlist entry
 
-Stored in `data/watchlist.yaml` (the server's source of truth; seed it from the project doc "Company Watchlist").
+Stored in `data/watchlist.yaml`, the server's source of truth. The repo ships `data/watchlist.example.yaml` as a starting point.
 
 ```yaml
 - company: Temporal Technologies
@@ -94,7 +95,7 @@ Input:
 - `remote`: list of enum, default [`remote_us`, `remote_global`]
 - `min_pay`: int, optional. Drops jobs whose posted **max** is below this; jobs with no pay are kept and flagged.
 - `posted_within_days`: int, optional. Jobs with an unknown date are kept and flagged.
-- `exclude_ids`, `exclude_fingerprints`, `exclude_urls`: lists, optional (leads Claude has already seen)
+- `exclude_ids`, `exclude_fingerprints`, `exclude_urls`: lists, optional (leads the client has already seen)
 - `include_description`: bool, default false
 
 Output: `{ jobs: Job[], per_company: [{company, ats, total, matched, status, error?}], fetched_at, cache_hits }`
@@ -129,7 +130,7 @@ Manage `data/watchlist.yaml`. `add_company` validates the board with a live fetc
 When hosted, these can be disabled with a config flag (`WATCHLIST_READONLY=true`) so the public endpoint can't be edited.
 
 ### 5.7 `lookup_business_address` (optional, v1.1)
-For MyUI's address fields on remote roles.
+For forms that ask for an employer's address when the role is remote, such as unemployment work-search logs.
 
 Input: `company`. Look up a CIK via `https://www.sec.gov/files/company_tickers.json`, then read `https://data.sec.gov/submissions/CIK{10-digit}.json` → `addresses.business`.
 
@@ -146,7 +147,7 @@ Output: `{ street1, street2, city, state, zip, source_url }` or `{ found: false 
   - Pay: structured first; otherwise parse ranges like "$150,000 - $180,000", "$150K–$180K", or "$75/hr" from text. Multiple tiers (e.g. by US region): report the overall min and max and keep the tiers in `pay_raw`.
   - HTML to text: unescape, strip tags, and collapse whitespace.
 - **Politeness:** identify with a `User-Agent` like `jobboard-mcp/{version} (+repo URL)`. No more than one full sweep per board per cache TTL unless `refresh` is set.
-- **Logging:** structured JSON logs (company, ATS, status, latency, cache hit). Optional OpenTelemetry traces are a nice-to-have for the portfolio.
+- **Logging:** structured JSON logs (company, ATS, status, latency, cache hit). Optional OpenTelemetry traces are a nice-to-have.
 
 ## 7. Architecture
 
@@ -165,7 +166,7 @@ src/jobboard_mcp/
   watchlist.py     # YAML load/save/validate
   sec.py           # optional address lookup
   http.py          # shared client, cache, retries, rate limits
-data/watchlist.yaml
+data/watchlist.example.yaml
 tests/
   fixtures/        # recorded JSON responses per ATS (real, trimmed)
   test_adapters.py
@@ -201,4 +202,4 @@ tests/
 
 ## 11. Integration notes (for later)
 
-Once the server is working, the find-jobs skill's watchlist step becomes one `sweep_boards` call, and apply-to-job's "company's own posting first" step becomes `find_company_posting`. Claude still does vetting, ranking, and writing to Job Search HQ. Those skill edits are separate and should go through the usual diff review.
+Once the server is working, an assistant's job-search workflow can replace its per-company board fetches with one `sweep_boards` call, and "find the company's own posting" with `find_company_posting`. Vetting, ranking, and tracking applications stay with the client.
