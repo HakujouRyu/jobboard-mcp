@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from typing import Any, Protocol
 
 from jobboard_mcp.http import HttpClient
-from jobboard_mcp.models import Ats, Job
+from jobboard_mcp.models import FLAG_REMOTE_UNKNOWN, Ats, Job, Remote
 from jobboard_mcp.normalize import fingerprint
 
 
@@ -77,6 +77,8 @@ def build_job(
 ) -> Job:
     nid = str(native_id)
     title = " ".join(title.split())
+    if fields.get("remote") is Remote.UNKNOWN:
+        fields.setdefault("flags", [FLAG_REMOTE_UNKNOWN])
     return Job.model_validate(
         {
             "id": f"{ats.value}:{token}:{nid}",

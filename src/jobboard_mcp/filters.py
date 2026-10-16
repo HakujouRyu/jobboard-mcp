@@ -12,15 +12,17 @@ from dataclasses import dataclass, field
 from datetime import date, timedelta
 from urllib.parse import urlsplit
 
-from jobboard_mcp.models import Job, Remote
+from jobboard_mcp.models import (
+    FLAG_DATE_UNKNOWN,
+    FLAG_PAY_UNKNOWN,
+    FLAG_REMOTE_UNKNOWN,
+    Job,
+    Remote,
+)
 
 # "internship" is listed separately because "intern" matches whole words only.
 DEFAULT_TITLE_EXCLUDE = ("intern", "internship", "new grad", "principal")
 DEFAULT_REMOTE = (Remote.REMOTE_US, Remote.REMOTE_GLOBAL)
-
-FLAG_PAY_UNKNOWN = "pay_unknown"
-FLAG_DATE_UNKNOWN = "date_unknown"
-FLAG_REMOTE_UNKNOWN = "remote_unknown"
 
 
 def compile_terms(terms: Iterable[str]) -> list[re.Pattern[str]]:

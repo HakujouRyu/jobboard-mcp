@@ -198,13 +198,13 @@ flowchart LR
 
 ### Flags
 
-Each kept job has a `flags` list naming the active filters it couldn't be checked against:
+Each job has a `flags` list naming data that's missing:
 
 | Flag | When |
 |------|------|
-| `pay_unknown` | `min_pay` was set and the job has no USD maximum |
-| `date_unknown` | `posted_within_days` was set and the job has no date |
-| `remote_unknown` | the job's remote status is `unknown` |
+| `remote_unknown` | the job's remote status is `unknown`. Set when the job is built, so `get_posting` and `sweep_boards` agree |
+| `pay_unknown` | a sweep set `min_pay` and the job has no USD maximum |
+| `date_unknown` | a sweep set `posted_within_days` and the job has no date |
 
 `flag_counts` in the sweep result totals them.
 

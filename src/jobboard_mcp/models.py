@@ -47,6 +47,13 @@ class CompanyStatus(StrEnum):
     TIMEOUT = "timeout"
 
 
+# Job.flags values. remote_unknown is set on every job whose remote status is unknown; the
+# other two only by a sweep that filters on pay or date.
+FLAG_PAY_UNKNOWN = "pay_unknown"
+FLAG_DATE_UNKNOWN = "date_unknown"
+FLAG_REMOTE_UNKNOWN = "remote_unknown"
+
+
 class Pay(BaseModel):
     """Result of pay normalization. min/max are annual USD or null."""
 
@@ -97,7 +104,8 @@ class Job(BaseModel):
     flags: list[str] = Field(
         default_factory=list,
         description=(
-            "Why a job was kept despite missing data: pay_unknown, date_unknown, remote_unknown"
+            "Missing data: remote_unknown on any job whose remote status is unknown; "
+            "pay_unknown and date_unknown when a sweep filtered on pay or date"
         ),
     )
 
