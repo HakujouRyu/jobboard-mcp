@@ -53,8 +53,20 @@ from jobboard_mcp.normalize import (
         ("Remote - Worldwide", Remote.REMOTE_GLOBAL),
         ("Hybrid - New York", Remote.HYBRID),
         ("San Francisco, CA", Remote.ONSITE),
-        # "United States" alone is a place, not a remote signal
-        ("United States", Remote.ONSITE),
+        # Country/region-only locations are not on-site evidence (Mattermost, Buildkite):
+        # they stay unknown rather than being guessed either way.
+        ("United States", Remote.UNKNOWN),
+        ("United States - West Coast", Remote.UNKNOWN),
+        ("ANZ Region", Remote.UNKNOWN),
+        ("United Kingdom, Ireland or Poland", Remote.UNKNOWN),
+        ("Australia - WA", Remote.UNKNOWN),
+        ("Ontario, Canada", Remote.UNKNOWN),
+        ("Texas", Remote.UNKNOWN),
+        ("Pacific Time", Remote.UNKNOWN),
+        # A city anywhere in the list is on-site evidence
+        ("Ontario, Canada; Toronto, Ontario, Canada", Remote.ONSITE),
+        ("Tokyo, Japan", Remote.ONSITE),
+        ("Houston, TX", Remote.ONSITE),
     ],
 )
 def test_classify_remote_text_only(location: str, expected: Remote) -> None:

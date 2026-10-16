@@ -110,6 +110,40 @@ _NON_US = re.compile(
     r"london|berlin|paris|amsterdam|dublin|toronto|vancouver|montreal|sydney|melbourne)\b",
     re.I,
 )
+# Words that name only a country, region, state, or time zone. A location made only of these
+# ("United States", "ANZ Region", "United States - West Coast", "Ontario, Canada") says where
+# someone may live, not where an office is, so it is not evidence of on-site work.
+_COUNTRIES = {
+    "united states", "united states of america", "usa", "us", "u.s.", "canada", "mexico",
+    "brazil", "argentina", "colombia", "chile", "peru", "costa rica", "united kingdom", "uk",
+    "great britain", "england", "scotland", "wales", "northern ireland", "ireland", "germany",
+    "france", "spain", "portugal", "italy", "netherlands", "belgium", "luxembourg", "poland",
+    "sweden", "norway", "denmark", "finland", "iceland", "switzerland", "austria", "czechia",
+    "czech republic", "slovakia", "hungary", "romania", "bulgaria", "greece", "croatia",
+    "serbia", "slovenia", "estonia", "latvia", "lithuania", "ukraine", "israel", "turkey",
+    "india", "pakistan", "bangladesh", "sri lanka", "singapore", "japan", "south korea", "korea",
+    "china", "hong kong", "taiwan", "philippines", "vietnam", "thailand", "indonesia",
+    "malaysia", "australia", "new zealand", "south africa", "nigeria", "kenya", "egypt",
+    "uae", "united arab emirates", "saudi arabia", "ksa", "qatar",
+}  # fmt: skip
+_REGION_TERMS = {
+    "north america", "south america", "latin america", "central america", "americas", "amer",
+    "namer", "noram", "latam", "emea", "apac", "anz", "apj", "europe", "european union", "eu",
+    "eea", "asia", "asia pacific", "middle east", "africa", "oceania", "nordics", "dach",
+    "benelux", "region", "regions", "west", "east", "north", "south", "central", "western",
+    "eastern", "northern", "southern", "coast", "time", "zone", "zones", "timezone", "pacific",
+    "mountain", "atlantic", "est", "pst", "cst", "mst", "et", "pt", "ct", "cet", "gmt", "utc",
+    "or", "and", "only", "based", "the", "of", "in", "any", "state", "states", "province",
+    "ontario", "quebec", "british columbia", "alberta", "manitoba", "nova scotia",
+}  # fmt: skip
+_PLACE_PHRASES = sorted(
+    _COUNTRIES | _REGION_TERMS | _US_STATES | {"district of columbia"}, key=len, reverse=True
+)
+_PLACE_PHRASE = re.compile(r"\b(" + "|".join(re.escape(p) for p in _PLACE_PHRASES) + r")\b", re.I)
+# Upper-case state and province codes only, so ordinary words are not mistaken for codes.
+_STATE_CODE = re.compile(
+    r"\b(" + "|".join(sorted(_US_STATE_ABBR | {"CA", "BC", "ON", "QC"})) + r")\b"
+)
 _REMOTE_WORD = re.compile(r"\b(remote|anywhere|work from home|wfh|distributed)\b", re.I)
 _HYBRID_WORD = re.compile(r"\bhybrid\b", re.I)
 _US_COUNTRY = {"us", "usa", "united states", "united states of america"}
@@ -151,6 +185,13 @@ def _country_region(country: str) -> str | None:
     return "other" if regions else None
 
 
+def _region_only(segment: str) -> bool:
+    """True when a location names no city: only countries, regions, states, or time zones."""
+    rest = _PLACE_PHRASE.sub(" ", segment)
+    rest = _STATE_CODE.sub(" ", rest)  # "Australia - WA", "Remote, TX"
+    return not re.search(r"[A-Za-z]{2,}", rest)
+
+
 def classify_remote(
     locations: Sequence[str],
     workplace_type: str | None = None,
@@ -174,9 +215,10 @@ def classify_remote(
     if wt != "remote" and not text_remote:
         if text_hybrid:
             return Remote.HYBRID
-        # A concrete place with no remote/hybrid signal means on-site, but only when the ATS
-        # has no structured field. An explicit "unspecified" stays unknown.
-        if workplace_type is None and segs:
+        # A city with no remote/hybrid signal means on-site, but only when the ATS has no
+        # structured field (an explicit "unspecified" stays unknown) and some location names
+        # a city. Country- or region-only locations are common on remote-first boards.
+        if workplace_type is None and segs and not all(_region_only(s) for s in segs):
             return Remote.ONSITE
         return Remote.UNKNOWN
 
