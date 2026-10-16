@@ -1,0 +1,87 @@
+# The watchlist
+
+[data/watchlist.yaml](../data/watchlist.yaml) lists the companies the server sweeps. It's the
+only file the server ever writes, and you can also edit it by hand.
+
+## Format
+
+A YAML list with one mapping per company:
+
+```yaml
+- company: Temporal Technologies   # display name, unique (case-insensitive)
+  ats: ashby                       # greenhouse | ashby | lever | null
+  token: temporal                  # board token, or null
+  careers_url: https://temporal.io/careers
+  domains: [dev tools, open source]
+  tags: []                         # e.g. [hww] = hiring-without-whiteboards
+  interview_note: null
+  notes: Old Greenhouse board is gone
+```
+
+| Field | Required | |
+|-------|----------|---|
+| `company` | yes | Shown on every job. Must be unique. |
+| `ats`, `token` | both or neither | Without them, sweeps skip the entry with status `no_board`. |
+| `careers_url` | no | `resolve_board` uses it when no URL is passed. |
+| `domains`, `tags` | no | Free-form. Used by `list_watchlist` filters. |
+| `interview_note`, `notes` | no | Free-form. |
+
+The file is validated every time it's read: it must be a list, every entry must match the
+schema, names must be unique, and `ats`/`token` must be set together. An invalid file makes
+watchlist-based tools fail with a message naming the problem. They don't fall back to a partial
+list.
+
+## Finding a board token
+
+The token is the path segment after the ATS host:
+
+| ATS | Board URL | Token |
+|-----|-----------|-------|
+| Greenhouse | `job-boards.greenhouse.io/gitlab` | `gitlab` |
+| Ashby | `jobs.ashbyhq.com/linear` | `linear` |
+| Lever | `jobs.lever.co/outreach` | `outreach` |
+
+Or ask the server to find it, then save the result:
+
+```text
+resolve_board(company="Posit", careers_url="https://posit.co/careers/")
+  -> greenhouse / rstudio, confidence high
+update_company(company="Posit", ats="greenhouse", token="rstudio")
+```
+
+## How edits work
+
+```mermaid
+sequenceDiagram
+    participant T as add_company / update_company
+    participant Svc as JobBoardService
+    participant API as ATS API
+    participant St as WatchlistStore
+    participant F as watchlist.yaml
+
+    T->>Svc: entry or changes
+    Svc->>Svc: refuse if WATCHLIST_READONLY
+    opt board is new or changed
+        Svc->>API: fetch the board (refresh, not cached)
+        API-->>Svc: ok / not_found / error
+        Note over Svc: anything but ok stops here, and nothing is written
+    end
+    Svc->>St: add(entry) / update(name, changes)
+    St->>F: re-read the current file (keeps hand edits made meanwhile)
+    St->>St: edit the ruamel round-trip tree in place
+    St->>St: dump, then parse and validate the new text
+    St->>F: write to a temp file, then os.replace()
+```
+
+- Comments, blank lines, quoting, and field order are kept. A field added by `update_company`
+  goes in its usual position, and the blank line between entries stays in place.
+- `add_company` appends to the end of the file.
+- The new text is parsed and validated before it replaces the file, so a write can't leave the
+  file unreadable. The swap is atomic, so a crash can't leave it half-written either.
+- The file is re-read on every call, so hand edits take effect without a restart.
+
+## Read-only mode
+
+Set `WATCHLIST_READONLY=true` for any deployment other people can reach. `add_company` and
+`update_company` then aren't registered at all, and `list_watchlist` reports
+`readonly: true`.
