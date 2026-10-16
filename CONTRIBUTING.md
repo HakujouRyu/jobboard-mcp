@@ -6,6 +6,8 @@ adding a tool.
 
 Read [docs/architecture.md](docs/architecture.md) first. It's short and has diagrams.
 [SPEC.md](SPEC.md) is the original design and milestone plan.
+If you work with an AI coding agent, [AGENTS.md](AGENTS.md) (which `CLAUDE.md` imports) gives
+it the commands, the rules it most often breaks, and which docs to update.
 
 ## Setup
 
