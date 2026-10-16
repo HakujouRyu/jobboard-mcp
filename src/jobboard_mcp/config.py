@@ -79,3 +79,5 @@ def configure_logging(level: str = "INFO") -> None:
     root.handlers[:] = [handler]
     root.setLevel(level)
     root.propagate = False
+    # httpx logs every request at INFO; our own http/board logs already cover it.
+    logging.getLogger("httpx").setLevel(logging.WARNING)

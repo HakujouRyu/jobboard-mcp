@@ -6,7 +6,13 @@ import re
 from typing import Any
 from urllib.parse import urlsplit
 
-from jobboard_mcp.adapters.base import BoardListing, PostingRef, build_job, dedupe
+from jobboard_mcp.adapters.base import (
+    BoardListing,
+    ListingMemo,
+    PostingRef,
+    build_job,
+    dedupe,
+)
 from jobboard_mcp.http import HttpClient, NotFound
 from jobboard_mcp.models import Ats, Job, Pay, PaySource, raw_json
 from jobboard_mcp.normalize import (
@@ -60,6 +66,9 @@ def _pay(raw: dict[str, Any]) -> Pay:
 class AshbyAdapter:
     ats = Ats.ASHBY
 
+    def __init__(self) -> None:
+        self._memo = ListingMemo()
+
     def list_url(self, token: str) -> str:
         return f"{API}/{token}?includeCompensation=true"
 
@@ -96,12 +105,18 @@ class AshbyAdapter:
     async def list_jobs(
         self, http: HttpClient, company: str, token: str, *, refresh: bool = False
     ) -> BoardListing:
-        fetched = await http.get_json(self.list_url(token), refresh=refresh)
-        jobs = [
-            self.to_job(j, company, token)
-            for j in fetched.data.get("jobs", [])
-            if j.get("isListed", True)
-        ]
+        url = self.list_url(token)
+        fetched = await http.get_json(url, refresh=refresh)
+        jobs = self._memo.jobs(
+            company,
+            url,
+            fetched.data,
+            lambda: [
+                self.to_job(j, company, token)
+                for j in fetched.data.get("jobs", [])
+                if j.get("isListed", True)
+            ],
+        )
         return BoardListing(jobs, fetched.cache_hit)
 
     async def get_job(

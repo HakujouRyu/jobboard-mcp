@@ -25,6 +25,7 @@ _BR = re.compile(r"<br\s*/?>", re.I)
 _LI = re.compile(r"<li[^>]*>", re.I)
 _DROP = re.compile(r"<(script|style)[^>]*>.*?</\1\s*>", re.I | re.S)
 _TAG = re.compile(r"<[^>]+>")
+_ESCAPED_TAG = re.compile(r"&lt;/?[a-zA-Z]")
 
 
 def html_to_text(value: str | None) -> str | None:
@@ -32,18 +33,21 @@ def html_to_text(value: str | None) -> str | None:
     if not value:
         return None
     s = value
-    if re.search(r"&lt;/?[a-zA-Z]", s):
+    if _ESCAPED_TAG.search(s):
         s = html.unescape(s)
     s = _DROP.sub("", s)
     s = _BR.sub("\n", s)
     s = _LI.sub("\n- ", s)
     s = _BLOCK_END.sub("\n", s)
     s = _TAG.sub("", s)
-    s = html.unescape(s).replace("\xa0", " ")
-    lines = [re.sub(r"[ \t\r\f\v]+", " ", line).strip() for line in s.split("\n")]
-    s = "\n".join(lines)
-    s = re.sub(r"\n{3,}", "\n\n", s).strip()
-    return s or None
+    s = html.unescape(s)
+    # str.split() is much faster than whitespace regexes on long descriptions.
+    lines: list[str] = []
+    for line in s.split("\n"):
+        text = " ".join(line.split())
+        if text or (lines and lines[-1]):
+            lines.append(text)
+    return "\n".join(lines).strip() or None
 
 
 # --------------------------------------------------------------------------- dates

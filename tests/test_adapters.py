@@ -255,3 +255,19 @@ def test_parse_posting_url(url: str, ref: PostingRef | None) -> None:
 
 def test_registry_covers_every_ats() -> None:
     assert set(ADAPTERS) == set(Ats)
+
+
+@respx.mock
+async def test_listing_memo_reuses_jobs_while_cached(http: HttpClient) -> None:
+    route = respx.get(LEVER.list_url("outreach")).mock(
+        side_effect=[
+            httpx.Response(200, json=fixture_json("lever_outreach.json")),
+            httpx.Response(200, json=fixture_json("lever_outreach.json")),
+        ]
+    )
+    first = await LEVER.list_jobs(http, "Outreach", "outreach")
+    second = await LEVER.list_jobs(http, "Outreach", "outreach")
+    assert second.cache_hit and second.jobs is first.jobs
+    fresh = await LEVER.list_jobs(http, "Outreach", "outreach", refresh=True)
+    assert fresh.jobs is not first.jobs and fresh.jobs == first.jobs
+    assert route.call_count == 2

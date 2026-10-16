@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Any, Protocol
 
 from jobboard_mcp.http import HttpClient
 from jobboard_mcp.models import Ats, Job
@@ -78,3 +78,22 @@ def build_job(
 def dedupe(values: Iterable[str]) -> list[str]:
     """Strip, drop empties, and remove duplicates while keeping order."""
     return list(dict.fromkeys(v.strip() for v in values if v and v.strip()))
+
+
+class ListingMemo:
+    """Reuse normalized jobs while the HTTP cache keeps serving the same response object.
+
+    Warm sweeps would otherwise re-run HTML and pay parsing on every cached board. Jobs are
+    shared between calls, so callers must treat them as immutable (use ``model_copy``).
+    """
+
+    def __init__(self) -> None:
+        self._memo: dict[tuple[str, str], tuple[Any, list[Job]]] = {}
+
+    def jobs(self, company: str, url: str, data: Any, parse: Callable[[], list[Job]]) -> list[Job]:
+        hit = self._memo.get((company, url))
+        if hit is not None and hit[0] is data:
+            return hit[1]
+        jobs = parse()
+        self._memo[(company, url)] = (data, jobs)
+        return jobs
