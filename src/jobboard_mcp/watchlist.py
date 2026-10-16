@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import io
 import os
+import shutil
 import tempfile
 from collections.abc import Mapping
 from pathlib import Path
@@ -75,6 +76,15 @@ def load_watchlist(path: Path) -> list[WatchlistEntry]:
     except FileNotFoundError as exc:
         raise WatchlistError(f"watchlist not found: {path}") from exc
     return parse_watchlist(text, str(path))
+
+
+def seed_watchlist(path: Path, example: Path) -> bool:
+    """Copy ``example`` to ``path`` if nothing is there yet. Returns whether it copied."""
+    if path.exists():
+        return False
+    path.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(example, path)
+    return True
 
 
 def _plain(entry: WatchlistEntry) -> CommentedMap:

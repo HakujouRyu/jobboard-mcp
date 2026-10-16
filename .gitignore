@@ -8,3 +8,6 @@ dist/
 build/
 *.egg-info/
 .env
+
+# Your own watchlist. The server copies it from data/watchlist.example.yaml on first run.
+data/watchlist.yaml

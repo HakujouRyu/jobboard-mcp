@@ -2,15 +2,15 @@ from pathlib import Path
 
 import pytest
 
+from jobboard_mcp.config import EXAMPLE_WATCHLIST
 from jobboard_mcp.models import Ats, WatchlistEntry
 from jobboard_mcp.watchlist import (
     WatchlistError,
     WatchlistStore,
     load_watchlist,
     parse_watchlist,
+    seed_watchlist,
 )
-
-REPO_WATCHLIST = Path(__file__).resolve().parents[1] / "data" / "watchlist.yaml"
 
 SAMPLE = """\
 # Header comment that must survive edits.
@@ -42,10 +42,20 @@ def store(tmp_path: Path) -> WatchlistStore:
     return WatchlistStore(path)
 
 
-def test_repo_watchlist_is_valid() -> None:
-    entries = load_watchlist(REPO_WATCHLIST)
-    assert len(entries) >= 20
-    assert {"GitLab", "Linear", "Temporal Technologies", "Posit"} <= {e.company for e in entries}
+def test_example_watchlist_is_valid() -> None:
+    entries = load_watchlist(EXAMPLE_WATCHLIST)
+    # The live tests rely on these.
+    assert {"GitLab", "Linear", "Posit"} <= {e.company for e in entries}
+    assert {e.ats for e in entries} == {*Ats, None}
+
+
+def test_seed_watchlist_copies_only_when_missing(tmp_path: Path) -> None:
+    path = tmp_path / "data" / "watchlist.yaml"
+    assert seed_watchlist(path, EXAMPLE_WATCHLIST)
+    assert path.read_bytes() == EXAMPLE_WATCHLIST.read_bytes()
+    path.write_text(SAMPLE, encoding="utf-8")
+    assert not seed_watchlist(path, EXAMPLE_WATCHLIST)
+    assert path.read_text(encoding="utf-8") == SAMPLE
 
 
 def test_parse_errors() -> None:

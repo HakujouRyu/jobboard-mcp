@@ -1,7 +1,12 @@
 # The watchlist
 
-[data/watchlist.yaml](../data/watchlist.yaml) lists the companies the server sweeps. It's the
-only file the server ever writes, and you can also edit it by hand.
+`data/watchlist.yaml` lists the companies the server sweeps. It's the only file the server ever
+writes, and you can also edit it by hand.
+
+The file is yours, so git ignores it. On first run the server copies
+[data/watchlist.example.yaml](../data/watchlist.example.yaml) there to give you something to
+start from. Set `WATCHLIST_PATH` to keep your list somewhere else. A custom path isn't seeded:
+the server reports it as missing instead, in case it's a typo.
 
 ## Format
 

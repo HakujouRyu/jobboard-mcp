@@ -109,6 +109,8 @@ Patterns to follow:
   it with `server.set_service(...)`, and call `server.mcp.call_tool(name, args)`. See the
   `service` fixture and `call()` helper in [tests/test_tools.py](tests/test_tools.py).
 - **Watchlist writes:** use a copy in `tmp_path`, never `data/watchlist.yaml`.
+- **The example watchlist:** the live tests sweep `data/watchlist.example.yaml`, not your own
+  list. Keep at least one board per ATS in it.
 - `asyncio_mode = "auto"` is on, so async tests need no decorator.
 
 ### Recording a fixture

@@ -16,6 +16,9 @@ from jobboard_mcp import __version__
 
 REPO_URL = "https://github.com/HakujouRyu/jobboard-mcp"
 _PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_WATCHLIST = _PROJECT_ROOT / "data" / "watchlist.yaml"
+# Copied to DEFAULT_WATCHLIST on first run. The real watchlist is per-user and git-ignored.
+EXAMPLE_WATCHLIST = _PROJECT_ROOT / "data" / "watchlist.example.yaml"
 
 
 def _int(name: str, default: int) -> int:
@@ -32,7 +35,7 @@ def _bool(name: str, default: bool) -> bool:
 
 @dataclass(frozen=True)
 class Settings:
-    watchlist_path: Path = _PROJECT_ROOT / "data" / "watchlist.yaml"
+    watchlist_path: Path = DEFAULT_WATCHLIST
     cache_ttl_seconds: int = 3 * 60 * 60
     max_concurrency: int = 8
     per_host_concurrency: int = 4

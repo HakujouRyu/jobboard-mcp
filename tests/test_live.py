@@ -1,5 +1,10 @@
-"""Live checks against the real job board APIs. Opt-in: ``uv run pytest -m live``."""
+"""Live checks against the real job board APIs. Opt-in: ``uv run pytest -m live``.
 
+They sweep the example watchlist rather than your own, so results don't depend on who runs them.
+"""
+
+import dataclasses
+import os
 import sys
 import time
 from collections.abc import AsyncIterator
@@ -10,15 +15,15 @@ from mcp.client.session import ClientSession
 from mcp.client.stdio import StdioServerParameters, stdio_client
 from mcp.types import CallToolResult
 
-from jobboard_mcp.config import Settings
+from jobboard_mcp.config import EXAMPLE_WATCHLIST, Settings
 from jobboard_mcp.filters import SweepFilters
 from jobboard_mcp.models import Ats, CompanyStatus, Remote
 from jobboard_mcp.service import JobBoardService
-from jobboard_mcp.watchlist import load_watchlist
 
 pytestmark = pytest.mark.live
 
 ROOT = Path(__file__).resolve().parents[1]
+SERVER_ENV = {**os.environ, "WATCHLIST_PATH": str(EXAMPLE_WATCHLIST), "LOG_LEVEL": "WARNING"}
 ACCEPTANCE = {
     "title_include": ["engineer", "sre", "product"],
     "remote": [Remote.REMOTE_US, Remote.REMOTE_GLOBAL],
@@ -29,7 +34,9 @@ ACCEPTANCE = {
 
 @pytest.fixture
 async def service() -> AsyncIterator[JobBoardService]:
-    svc = JobBoardService(Settings.from_env())
+    svc = JobBoardService(
+        dataclasses.replace(Settings.from_env(), watchlist_path=EXAMPLE_WATCHLIST)
+    )
     yield svc
     await svc.aclose()
 
@@ -85,9 +92,8 @@ async def test_live_get_posting_each_ats(service: JobBoardService, ats: Ats, tok
 
 
 async def test_live_stdio_roundtrip() -> None:
-    assert load_watchlist(Settings().watchlist_path)
     params = StdioServerParameters(
-        command=sys.executable, args=["-m", "jobboard_mcp.server"], cwd=str(ROOT)
+        command=sys.executable, args=["-m", "jobboard_mcp.server"], cwd=str(ROOT), env=SERVER_ENV
     )
     async with (
         stdio_client(params) as (read, write),
@@ -133,13 +139,11 @@ async def test_live_is_posting_live(service: JobBoardService) -> None:
 
 
 async def test_live_stdio_readonly_hides_write_tools() -> None:
-    import os
-
     params = StdioServerParameters(
         command=sys.executable,
         args=["-m", "jobboard_mcp.server"],
         cwd=str(ROOT),
-        env={**os.environ, "WATCHLIST_READONLY": "true", "LOG_LEVEL": "WARNING"},
+        env={**SERVER_ENV, "WATCHLIST_READONLY": "true"},
     )
     async with (
         stdio_client(params) as (read, write),

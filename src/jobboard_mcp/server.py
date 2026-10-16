@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import logging
 import os
 import sys
 from collections.abc import AsyncIterator
@@ -15,7 +16,12 @@ from mcp.types import ToolAnnotations
 from pydantic import Field
 
 from jobboard_mcp import __version__
-from jobboard_mcp.config import Settings, configure_logging
+from jobboard_mcp.config import (
+    DEFAULT_WATCHLIST,
+    EXAMPLE_WATCHLIST,
+    Settings,
+    configure_logging,
+)
 from jobboard_mcp.filters import DEFAULT_REMOTE, DEFAULT_TITLE_EXCLUDE, SweepFilters
 from jobboard_mcp.http import FetchError
 from jobboard_mcp.models import (
@@ -31,7 +37,7 @@ from jobboard_mcp.models import (
     WatchlistView,
 )
 from jobboard_mcp.service import JobBoardService
-from jobboard_mcp.watchlist import WatchlistError
+from jobboard_mcp.watchlist import WatchlistError, seed_watchlist
 
 INSTRUCTIONS = """\
 Searches public Greenhouse, Ashby, and Lever job boards for a watchlist of companies and returns
@@ -360,6 +366,13 @@ def main(argv: list[str] | None = None) -> None:
         sys.exit("jobboard-mcp: only the stdio transport is available in this version")
     settings = Settings.from_env()
     configure_logging(settings.log_level)
+    # Only the default path is seeded: a missing WATCHLIST_PATH is more likely a typo.
+    if settings.watchlist_path == DEFAULT_WATCHLIST and seed_watchlist(
+        DEFAULT_WATCHLIST, EXAMPLE_WATCHLIST
+    ):
+        logging.getLogger("jobboard_mcp.server").info(
+            "copied the example watchlist", extra={"fields": {"path": str(DEFAULT_WATCHLIST)}}
+        )
     if settings.watchlist_readonly:
         for name in WRITE_TOOLS:
             mcp.remove_tool(name)

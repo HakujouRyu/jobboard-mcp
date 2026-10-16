@@ -99,7 +99,8 @@ uv run pytest            # offline, against recorded fixtures
 uv run jobboard-mcp      # start the server on stdio
 ```
 
-Then edit [data/watchlist.yaml](data/watchlist.yaml) to choose which companies to watch (see
+On first run the server copies [data/watchlist.example.yaml](data/watchlist.example.yaml) to
+`data/watchlist.yaml`, which git ignores. Edit that copy to choose which companies to watch (see
 [docs/watchlist.md](docs/watchlist.md)), or use `add_company` from your MCP client.
 
 ### Use from the Claude desktop app
@@ -135,7 +136,7 @@ Environment variables, all optional:
 
 | Variable | Default | |
 |----------|---------|---|
-| `WATCHLIST_PATH` | `data/watchlist.yaml` | |
+| `WATCHLIST_PATH` | `data/watchlist.yaml` | Only the default path is created from the example on first run |
 | `CACHE_TTL_SECONDS` | `10800` (3 h) | Boards are refetched at most once per TTL unless `refresh: true`. Stale entries revalidate with ETag / Last-Modified. |
 | `MAX_CONCURRENCY` | `8` | Global cap on requests in flight |
 | `PER_HOST_CONCURRENCY` | `4` | Cap per host |
