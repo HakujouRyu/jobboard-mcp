@@ -15,7 +15,12 @@ You need [uv](https://docs.astral.sh/uv/). It installs Python 3.12 if you don't 
 git clone https://github.com/HakujouRyu/jobboard-mcp
 cd jobboard-mcp
 uv sync
+uv run pre-commit install
 ```
+
+The pre-commit hooks run ruff (lint with fixes, then format), check that `uv.lock` matches
+`pyproject.toml`, and fix whitespace and line endings. `uv run pre-commit run --all-files` runs
+them by hand.
 
 ## Checks
 
