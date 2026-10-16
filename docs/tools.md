@@ -235,6 +235,14 @@ alone would have missed it.
 When nothing is found, `ats` and `token` are null, and `evidence` lists the tokens tried and any
 unsupported ATS the pages mention (Workday, Workable, and so on).
 
+Careers pages are only fetched from public addresses over `http`/`https` on the default port,
+redirects included (see [architecture.md](architecture.md#careers-pages)). A page that's refused
+still counts as checked, with the reason, and the token probes still run:
+
+```json
+"pages_checked": ["http://localhost:8080/careers (blocked: only default ports are fetched, not 8080)"]
+```
+
 ---
 
 ## `is_posting_live`

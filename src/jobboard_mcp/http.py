@@ -1,4 +1,8 @@
-"""Shared async HTTP client: cache, conditional requests, retries, and concurrency caps."""
+"""Shared async HTTP client: cache, conditional requests, retries, and concurrency caps.
+
+Careers pages (``get_text``) are fetched through ``urlguard.GuardedTransport``, which keeps them
+on the public internet. JSON requests only ever go to the job board APIs.
+"""
 
 from __future__ import annotations
 
@@ -14,6 +18,7 @@ from urllib.parse import urlsplit
 import httpx
 
 from jobboard_mcp.config import Settings
+from jobboard_mcp.urlguard import BlockedURL, GuardedTransport, Resolver
 
 log = logging.getLogger(__name__)
 
@@ -37,6 +42,12 @@ class NotFound(FetchError):
 
 class FetchTimeout(FetchError):
     kind = "timeout"
+
+
+class Blocked(FetchError):
+    """A careers-page URL that isn't a public http(s) address. Never retried."""
+
+    kind = "blocked"
 
 
 @dataclass
@@ -80,13 +91,29 @@ class HttpClient:
         transport: httpx.AsyncBaseTransport | None = None,
         clock: Callable[[], float] = time.monotonic,
         sleep: Callable[[float], Awaitable[None]] = asyncio.sleep,
+        resolver: Resolver | None = None,
     ) -> None:
         self._settings = settings
+        headers = {"User-Agent": settings.user_agent, "Accept": "application/json"}
         self._client = httpx.AsyncClient(
-            headers={"User-Agent": settings.user_agent, "Accept": "application/json"},
+            headers=headers,
             timeout=settings.timeout_seconds,
             follow_redirects=True,
             transport=transport,
+        )
+        # Pinned connections are keyed by IP, so one kept alive for one site could be reused
+        # for another site on the same IP with the wrong TLS name. Hence no keep-alive. Proxy
+        # settings from the environment are ignored because a proxy would bypass the guard.
+        self._pages = httpx.AsyncClient(
+            headers=headers,
+            timeout=settings.timeout_seconds,
+            follow_redirects=True,
+            transport=GuardedTransport(
+                transport
+                or httpx.AsyncHTTPTransport(limits=httpx.Limits(max_keepalive_connections=0)),
+                resolver=resolver,
+            ),
+            trust_env=False,
         )
         self._clock, self._sleep = clock, sleep
         self._cache: dict[str, _Entry] = {}
@@ -96,6 +123,7 @@ class HttpClient:
 
     async def aclose(self) -> None:
         await self._client.aclose()
+        await self._pages.aclose()
 
     def clear_cache(self) -> None:
         self._cache.clear()
@@ -107,7 +135,8 @@ class HttpClient:
 
     async def get_text(self, url: str, *, refresh: bool = False) -> Fetched:
         """GET a web page. ``data`` is a TextPage; 4xx pages are returned (not raised) because
-        even an error page can link to the right place. Only 2xx pages are cached."""
+        even an error page can link to the right place. Only 2xx pages are cached. Raises
+        ``Blocked`` for a URL, or a redirect, that isn't a public http(s) address."""
         return await self._get(url, "text", refresh)
 
     async def _get(self, url: str, kind: str, refresh: bool) -> Fetched:
@@ -144,13 +173,16 @@ class HttpClient:
             if entry.last_modified:
                 headers["If-Modified-Since"] = entry.last_modified
 
+        client = self._pages if kind == "text" else self._client
         attempt = 0
         while True:
             started = self._clock()
             try:
                 # Host slot first, so waiting on a busy host doesn't hold a global slot.
                 async with self._host_sem(url), self._global:
-                    response = await self._client.get(url, headers=headers)
+                    response = await client.get(url, headers=headers)
+            except BlockedURL as exc:
+                raise Blocked(url, f"blocked: {exc}") from exc
             except httpx.TimeoutException as exc:
                 raise FetchTimeout(
                     url, f"timed out after {self._settings.timeout_seconds}s"

@@ -66,7 +66,8 @@ flowchart LR
 | [matching.py](../src/jobboard_mcp/matching.py) | Pure functions: title normalization and rapidfuzz scoring for `find_company_posting`. |
 | [resolve.py](../src/jobboard_mcp/resolve.py) | Works out which board a company uses, from token probes and careers-page links. |
 | [watchlist.py](../src/jobboard_mcp/watchlist.py) | Loads and validates the YAML, and makes comment-preserving, atomic edits. |
-| [http.py](../src/jobboard_mcp/http.py) | The one shared `httpx.AsyncClient`, with cache, conditional requests, retries, request sharing, and concurrency caps. |
+| [http.py](../src/jobboard_mcp/http.py) | `HttpClient`: cache, conditional requests, retries, request sharing, and concurrency caps for every outbound request. |
+| [urlguard.py](../src/jobboard_mcp/urlguard.py) | Keeps careers-page fetches on the public internet: checks every request and redirect, and pins the connection to the checked address. |
 | [config.py](../src/jobboard_mcp/config.py) | `Settings` from environment variables, and JSON logging to stderr. |
 | [models.py](../src/jobboard_mcp/models.py) | Pydantic models for jobs, watchlist entries, and every tool result. |
 
@@ -179,6 +180,7 @@ flowchart TD
     inflight -- no --> slots["acquire per-host slot (PER_HOST_CONCURRENCY),<br/>then global slot (MAX_CONCURRENCY)"]
     slots --> send["GET, sending ETag / Last-Modified<br/>from any stale entry"]
     send --> exc{"timeout or<br/>transport error?"}
+    exc -- "blocked (text only)" --> fb(["raise Blocked"])
     exc -- timeout --> ft(["raise FetchTimeout"])
     exc -- other --> fe(["raise FetchError"])
     exc -- no --> retry{"429 or 5xx, with<br/>retries left (max 2)?"}
@@ -203,6 +205,25 @@ flowchart TD
 - Requests send a `User-Agent` of `jobboard-mcp/{version} (+repo URL)`.
 - Error pages from careers sites are returned instead of raised, because even a 404 page can
   link to the right board.
+
+### Careers pages
+
+Careers URLs come from the MCP client, so `get_text` sends them through `GuardedTransport`
+(in `urlguard.py`) to stop the server being pointed at internal addresses (SSRF). JSON requests
+skip it, because their hosts are fixed in the adapters. For every request, redirects included:
+
+1. The URL must be `http` or `https` on the default port, with no username or password.
+2. The host is resolved, and every address it resolves to must be public. Loopback, private,
+   link-local (including cloud metadata at `169.254.169.254`), carrier-grade NAT, multicast,
+   and IPv4-mapped forms of these are refused.
+3. The request connects to the checked address, with the original `Host` header and TLS name
+   (`sni_hostname`), so a DNS answer that changes between the check and the connect can't get
+   through.
+
+A refused URL raises `Blocked`, which is never retried, and `resolve_board` lists the page in
+`pages_checked` with the reason. Because connections are pinned by IP, the careers-page client
+keeps no connections alive (another site on the same IP would otherwise reuse one), and it
+ignores proxy environment variables (a proxy would do its own DNS lookup and skip the check).
 
 ## Board resolution
 
@@ -333,6 +354,7 @@ classDiagram
     Exception <|-- FetchError
     FetchError <|-- NotFound
     FetchError <|-- FetchTimeout
+    FetchError <|-- Blocked
     ValueError <|-- WatchlistError
     class FetchError {
         kind = error
@@ -345,9 +367,13 @@ classDiagram
     class FetchTimeout {
         kind = timeout
     }
+    class Blocked {
+        kind = blocked
+    }
 ```
 
 - A `FetchError`'s `kind` is the `CompanyStatus` value a sweep reports for that company.
+  `Blocked` is the exception: only careers-page fetches raise it, and sweeps never make those.
 - In single-target tools (`get_posting`, `find_company_posting`, and the rest), `ValueError`,
   `FetchError`, and `WatchlistError` become an MCP `ToolError` with a readable message.
   Anything else is a bug and surfaces as one.
@@ -365,3 +391,4 @@ classDiagram
 | Logic in `service.py`, MCP wiring in `server.py` | Tests can call the service directly, and the tool layer stays a thin, readable schema. |
 | ruamel.yaml round-trip, atomic replace | The watchlist is also edited by hand, so its comments and layout have to survive tool writes. Every write is re-read and validated before it replaces the file. |
 | Logs go to stderr as JSON | stdout carries the MCP stdio transport. |
+| Careers-page fetches are checked and pinned to public addresses | The URL comes from the client. Without the guard, a server other people can reach could be made to request internal services or cloud metadata. |

@@ -56,7 +56,9 @@ These are what make the server trustworthy, and review checks for them.
 
 1. **Public JSON APIs only.** Don't scrape LinkedIn, Indeed, Glassdoor, or any site whose terms
    forbid it. The only HTML the server reads is careers pages, in `resolve_board`, and only to
-   find board links. Don't extract job content from HTML.
+   find board links. Don't extract job content from HTML. Every careers-page request goes
+   through `get_text`, which keeps it on public addresses (`urlguard.py`). Don't fetch pages
+   any other way.
 2. **Read-only, except the watchlist.** The server writes nothing except `data/watchlist.yaml`,
    and only through `add_company` / `update_company`. Any new write tool must be removed when
    `WATCHLIST_READONLY=true` (add it to `WRITE_TOOLS` in `server.py`).
@@ -83,6 +85,7 @@ These are what make the server trustworthy, and review checks for them.
 | How one ATS's JSON maps to a `Job` | `adapters/<ats>.py` |
 | Filtering, flags, sorting | `filters.py` |
 | Request behavior: cache, retries, limits | `http.py` |
+| Which addresses careers-page fetches may reach | `urlguard.py` |
 | New settings | `config.py`, plus the table in the README |
 | New result fields | `models.py`, with a `Field(description=...)` if the name isn't self-explanatory |
 
@@ -97,6 +100,7 @@ tests/
   test_matching.py   title scoring
   test_adapters.py   each adapter against its fixtures, including empty boards and 404s
   test_http.py       cache, revalidation, retries, concurrency caps
+  test_urlguard.py   careers-page SSRF guard: address checks, redirects, pinning
   test_resolve.py    token candidates, link scanning, ranking
   test_watchlist.py  validation and comment-preserving edits
   test_tools.py      end-to-end tool calls through the MCP server (M1 tools)
@@ -117,6 +121,9 @@ Patterns to follow:
 - **The example watchlist:** the live tests sweep `data/watchlist.example.yaml`, not your own
   list. Keep at least one board per ATS in it.
 - `asyncio_mode = "auto"` is on, so async tests need no decorator.
+- **DNS:** an autouse fixture in `conftest.py` makes every host resolve to one public address
+  and turns off address pinning, so offline tests never do DNS and respx routes match on
+  hostnames. `test_urlguard.py` turns pinning back on where it tests it.
 
 ### Recording a fixture
 

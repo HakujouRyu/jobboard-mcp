@@ -14,3 +14,9 @@ All notable changes are recorded here. The format follows
 - `list_watchlist`, `add_company`, and `update_company`, plus `WATCHLIST_READONLY` to turn the
   write tools off.
 - An example watchlist, copied to `data/watchlist.yaml` on first run.
+
+### Security
+
+- Careers-page fetches (`resolve_board`, `find_company_posting`) only go to public addresses
+  over `http`/`https` on the default port. Every redirect is checked, and the connection is
+  pinned to the checked address so DNS rebinding can't get around it.

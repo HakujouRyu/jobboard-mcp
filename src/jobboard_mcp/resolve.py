@@ -19,7 +19,7 @@ from urllib.parse import urljoin, urlsplit
 from rapidfuzz import fuzz
 
 from jobboard_mcp.adapters import ADAPTERS
-from jobboard_mcp.http import FetchError, HttpClient, TextPage
+from jobboard_mcp.http import Blocked, FetchError, HttpClient, TextPage
 from jobboard_mcp.models import Ats, BoardCandidate, Confidence, Resolution
 from jobboard_mcp.normalize import normalize_text
 
@@ -174,6 +174,9 @@ async def _scan_pages(
         url = queue.pop(0)
         try:
             page: TextPage = (await http.get_text(url, refresh=refresh)).data
+        except Blocked as exc:
+            checked.append(f"{url} ({exc})")
+            continue
         except FetchError:
             checked.append(url)
             continue
