@@ -1,0 +1,56 @@
+name: Board problem
+description: One company's board fails, or its jobs come back with wrong pay, remote status, dates, or titles.
+labels: [board]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Real boards change often, so this is the most common kind of problem. The exact posting
+        and the raw value you see on it make it quick to fix.
+  - type: input
+    id: company
+    attributes:
+      label: Company
+    validations:
+      required: true
+  - type: dropdown
+    id: ats
+    attributes:
+      label: ATS
+      options: [Greenhouse, Ashby, Lever, Not sure]
+    validations:
+      required: true
+  - type: input
+    id: token
+    attributes:
+      label: Board token
+      description: The path segment after the ATS host, such as `gitlab` in job-boards.greenhouse.io/gitlab.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What's wrong?
+      multiple: true
+      options:
+        - The board fails (not_found, error, or timeout)
+        - Jobs are missing
+        - Pay is wrong or missing
+        - Remote status is wrong
+        - Posted date is wrong or missing
+        - resolve_board finds the wrong board, or none
+        - Something else
+    validations:
+      required: true
+  - type: input
+    id: posting
+    attributes:
+      label: Posting URL
+      description: One posting that shows the problem.
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: >-
+        What the server returned, and what the posting actually says. Quote the raw text, such
+        as `pay_raw` or the location string.
+    validations:
+      required: true

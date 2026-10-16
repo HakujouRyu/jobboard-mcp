@@ -1,5 +1,9 @@
 # jobboard-mcp
 
+[![PR checks](https://github.com/HakujouRyu/jobboard-mcp/actions/workflows/pr-checks.yml/badge.svg)](https://github.com/HakujouRyu/jobboard-mcp/actions/workflows/pr-checks.yml)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue)](pyproject.toml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
 A small [MCP](https://modelcontextprotocol.io) server that sweeps public applicant-tracking-system
 job boards (**Greenhouse, Ashby, Lever**) for a watchlist of companies and returns clean,
 normalized, filtered jobs.
@@ -155,6 +159,8 @@ Environment variables, all optional:
 | [docs/api-notes.md](docs/api-notes.md) | How the live Greenhouse / Ashby / Lever APIs differ from their docs |
 | [SPEC.md](SPEC.md) | Original design spec and milestones |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Setup, ground rules, tests, and how to add an ATS or a tool |
+| [CHANGELOG.md](CHANGELOG.md) | What changed in each release |
+| [SECURITY.md](SECURITY.md) | How to report a vulnerability, and what's in scope |
 
 ## Status
 
@@ -173,7 +179,8 @@ uv run pytest -m live                # opt-in: hits the real board APIs
 uv run ruff check . && uv run pyright
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md). Everyone taking part is expected to follow the
+[code of conduct](CODE_OF_CONDUCT.md).
 
 ## License
 
