@@ -3,8 +3,9 @@
 A small, read-only [MCP](https://modelcontextprotocol.io) server that sweeps public applicant-tracking-system
 job boards (Greenhouse, Ashby, Lever) for a watchlist of companies and returns clean, normalized, filtered jobs.
 
-It talks only to the public JSON board APIs. It never scrapes career pages, LinkedIn, Indeed, or anything else,
-and it never writes anywhere. See [SPEC.md](SPEC.md) for the design and
+It talks only to the public JSON board APIs. The one exception is `resolve_board`, which reads a company's
+careers page (and at most two same-site careers links) only to find which board it links to. It never scrapes
+LinkedIn, Indeed, or job content from web pages, and the only file it writes is its own watchlist. See [SPEC.md](SPEC.md) for the design and
 [docs/api-notes.md](docs/api-notes.md) for how the live APIs differ from their docs.
 
 ## Tools
@@ -13,6 +14,11 @@ and it never writes anywhere. See [SPEC.md](SPEC.md) for the design and
 |------|--------------|
 | `sweep_boards` | Fetches every watched board in parallel, applies title / remote / pay / date / seen-before filters, and returns matching jobs newest first, with per-company status (`ok`, `not_found`, `no_board`, `error`, `timeout`). |
 | `get_posting` | One posting by URL or `{ats, token, job_id}`, with its full plain-text description and the best pay data (Greenhouse pay-transparency ranges included). |
+| `find_company_posting` | Finds a role seen on LinkedIn, Indeed, etc. on the company's own board (watchlist board, or resolved on the fly). Up to 5 fuzzy-matched candidates, scored 0-100. |
+| `resolve_board` | Works out which Greenhouse, Ashby, or Lever board a company uses: probes likely tokens and scans the careers page (plus up to two same-site careers links) for board links. Read-only. |
+| `is_posting_live` | Whether a posting is still open, via the ATS API. Ashby has no per-job endpoint, so it checks the (usually cached) board listing. |
+| `list_watchlist` | Watched companies, filterable by board / tag / domain. |
+| `add_company`, `update_company` | The only writes, and only to `data/watchlist.yaml`. Boards are validated with a live fetch before saving; comments and formatting are preserved. Not registered when `WATCHLIST_READONLY=true`. |
 
 ### Normalization rules
 
@@ -73,6 +79,7 @@ Environment variables (all optional):
 | `PER_HOST_CONCURRENCY` | `4` | Per-host cap |
 | `HTTP_TIMEOUT_SECONDS` | `15` | Retries 429/5xx twice with backoff, honoring `Retry-After` |
 | `LOG_LEVEL` | `INFO` | JSON logs go to stderr (stdout is the MCP transport) |
+| `WATCHLIST_READONLY` | `false` | `true` removes `add_company` and `update_company` (for a public deployment) |
 
 ## Layout
 
@@ -84,6 +91,8 @@ src/jobboard_mcp/
   normalize.py   remote / pay / date / HTML helpers (pure)
   filters.py     sweep filters, flags, sorting (pure)
   http.py        shared client: cache, retries, concurrency caps
-  watchlist.py   YAML loading and validation
+  watchlist.py   YAML loading, validation, and comment-preserving edits
+  resolve.py     board detection (token probes + careers-page links)
+  matching.py    fuzzy title matching (pure)
 tests/fixtures/  trimmed real API responses
 ```
