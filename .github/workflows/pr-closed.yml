@@ -1,0 +1,73 @@
+# Housekeeping when a PR closes: live tests against the merged code, then branch and cache
+# cleanup.
+#
+# pull_request_target so the token can delete branches and caches for PRs from forks too. That's
+# safe here because nothing runs the PR's code: the live tests check out the merge commit, which
+# is already on the base branch.
+name: PR closed
+
+on:
+  pull_request_target:
+    types: [closed]
+
+permissions: {}
+
+jobs:
+  live-tests:
+    if: github.event.pull_request.merged
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: Install
+        run: uv sync --locked
+
+      # A failure can mean a board changed rather than a bug. See "Checks" in CONTRIBUTING.md.
+      - name: Live tests
+        run: uv run pytest -m live
+
+  delete-branch:
+    if: >-
+      github.event.pull_request.merged
+      && github.event.pull_request.head.repo.full_name == github.repository
+      && github.event.pull_request.head.ref != github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Delete head branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          # The branch may already be gone (deleted from the PR page, or by the repo setting).
+          gh api -X DELETE "repos/$GITHUB_REPOSITORY/git/refs/heads/$BRANCH" \
+            || echo "Branch $BRANCH was already deleted."
+
+  delete-caches:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Delete caches for this PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          REF: refs/pull/${{ github.event.pull_request.number }}/merge
+        run: |
+          ids=$(gh cache list --ref "$REF" --limit 100 --json id --jq '.[].id')
+          if [ -z "$ids" ]; then
+            echo "No caches for $REF."
+            exit 0
+          fi
+          for id in $ids; do
+            gh cache delete "$id"
+          done

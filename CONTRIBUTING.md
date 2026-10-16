@@ -37,6 +37,14 @@ Run them when you change an adapter, `http.py`, or `resolve.py`. They depend on 
 which change, so a live failure can mean a board changed rather than a bug. Look at which one
 failed before you change any code.
 
+### CI
+
+GitHub Actions runs the three checks above on every PR
+([pr-checks.yml](.github/workflows/pr-checks.yml)). When a PR merges,
+[pr-closed.yml](.github/workflows/pr-closed.yml) runs the live tests against the merge commit
+and deletes the head branch. A live failure there doesn't undo the merge, so check the run after
+merging. Closing a PR, merged or not, also deletes its Actions caches.
+
 ## Ground rules
 
 These are what make the server trustworthy, and review checks for them.
