@@ -18,6 +18,13 @@ class BoardListing:
 
 
 @dataclass(frozen=True)
+class LiveCheck:
+    live: bool
+    reason: str
+    cache_hit: bool
+
+
+@dataclass(frozen=True)
 class PostingRef:
     ats: Ats
     token: str
@@ -41,6 +48,12 @@ class Adapter(Protocol):
         self, http: HttpClient, company: str, token: str, job_id: str, *, refresh: bool = False
     ) -> Job:
         """One job with the best available pay data. Raises NotFound if it is gone."""
+        ...
+
+    async def check_live(
+        self, http: HttpClient, token: str, job_id: str, *, refresh: bool = False
+    ) -> LiveCheck:
+        """Whether the posting is still up, from the ATS API (never a page fetch)."""
         ...
 
     def needs_detail_for_pay(self, job: Job) -> bool:

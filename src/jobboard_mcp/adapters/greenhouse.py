@@ -9,11 +9,12 @@ from urllib.parse import parse_qs, urlsplit
 from jobboard_mcp.adapters.base import (
     BoardListing,
     ListingMemo,
+    LiveCheck,
     PostingRef,
     build_job,
     dedupe,
 )
-from jobboard_mcp.http import HttpClient
+from jobboard_mcp.http import HttpClient, NotFound
 from jobboard_mcp.models import Ats, Job, Pay, PaySource, raw_json
 from jobboard_mcp.normalize import (
     PayRange,
@@ -111,6 +112,19 @@ class GreenhouseAdapter:
     ) -> Job:
         fetched = await http.get_json(self.detail_url(token, job_id), refresh=refresh)
         return self.to_job(fetched.data, company, token)
+
+    async def check_live(
+        self, http: HttpClient, token: str, job_id: str, *, refresh: bool = False
+    ) -> LiveCheck:
+        try:
+            fetched = await http.get_json(self.detail_url(token, job_id), refresh=refresh)
+        except NotFound as exc:
+            return LiveCheck(
+                False, f"{self.ats.value} returned HTTP {exc.status} for the job", False
+            )
+        return LiveCheck(
+            True, f"{self.ats.value} job endpoint returned the posting", fetched.cache_hit
+        )
 
     def needs_detail_for_pay(self, job: Job) -> bool:
         return job.pay_source is PaySource.NONE

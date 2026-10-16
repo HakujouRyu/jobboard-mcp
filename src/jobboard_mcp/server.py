@@ -18,14 +18,28 @@ from jobboard_mcp import __version__
 from jobboard_mcp.config import Settings, configure_logging
 from jobboard_mcp.filters import DEFAULT_REMOTE, DEFAULT_TITLE_EXCLUDE, SweepFilters
 from jobboard_mcp.http import FetchError
-from jobboard_mcp.models import Ats, Job, Remote, SweepResult
+from jobboard_mcp.models import (
+    Ats,
+    FindResult,
+    Job,
+    LiveResult,
+    Remote,
+    Resolution,
+    SweepResult,
+    WatchlistChange,
+    WatchlistEntry,
+    WatchlistView,
+)
 from jobboard_mcp.service import JobBoardService
 from jobboard_mcp.watchlist import WatchlistError
 
 INSTRUCTIONS = """\
 Searches public Greenhouse, Ashby, and Lever job boards for a watchlist of companies and returns
-normalized jobs. Use sweep_boards for a filtered sweep and get_posting for one full posting.
-Read-only; public data only. Remote status is never guessed: 'unknown' jobs are kept and flagged.
+normalized jobs. sweep_boards: filtered sweep of every watched board. get_posting: one full
+posting. find_company_posting: find a role seen elsewhere on the company's own board.
+resolve_board: work out a company's board. is_posting_live: check a posting is still open.
+list_watchlist / add_company / update_company: manage the watchlist (the only writes).
+Public data only. Remote status is never guessed: 'unknown' jobs are kept and flagged.
 """
 
 _service: JobBoardService | None = None
@@ -175,6 +189,169 @@ async def get_posting(
         raise ToolError(str(exc)) from exc
 
 
+@mcp.tool(annotations=_READ_ONLY)
+async def find_company_posting(
+    company: Annotated[str, Field(description="Company name, e.g. as shown on LinkedIn.")],
+    title: Annotated[str, Field(description="Job title as seen elsewhere.")],
+    location: Annotated[
+        str | None, Field(description="Optional location as seen elsewhere; breaks ties.")
+    ] = None,
+    refresh: Annotated[bool, Field(description="Bypass the cache.")] = False,
+) -> FindResult:
+    """Find a role seen on LinkedIn, Indeed, etc. on the company's own job board. Uses the
+    watchlist board if known, otherwise resolves it. Returns up to 5 candidates scored 0-100
+    (titles normalized: Sr./Senior, SWE, levels; seniority or role mismatches score lower)."""
+    try:
+        return await get_service().find_company_posting(company, title, location, refresh=refresh)
+    except (ValueError, FetchError, WatchlistError) as exc:
+        raise ToolError(str(exc)) from exc
+
+
+@mcp.tool(annotations=_READ_ONLY)
+async def resolve_board(
+    company: Annotated[str | None, Field(description="Company name.")] = None,
+    careers_url: Annotated[
+        str | None,
+        Field(description="Careers page. Default: the watchlist's careers_url for the company."),
+    ] = None,
+    refresh: Annotated[bool, Field(description="Bypass the cache.")] = False,
+) -> Resolution:
+    """Work out which Greenhouse, Ashby, or Lever board a company uses: probes likely tokens and
+    scans the careers page (plus up to two same-site careers links) for board links. Read-only:
+    record a result with update_company."""
+    try:
+        return await get_service().resolve_board(company, careers_url, refresh=refresh)
+    except (ValueError, WatchlistError) as exc:
+        raise ToolError(str(exc)) from exc
+
+
+@mcp.tool(annotations=_READ_ONLY)
+async def is_posting_live(
+    url: Annotated[
+        str | None,
+        Field(description="A Greenhouse, Ashby, or Lever posting URL. Or pass ats, token, job_id."),
+    ] = None,
+    ats: Annotated[Ats | None, Field(description="greenhouse, ashby, or lever.")] = None,
+    token: Annotated[str | None, Field(description="Board token.")] = None,
+    job_id: Annotated[str | None, Field(description="The ATS's own job id.")] = None,
+    refresh: Annotated[
+        bool, Field(description="Check now instead of trusting a cached answer (up to 3 h old).")
+    ] = False,
+) -> LiveResult:
+    """Check whether a posting is still open, via the ATS API rather than the page. Ashby has no
+    per-job endpoint, so its answer comes from the (usually cached) board listing."""
+    try:
+        return await get_service().is_posting_live(
+            url=url, ats=ats, token=token, job_id=job_id, refresh=refresh
+        )
+    except (ValueError, FetchError) as exc:
+        raise ToolError(str(exc)) from exc
+
+
+@mcp.tool(annotations=_READ_ONLY)
+async def list_watchlist(
+    has_board: Annotated[
+        bool | None,
+        Field(description="true: only companies with a known board; false: careers page only."),
+    ] = None,
+    tag: Annotated[
+        str | None, Field(description="Only companies with this tag, e.g. 'hww'.")
+    ] = None,
+    domain: Annotated[
+        str | None, Field(description="Only companies whose domains contain this text.")
+    ] = None,
+) -> WatchlistView:
+    """List watched companies with their boards, domains, tags, and interview notes."""
+    try:
+        return get_service().list_watchlist(has_board=has_board, tag=tag, domain=domain)
+    except WatchlistError as exc:
+        raise ToolError(str(exc)) from exc
+
+
+_WRITES = ToolAnnotations(
+    read_only_hint=False, destructive_hint=False, idempotent_hint=False, open_world_hint=True
+)
+
+
+@mcp.tool(annotations=_WRITES)
+async def add_company(
+    company: Annotated[str, Field(description="Display name.")],
+    ats: Annotated[
+        Ats | None, Field(description="greenhouse, ashby, or lever; omit if unknown.")
+    ] = None,
+    token: Annotated[str | None, Field(description="Board token; required with ats.")] = None,
+    careers_url: Annotated[str | None, Field(description="Careers page URL.")] = None,
+    domains: Annotated[list[str] | None, Field(description="e.g. ['dev tools'].")] = None,
+    tags: Annotated[list[str] | None, Field(description="e.g. ['hww'].")] = None,
+    interview_note: Annotated[str | None, Field(description="Interview process notes.")] = None,
+    notes: Annotated[str | None, Field(description="Anything else.")] = None,
+) -> WatchlistChange:
+    """Add a company to the server's watchlist. A board, if given, is validated with a live fetch
+    first; nothing is saved if that fails. Writes only data/watchlist.yaml."""
+    entry = WatchlistEntry(
+        company=company.strip(),
+        ats=ats,
+        token=token,
+        careers_url=careers_url,
+        domains=domains or [],
+        tags=tags or [],
+        interview_note=interview_note,
+        notes=notes,
+    )
+    try:
+        return await get_service().add_company(entry)
+    except WatchlistError as exc:
+        raise ToolError(str(exc)) from exc
+
+
+@mcp.tool(annotations=_WRITES)
+async def update_company(
+    company: Annotated[str, Field(description="Current name on the watchlist.")],
+    new_name: Annotated[str | None, Field(description="Rename the company.")] = None,
+    ats: Annotated[Ats | None, Field(description="Set the ATS (with token).")] = None,
+    token: Annotated[str | None, Field(description="Set the board token.")] = None,
+    clear_board: Annotated[bool, Field(description="Remove the ats and token.")] = False,
+    careers_url: Annotated[str | None, Field(description="New careers URL; '' clears.")] = None,
+    domains: Annotated[list[str] | None, Field(description="Replace domains; [] clears.")] = None,
+    tags: Annotated[list[str] | None, Field(description="Replace tags; [] clears.")] = None,
+    interview_note: Annotated[str | None, Field(description="New note; '' clears.")] = None,
+    notes: Annotated[str | None, Field(description="New notes; '' clears.")] = None,
+) -> WatchlistChange:
+    """Change a watchlist entry. Only the fields you pass change. A new board is validated with a
+    live fetch first; nothing is saved if that fails. Writes only data/watchlist.yaml."""
+    changes: dict[str, object] = {}
+    if new_name is not None:
+        changes["company"] = new_name.strip()
+    if clear_board:
+        if ats is not None or token is not None:
+            raise ToolError("pass clear_board or ats/token, not both")
+        changes["ats"] = changes["token"] = None
+    if ats is not None:
+        changes["ats"] = ats
+    if token is not None:
+        changes["token"] = token
+    for key, value in (
+        ("careers_url", careers_url),
+        ("interview_note", interview_note),
+        ("notes", notes),
+    ):
+        if value is not None:
+            changes[key] = value or None
+    if domains is not None:
+        changes["domains"] = domains
+    if tags is not None:
+        changes["tags"] = tags
+    if not changes:
+        raise ToolError("nothing to change")
+    try:
+        return await get_service().update_company(company, changes)
+    except WatchlistError as exc:
+        raise ToolError(str(exc)) from exc
+
+
+WRITE_TOOLS = ("add_company", "update_company")
+
+
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(prog="jobboard-mcp", description=INSTRUCTIONS)
     parser.add_argument("--http", action="store_true", help="streamable HTTP (not until M3)")
@@ -183,6 +360,9 @@ def main(argv: list[str] | None = None) -> None:
         sys.exit("jobboard-mcp: only the stdio transport is available in this version")
     settings = Settings.from_env()
     configure_logging(settings.log_level)
+    if settings.watchlist_readonly:
+        for name in WRITE_TOOLS:
+            mcp.remove_tool(name)
     set_service(JobBoardService(settings))
     mcp.run("stdio")
 

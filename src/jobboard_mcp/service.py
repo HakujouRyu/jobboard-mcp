@@ -2,6 +2,8 @@
 
 A sweep runs in two phases: fetch every board in parallel and apply the cheap filters, then
 fetch Greenhouse detail pages (pay transparency) only for the survivors that still lack pay.
+
+The watchlist tools are the only writers, and they write only the server's own watchlist file.
 """
 
 from __future__ import annotations
@@ -10,24 +12,33 @@ import asyncio
 import logging
 import time
 from collections import Counter
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, date, datetime
+from typing import Any
 
 from jobboard_mcp.adapters import ADAPTERS, parse_posting_url
 from jobboard_mcp.adapters.base import BoardListing
 from jobboard_mcp.config import Settings
 from jobboard_mcp.filters import SweepFilters, flag, passes_pay, prefilter, sort_jobs
-from jobboard_mcp.http import FetchError, HttpClient
+from jobboard_mcp.http import FetchError, HttpClient, NotFound
+from jobboard_mcp.matching import rank_postings
 from jobboard_mcp.models import (
     Ats,
+    BoardCheck,
     CompanyResult,
     CompanyStatus,
+    FindResult,
     Job,
+    LiveResult,
+    Resolution,
     SweepResult,
+    WatchlistChange,
     WatchlistEntry,
+    WatchlistView,
 )
-from jobboard_mcp.watchlist import load_watchlist
+from jobboard_mcp.resolve import resolve_board
+from jobboard_mcp.watchlist import WatchlistError, WatchlistStore
 
 log = logging.getLogger(__name__)
 
@@ -54,12 +65,17 @@ class JobBoardService:
         settings: Settings,
         http: HttpClient | None = None,
         *,
+        store: WatchlistStore | None = None,
         watchlist: Callable[[], list[WatchlistEntry]] | None = None,
         now: Callable[[], datetime] = lambda: datetime.now(UTC),
     ) -> None:
+        """``watchlist`` overrides how entries are read (tests); edits always go to ``store``."""
         self.settings = settings
         self.http = http or HttpClient(settings)
-        self._watchlist = watchlist or (lambda: load_watchlist(settings.watchlist_path))
+        self.store = store or WatchlistStore(
+            settings.watchlist_path, readonly=settings.watchlist_readonly
+        )
+        self._watchlist = watchlist or self.store.load
         self._now = now
 
     async def aclose(self) -> None:
@@ -200,7 +216,149 @@ class JobBoardService:
             ats, token, job_id = ref.ats, ref.token, ref.job_id
         if ats is None or not token or not job_id:
             raise ValueError("pass either url, or all of ats, token, and job_id")
-        company = next(
-            (e.company for e in self._watchlist() if e.ats is ats and e.token == token), token
+        return await ADAPTERS[ats].get_job(
+            self.http, self._company_for(ats, token), token, job_id, refresh=refresh
         )
-        return await ADAPTERS[ats].get_job(self.http, company, token, job_id, refresh=refresh)
+
+    def _company_for(self, ats: Ats, token: str) -> str:
+        key = token.casefold()
+        return next(
+            (
+                e.company
+                for e in self._watchlist()
+                if e.ats is ats and (e.token or "").casefold() == key
+            ),
+            token,
+        )
+
+    def _entry(self, company: str) -> WatchlistEntry | None:
+        key = company.strip().casefold()
+        return next((e for e in self._watchlist() if e.company.casefold() == key), None)
+
+    # ------------------------------------------------------------------ resolve / find
+
+    async def resolve_board(
+        self, company: str | None, careers_url: str | None = None, *, refresh: bool = False
+    ) -> Resolution:
+        """Read-only. Falls back to the watchlist's careers_url when none is given."""
+        if company and not careers_url:
+            entry = self._entry(company)
+            careers_url = entry.careers_url if entry else None
+        return await resolve_board(self.http, company, careers_url, refresh=refresh)
+
+    async def find_company_posting(
+        self, company: str, title: str, location: str | None = None, *, refresh: bool = False
+    ) -> FindResult:
+        entry = self._entry(company)
+        name = entry.company if entry else company.strip()
+        resolution: Resolution | None = None
+        ats, token = (entry.ats, entry.token) if entry else (None, None)
+        if ats is None or token is None:
+            resolution = await self.resolve_board(name, entry.careers_url if entry else None)
+            ats, token = resolution.ats, resolution.token
+        result = FindResult(company=name, title=title, board_found=False, resolution=resolution)
+        if ats is None or token is None:
+            return result
+        try:
+            listing = await ADAPTERS[ats].list_jobs(self.http, name, token, refresh=refresh)
+        except NotFound:
+            return result
+        result.board_found, result.ats, result.token = True, ats, token
+        result.candidates = rank_postings(listing.jobs, title, location)
+        return result
+
+    # ------------------------------------------------------------------ liveness
+
+    async def is_posting_live(
+        self,
+        *,
+        url: str | None = None,
+        ats: Ats | None = None,
+        token: str | None = None,
+        job_id: str | None = None,
+        refresh: bool = False,
+    ) -> LiveResult:
+        if url:
+            ref = parse_posting_url(url)
+            if ref is None:
+                raise ValueError(f"not a recognized Greenhouse, Ashby, or Lever posting URL: {url}")
+            ats, token, job_id = ref.ats, ref.token, ref.job_id
+        if ats is None or not token or not job_id:
+            raise ValueError("pass either url, or all of ats, token, and job_id")
+        check = await ADAPTERS[ats].check_live(self.http, token, job_id, refresh=refresh)
+        return LiveResult(
+            live=check.live,
+            checked_at=self._now(),
+            reason=check.reason,
+            ats=ats,
+            token=token,
+            job_id=job_id,
+            from_cache=check.cache_hit,
+        )
+
+    # ------------------------------------------------------------------ watchlist
+
+    def list_watchlist(
+        self,
+        *,
+        has_board: bool | None = None,
+        tag: str | None = None,
+        domain: str | None = None,
+    ) -> WatchlistView:
+        entries = self._watchlist()
+        if has_board is not None:
+            entries = [e for e in entries if (e.ats is not None) is has_board]
+        if tag:
+            entries = [e for e in entries if tag.casefold() in (t.casefold() for t in e.tags)]
+        if domain:
+            d = domain.casefold()
+            entries = [e for e in entries if any(d in x.casefold() for x in e.domains)]
+        return WatchlistView(companies=entries, total=len(entries), readonly=self.store.readonly)
+
+    async def _check_board(self, entry: WatchlistEntry) -> BoardCheck:
+        assert entry.ats is not None and entry.token is not None
+        try:
+            listing = await ADAPTERS[entry.ats].list_jobs(
+                self.http, entry.company, entry.token, refresh=True
+            )
+        except FetchError as exc:
+            return BoardCheck(status=CompanyStatus(exc.kind), error=str(exc))
+        return BoardCheck(status=CompanyStatus.OK, jobs=len(listing.jobs))
+
+    def _require_writable(self) -> None:
+        if self.store.readonly:
+            raise WatchlistError("watchlist is read-only on this server (WATCHLIST_READONLY)")
+
+    async def _validated(self, entry: WatchlistEntry) -> BoardCheck:
+        assert entry.ats is not None and entry.token is not None
+        check = await self._check_board(entry)
+        if check.status is not CompanyStatus.OK:
+            raise WatchlistError(
+                f"board {entry.ats.value}:{entry.token} failed validation: "
+                f"{check.status.value} ({check.error})"
+            )
+        return check
+
+    async def add_company(self, entry: WatchlistEntry) -> WatchlistChange:
+        """Validate the board with a live fetch, then append. Nothing is saved on failure."""
+        self._require_writable()
+        if self._entry(entry.company) is not None:
+            raise WatchlistError(f"{entry.company!r} is already on the watchlist")
+        check = None
+        if entry.ats is not None and entry.token is not None:
+            check = await self._validated(entry)
+        return WatchlistChange(entry=self.store.add(entry), board_check=check)
+
+    async def update_company(self, company: str, changes: Mapping[str, Any]) -> WatchlistChange:
+        """Partial update. A new or changed board is validated live before saving."""
+        self._require_writable()
+        current = self._entry(company)
+        if current is None:
+            raise WatchlistError(f"{company!r} is not on the watchlist")
+        merged = WatchlistEntry.model_validate({**current.model_dump(), **changes})
+        check = None
+        board_changed = (merged.ats, merged.token) != (current.ats, current.token)
+        if board_changed and merged.ats is not None and merged.token is not None:
+            check = await self._validated(merged)
+        saved = self.store.update(current.company, changes)
+        return WatchlistChange(entry=saved, board_check=check)

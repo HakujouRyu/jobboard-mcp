@@ -9,6 +9,7 @@ from urllib.parse import urlsplit
 from jobboard_mcp.adapters.base import (
     BoardListing,
     ListingMemo,
+    LiveCheck,
     PostingRef,
     build_job,
     dedupe,
@@ -128,6 +129,18 @@ class AshbyAdapter:
             if job.native_id == job_id:
                 return job
         raise NotFound(self.list_url(token), f"job {job_id} not on board {token}")
+
+    async def check_live(
+        self, http: HttpClient, token: str, job_id: str, *, refresh: bool = False
+    ) -> LiveCheck:
+        # No per-job endpoint: look for the job on the (usually cached) board.
+        try:
+            listing = await self.list_jobs(http, token, token, refresh=refresh)
+        except NotFound:
+            return LiveCheck(False, f"ashby board {token!r} not found", False)
+        if any(j.native_id == job_id.lower() for j in listing.jobs):
+            return LiveCheck(True, "job is listed on the ashby board", listing.cache_hit)
+        return LiveCheck(False, "job is no longer listed on the ashby board", listing.cache_hit)
 
     def needs_detail_for_pay(self, job: Job) -> bool:
         return False

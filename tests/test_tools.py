@@ -246,10 +246,22 @@ async def test_get_posting_errors(respx_mock: respx.MockRouter, service: JobBoar
 
 async def test_tools_have_descriptions_and_schemas() -> None:
     tools = {t.name: t for t in await server.mcp.list_tools()}
-    assert set(tools) == {"sweep_boards", "get_posting"}
+    assert set(tools) == {
+        "sweep_boards",
+        "get_posting",
+        "find_company_posting",
+        "resolve_board",
+        "is_posting_live",
+        "list_watchlist",
+        *server.WRITE_TOOLS,
+    }
     for tool in tools.values():
         assert tool.description and len(tool.description) > 40
         assert tool.output_schema
-        assert tool.annotations and tool.annotations.read_only_hint
+        assert tool.annotations is not None
+        writes = tool.name in server.WRITE_TOOLS
+        assert tool.annotations.read_only_hint is (not writes), tool.name
+        if writes:
+            assert tool.annotations.destructive_hint is False
         for name, prop in tool.input_schema["properties"].items():
             assert prop.get("description"), f"{tool.name}.{name} has no description"
