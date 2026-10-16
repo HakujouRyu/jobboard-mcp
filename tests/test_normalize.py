@@ -45,6 +45,10 @@ from jobboard_mcp.normalize import (
         ("Remote, Denver, CO", Remote.REMOTE_US),
         ("Remote - Bangalore, IN", Remote.REMOTE_OTHER),
         ("Remote - EMEA", Remote.REMOTE_OTHER),
+        # Supabase
+        ("Remote, AMER", Remote.REMOTE_US),
+        ("Remote, APAC", Remote.REMOTE_OTHER),
+        ("Remote, Global", Remote.REMOTE_GLOBAL),
         ("Anywhere", Remote.REMOTE_GLOBAL),
         ("Remote - Worldwide", Remote.REMOTE_GLOBAL),
         ("Hybrid - New York", Remote.HYBRID),
@@ -77,6 +81,12 @@ def test_structured_remote_uses_country() -> None:
     )
     # Lever: remote in Hyderabad, country IN
     assert classify_remote(["Hyderabad"], "remote", ["IN"]) is Remote.REMOTE_OTHER
+
+
+def test_structured_country_lists() -> None:
+    # PostHog: addressCountry "US | EU"
+    assert classify_remote(["Remote"], "Remote", ["US | EU"]) is Remote.REMOTE_US
+    assert classify_remote(["Remote"], "Remote", ["European Union"]) is Remote.REMOTE_OTHER
 
 
 def test_structured_remote_region_text() -> None:

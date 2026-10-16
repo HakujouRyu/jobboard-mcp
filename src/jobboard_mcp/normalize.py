@@ -89,7 +89,9 @@ _US_STATE_ABBR = {
     "WA", "WV", "WI", "WY", "DC",
 }  # fmt: skip
 _US_PATTERNS = re.compile(
-    r"\b(united states|usa|us|north america|americas|us[- ]based)\b|\bu\.s\.(a\.)?(?!\w)"
+    # AMER / NAMER / NORAM are region shorthands that include the US.
+    r"\b(united states|usa|us|north america|americas|amer|namer|noram|us[- ]based)\b"
+    r"|\bu\.s\.(a\.)?(?!\w)"
     r"|\b(" + "|".join(sorted(_US_STATES, key=len, reverse=True)) + r")\b",
     re.I,
 )
@@ -138,10 +140,15 @@ def _region(segment: str) -> str | None:
 
 
 def _country_region(country: str) -> str | None:
-    c = country.strip().lower()
-    if not c:
-        return None
-    return "us" if c in _US_COUNTRY else "other"
+    """Structured country values can still be lists ("US | EU"); any US part counts."""
+    regions: set[str] = set()
+    for part in re.split(r"[|;,/]", country):
+        c = part.strip().lower()
+        if c:
+            regions.add("us" if c in _US_COUNTRY else _region(part) or "other")
+    if "us" in regions:
+        return "us"
+    return "other" if regions else None
 
 
 def classify_remote(

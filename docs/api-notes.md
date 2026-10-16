@@ -39,6 +39,8 @@ trimmed copies of these responses (whole job objects, fewer of them).
   `summaryComponents` already holds the overall min/max across tiers.
 - `employmentType`: `FullTime`, `PartTime`, `Intern`, `Contract`, `Temporary`.
 - `isListed` exists; unlisted jobs are skipped.
+- `workplaceType` and `address` can be null (Supabase, Notion). `addressCountry` can be a list
+  in one string (PostHog: `"US | EU"`). Regions use shorthands like `AMER`, `APAC`, `EMEA`.
 - Unknown token → 404 with plain-text body `Not Found`.
 - On Windows, curl (schannel) can fail TLS revocation checks against this host. httpx is unaffected.
 
