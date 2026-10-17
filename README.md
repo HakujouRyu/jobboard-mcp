@@ -91,7 +91,7 @@ returns this (abridged):
 - **Employment type:** from the ATS field, or `contract` when the title says so ("(Contract)",
   "Contract Software Engineer").
 - **Titles:** plain filter terms match whole words plus a plural, so the default `intern`
-  exclude keeps "Internal Tools Engineer". Prefix a term with `re:` for a regex.
+  exclude keeps "Internal Tools Engineer".
 - **Missing data** never silently drops a job. Every job's `flags` say what's missing
   (`pay_unknown`, `pay_not_usd`, `date_unknown`, `remote_unknown`), whatever filters you use.
 

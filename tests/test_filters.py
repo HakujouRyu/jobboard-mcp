@@ -48,7 +48,7 @@ def make_job(n: int = 1, **kw: object) -> Job:
         ("engineer", "Engineer", True),
         ("engineer", "Forward Deployed Engineers", True),
         ("engineer", "Engineering Manager", False),
-        ("re:engineer(ing)?", "Engineering Manager", True),
+        ("re:engineer(ing)?", "Engineering Manager", False),  # literal text, not a regex
         ("c++", "C++ Developer", True),
     ],
 )

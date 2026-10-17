@@ -24,17 +24,14 @@ def compile_terms(terms: Iterable[str]) -> list[re.Pattern[str]]:
 
     "intern" matches "Interns" but not "Internal"; "engineer" does not match "Engineering".
 
-    Prefix a term with ``re:`` to use it as a raw regular expression.
+    Terms are always escaped. Raw regexes from the client aren't accepted, because a pattern
+    like ``(a+)+$`` can backtrack for seconds and block the event loop.
     """
     patterns: list[re.Pattern[str]] = []
     for term in terms:
-        t = term.strip()
-        if not t:
-            continue
-        if t.startswith("re:"):
-            patterns.append(re.compile(t[3:], re.I))
-        else:
-            body = r"\s+".join(re.escape(w) for w in t.split())
+        words = term.split()
+        if words:
+            body = r"\s+".join(re.escape(w) for w in words)
             patterns.append(re.compile(rf"(?<!\w){body}(?:e?s)?(?!\w)", re.I))
     return patterns
 

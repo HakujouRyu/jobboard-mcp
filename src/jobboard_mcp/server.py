@@ -104,8 +104,7 @@ async def sweep_boards(
         Field(
             description=(
                 "Keep titles matching any term. Plain terms match whole words, case-insensitively,"
-                " plus a plural ('engineer' matches 'Engineers', not 'Engineering'). Prefix with"
-                " 're:' for a regex."
+                " plus a plural ('engineer' matches 'Engineers', not 'Engineering')."
             )
         ),
     ] = None,

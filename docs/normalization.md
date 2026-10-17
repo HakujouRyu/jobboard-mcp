@@ -207,7 +207,8 @@ flowchart LR
 - Plain terms match **whole words**, ignore case, and allow a plural: `engineer` matches
   "Engineers" but not "Engineering", and `intern` matches "Interns" but not "Internal Tools".
   Multi-word terms allow any whitespace between the words.
-- Prefix a term with `re:` to use a regular expression: `re:\bsr\.?\b`.
+- Terms are matched as plain text, never as regular expressions. A client-supplied regex can
+  backtrack for seconds on a short title and stall the whole server.
 - The default `title_exclude` is `intern`, `internship`, `new grad`, `principal`. Pass `[]` to
   exclude nothing.
 
