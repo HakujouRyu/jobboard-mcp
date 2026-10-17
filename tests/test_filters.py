@@ -42,6 +42,11 @@ def make_job(n: int = 1, **kw: object) -> Job:
         ("intern", "International Payments Lead", False),
         ("internship", "Summer Internship 2027", True),
         ("new grad", "Software Engineer, New  Grad", True),
+        ("full stack", "Full-Stack Engineer", True),
+        ("full-stack", "Full Stack Engineer", True),
+        ("full stack", "Fullstack Engineer", False),  # no separator: pass "fullstack" too
+        ("entry level", "Software Engineer (Entry-Level)", True),
+        ("e-commerce", "E-Commerce Analyst", True),
         ("principal", "Principal Engineer", True),
         ("sre", "SRE II", True),
         ("sre", "Presales Engineer", False),
@@ -55,6 +60,10 @@ def make_job(n: int = 1, **kw: object) -> Job:
 def test_compile_terms(term: str, title: str, hit: bool) -> None:
     (pattern,) = compile_terms([term])
     assert bool(pattern.search(title)) is hit
+
+
+def test_blank_and_separator_only_terms_are_ignored() -> None:
+    assert compile_terms(["", "  ", "-", " - "]) == []
 
 
 def test_title_include_and_exclude() -> None:

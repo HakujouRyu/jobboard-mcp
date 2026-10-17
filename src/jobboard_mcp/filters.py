@@ -21,15 +21,17 @@ def compile_terms(terms: Iterable[str]) -> list[re.Pattern[str]]:
     """Plain terms match whole words, case-insensitively, plus a plain plural.
 
     "intern" matches "Interns" but not "Internal"; "engineer" does not match "Engineering".
+    Words in a term may be separated by spaces or hyphens, in the term or the title, so
+    "full stack" and "full-stack" both match "Full-Stack" and "Full Stack".
 
     Terms are always escaped. Raw regexes from the client aren't accepted, because a pattern
     like ``(a+)+$`` can backtrack for seconds and block the event loop.
     """
     patterns: list[re.Pattern[str]] = []
     for term in terms:
-        words = term.split()
+        words = [w for w in re.split(r"[\s-]+", term) if w]
         if words:
-            body = r"\s+".join(re.escape(w) for w in words)
+            body = r"[\s-]+".join(re.escape(w) for w in words)
             patterns.append(re.compile(rf"(?<!\w){body}(?:e?s)?(?!\w)", re.I))
     return patterns
 

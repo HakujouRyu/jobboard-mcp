@@ -206,7 +206,9 @@ flowchart LR
 
 - Plain terms match **whole words**, ignore case, and allow a plural: `engineer` matches
   "Engineers" but not "Engineering", and `intern` matches "Interns" but not "Internal Tools".
-  Multi-word terms allow any whitespace between the words.
+  In multi-word terms, spaces and hyphens are interchangeable, in the term and in the title:
+  `full stack` and `full-stack` both match "Full Stack" and "Full-Stack". A word written with
+  no separator ("Fullstack") is a different word, so pass it too.
 - Terms are matched as plain text, never as regular expressions. A client-supplied regex can
   backtrack for seconds on a short title and stall the whole server.
 - Neither list has a default. With no terms, no title is filtered out.
