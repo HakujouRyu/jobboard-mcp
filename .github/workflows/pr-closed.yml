@@ -6,7 +6,7 @@
 name: PR closed
 
 on:
-  pull_request_target:
+  pull_request_target: # zizmor: ignore[dangerous-triggers] -- no PR code runs; see above
     types: [closed]
 
 permissions: {}

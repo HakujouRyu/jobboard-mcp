@@ -21,7 +21,8 @@ uv run pre-commit install
 ```
 
 The pre-commit hooks run ruff (lint with fixes, then format), check that `uv.lock` matches
-`pyproject.toml`, and fix whitespace and line endings. `uv run pre-commit run --all-files` runs
+`pyproject.toml`, audit the GitHub workflows with [zizmor](https://docs.zizmor.sh/), and fix
+whitespace and line endings. `uv run pre-commit run --all-files` runs
 them by hand.
 
 ## Checks
@@ -48,7 +49,9 @@ failed before you change any code.
 
 GitHub Actions runs the three checks above on every PR and every push to `main`
 ([ci.yml](.github/workflows/ci.yml)). The tests run on Linux, Windows, and macOS, each with
-Python 3.12 (the oldest supported) and 3.14 (the newest). Lint and type checks run once. The
+Python 3.12 (the oldest supported) and 3.14 (the newest). Lint and type checks run once, and so
+does zizmor, which audits the workflows themselves. Actions are pinned to commit SHAs, and
+Dependabot keeps the pins current. The
 `checks` job passes only when all of those do, and it's the one a merge waits on.
 
 [live.yml](.github/workflows/live.yml) runs the live tests on every push to `main` and every
