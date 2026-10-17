@@ -1,12 +1,19 @@
 # The watchlist
 
-`data/watchlist.yaml` lists the companies the server sweeps. It's the only file the server ever
+The watchlist lists the companies the server sweeps. It's the only file the server ever
 writes, and you can also edit it by hand.
 
-The file is yours, so git ignores it. On first run the server copies
-[data/watchlist.example.yaml](../data/watchlist.example.yaml) there to give you something to
-start from. Set `WATCHLIST_PATH` to keep your list somewhere else. A custom path isn't seeded:
-the server reports it as missing instead, in case it's a typo.
+It lives in your per-user config folder, not next to the code:
+
+| Platform | Default path |
+|----------|--------------|
+| Windows | `%APPDATA%\jobboard-mcp\watchlist.yaml` |
+| macOS, Linux | `~/.config/jobboard-mcp/watchlist.yaml`, or `$XDG_CONFIG_HOME/jobboard-mcp/watchlist.yaml` when that's set |
+
+`list_watchlist` returns the path in use, so you can also ask your MCP client where it is. On
+first run the server copies [watchlist.example.yaml](../src/jobboard_mcp/watchlist.example.yaml)
+there to give you something to start from. Set `WATCHLIST_PATH` to keep your list somewhere
+else. A custom path isn't seeded: the server reports it as missing instead, in case it's a typo.
 
 ## Format
 

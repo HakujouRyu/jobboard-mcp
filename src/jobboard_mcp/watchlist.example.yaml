@@ -1,5 +1,6 @@
-# Example watchlist. On first run the server copies this file to data/watchlist.yaml (which git
-# ignores) and reads and edits that copy from then on. Edit your copy freely; see
+# Example watchlist. On first run the server copies this file to your per-user watchlist
+# (%APPDATA%\jobboard-mcp\watchlist.yaml on Windows, ~/.config/jobboard-mcp/watchlist.yaml
+# elsewhere) and reads and edits that copy from then on. Edit your copy freely; see
 # docs/watchlist.md for the format.
 #
 # Most of these come from hiring-without-whiteboards

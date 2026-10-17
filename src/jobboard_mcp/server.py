@@ -46,6 +46,7 @@ posting. find_company_posting: find a role seen elsewhere on the company's own b
 resolve_board: work out a company's board. is_posting_live: check a posting is still open.
 list_watchlist / add_company / update_company: manage the watchlist (the only writes). To
 drop a company, archive it with update_company(archived=true); there is no delete.
+list_watchlist's path is the watchlist file, if the user wants to edit it by hand.
 Public data only. Remote status is never guessed: 'unknown' jobs are kept and flagged.
 pay_min / pay_max are always annual USD; pay_posted_interval says how the pay was posted.
 Each job's flags list missing data: pay_unknown, pay_not_usd, date_unknown, remote_unknown.
@@ -312,7 +313,7 @@ async def add_company(
     notes: Annotated[str | None, Field(description="Anything else.")] = None,
 ) -> WatchlistChange:
     """Add a company to the server's watchlist. A board, if given, is validated with a live fetch
-    first; nothing is saved if that fails. Writes only data/watchlist.yaml."""
+    first; nothing is saved if that fails. Writes only the watchlist file."""
     entry = WatchlistEntry(
         company=company.strip(),
         ats=ats,
@@ -353,7 +354,7 @@ async def update_company(
 ) -> WatchlistChange:
     """Change a watchlist entry. Only the fields you pass change. Archive a company you no longer
     want swept with archived=true. A new board is validated with a live fetch first; nothing is
-    saved if that fails. Writes only data/watchlist.yaml."""
+    saved if that fails. Writes only the watchlist file."""
     changes: dict[str, object] = {}
     if new_name is not None:
         changes["company"] = new_name.strip()

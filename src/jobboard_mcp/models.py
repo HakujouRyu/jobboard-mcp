@@ -238,6 +238,7 @@ class WatchlistView(BaseModel):
     companies: list[WatchlistEntry]
     total: int
     readonly: bool
+    path: str = Field(description="The watchlist file, for editing it by hand")
     archived_hidden: int = Field(
         default=0, description="Archived companies left out; pass include_archived to see them"
     )

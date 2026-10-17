@@ -20,7 +20,7 @@ flowchart LR
     cache --> gh["Greenhouse API"]
     cache --> ash["Ashby API"]
     cache --> lev["Lever API"]
-    server <--> yaml[("data/watchlist.yaml")]
+    server <--> yaml[("watchlist.yaml<br/>(per-user config folder)")]
 ```
 
 **What it doesn't do:** it never scrapes LinkedIn, Indeed, or job content from web pages. The
@@ -38,7 +38,7 @@ accounts or credentials, and the only file it writes is its own watchlist.
 | `resolve_board` | Works out which Greenhouse, Ashby, or Lever board a company uses, by probing likely tokens and scanning the careers page for board links. Read-only. |
 | `is_posting_live` | Whether a posting is still open, checked through the ATS API. |
 | `list_watchlist` | Watched companies, filterable by board / tag / domain. Archived companies are hidden unless asked for. |
-| `add_company`, `update_company` | The only writes, and only to `data/watchlist.yaml`. Boards are validated with a live fetch before saving, and comments and formatting are kept. To drop a company, archive it with `update_company`; sweeps then skip it. Not registered when `WATCHLIST_READONLY=true`. |
+| `add_company`, `update_company` | The only writes, and only to the watchlist file. Boards are validated with a live fetch before saving, and comments and formatting are kept. To drop a company, archive it with `update_company`; sweeps then skip it. Not registered when `WATCHLIST_READONLY=true`. |
 
 Full parameters and example outputs are in **[docs/tools.md](docs/tools.md)**.
 
@@ -107,8 +107,9 @@ uv run pytest            # offline, against recorded fixtures
 uv run jobboard-mcp      # start the server on stdio
 ```
 
-On first run the server copies [data/watchlist.example.yaml](data/watchlist.example.yaml) to
-`data/watchlist.yaml`, which git ignores. Edit that copy to choose which companies to watch (see
+On first run the server copies the [example watchlist](src/jobboard_mcp/watchlist.example.yaml)
+to `%APPDATA%\jobboard-mcp\watchlist.yaml` on Windows, or `~/.config/jobboard-mcp/watchlist.yaml`
+elsewhere. Edit that copy to choose which companies to watch (see
 [docs/watchlist.md](docs/watchlist.md)), or use `add_company` from your MCP client.
 
 ### Use from the Claude desktop app
@@ -144,7 +145,7 @@ Environment variables, all optional:
 
 | Variable | Default | |
 |----------|---------|---|
-| `WATCHLIST_PATH` | `data/watchlist.yaml` | Only the default path is created from the example on first run |
+| `WATCHLIST_PATH` | `%APPDATA%\jobboard-mcp\watchlist.yaml` (Windows), `~/.config/jobboard-mcp/watchlist.yaml` (elsewhere; honors `$XDG_CONFIG_HOME`) | Only the default path is created from the example on first run |
 | `CACHE_TTL_SECONDS` | `10800` (3 h) | Boards are refetched at most once per TTL unless `refresh: true`. Stale entries revalidate with ETag / Last-Modified. |
 | `MAX_CONCURRENCY` | `8` | Global cap on requests in flight |
 | `PER_HOST_CONCURRENCY` | `4` | Cap per host |

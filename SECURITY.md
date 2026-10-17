@@ -23,7 +23,7 @@ worth a look:
   watchlist or the MCP client, plus up to two same-site links from that page. These must stay on
   public addresses (SSRF). With `ALLOW_CUSTOM_URLS=false`, no client-supplied URL should be
   fetched at all.
-- **Watchlist writes.** `add_company` and `update_company` edit `data/watchlist.yaml` from client
+- **Watchlist writes.** `add_company` and `update_company` edit the watchlist file from client
   input. Anything that writes outside that file, or leaves it invalid, is a bug.
 - **Parsing untrusted data.** Board responses, careers-page HTML, and the watchlist YAML all come
   from outside the server.

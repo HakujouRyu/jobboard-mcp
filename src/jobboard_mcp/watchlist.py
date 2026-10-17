@@ -1,4 +1,4 @@
-"""Load, validate, and edit data/watchlist.yaml.
+"""Load, validate, and edit the watchlist file.
 
 Writes go through ruamel.yaml's round-trip mode so comments and formatting survive, and land
 atomically (temp file + replace). The watchlist is the only thing this server ever writes.

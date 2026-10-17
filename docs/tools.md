@@ -12,8 +12,8 @@ company, or a board that fails validation, come back as MCP tool errors with a r
 | [`resolve_board`](#resolve_board) | board endpoints, a careers page | — |
 | [`is_posting_live`](#is_posting_live) | one posting or board | — |
 | [`list_watchlist`](#list_watchlist) | watchlist | — |
-| [`add_company`](#add_company) | the new board | `data/watchlist.yaml` |
-| [`update_company`](#update_company) | the new board, if changed | `data/watchlist.yaml` |
+| [`add_company`](#add_company) | the new board | the watchlist file |
+| [`update_company`](#update_company) | the new board, if changed | the watchlist file |
 
 Read tools are annotated `readOnlyHint: true, idempotentHint: true`. The two write tools are
 `readOnlyHint: false, destructiveHint: false`, and aren't registered at all when
@@ -280,8 +280,9 @@ a fresh answer. `from_cache` says whether the answer came from the cache.
 | `domain` | string? | Substring of any domain, such as `infra` |
 | `include_archived` | bool | Also list archived companies. Default `false`. |
 
-Returns `{ companies: WatchlistEntry[], total, readonly, archived_hidden }`. `archived_hidden`
-counts the archived companies left out.
+Returns `{ companies: WatchlistEntry[], total, readonly, path, archived_hidden }`. `path` is the
+watchlist file, so a client can tell the user where to edit it by hand. `archived_hidden` counts
+the archived companies left out.
 
 ---
 

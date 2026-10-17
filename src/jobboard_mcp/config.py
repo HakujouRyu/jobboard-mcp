@@ -9,16 +9,31 @@ import json
 import logging
 import os
 import sys
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
 from jobboard_mcp import __version__
 
 REPO_URL = "https://github.com/HakujouRyu/jobboard-mcp"
-_PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_WATCHLIST = _PROJECT_ROOT / "data" / "watchlist.yaml"
-# Copied to DEFAULT_WATCHLIST on first run. The real watchlist is per-user and git-ignored.
-EXAMPLE_WATCHLIST = _PROJECT_ROOT / "data" / "watchlist.example.yaml"
+
+
+def default_watchlist_path(env: Mapping[str, str], platform: str, home: Path) -> Path:
+    """The per-user watchlist: under %APPDATA% on Windows, and under the XDG config folder
+    (~/.config) everywhere else, macOS included."""
+    if platform == "win32":
+        appdata = env.get("APPDATA")
+        base = Path(appdata) if appdata else home / "AppData" / "Roaming"
+    else:
+        xdg = env.get("XDG_CONFIG_HOME", "")
+        # The XDG spec says to ignore a relative path.
+        base = Path(xdg) if xdg.startswith("/") else home / ".config"
+    return base / "jobboard-mcp" / "watchlist.yaml"
+
+
+DEFAULT_WATCHLIST = default_watchlist_path(os.environ, sys.platform, Path.home())
+# Ships inside the package, and is copied to DEFAULT_WATCHLIST on first run.
+EXAMPLE_WATCHLIST = Path(__file__).with_name("watchlist.example.yaml")
 
 
 def _int(name: str, default: int) -> int:

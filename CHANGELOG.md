@@ -15,7 +15,9 @@ All notable changes are recorded here. The format follows
   write tools off.
 - `ALLOW_CUSTOM_URLS=false` refuses careers URLs from the client, so a public server fetches
   careers pages only from its own watchlist.
-- An example watchlist, copied to `data/watchlist.yaml` on first run.
+- An example watchlist, copied on first run to a per-user watchlist:
+  `%APPDATA%\jobboard-mcp\watchlist.yaml` on Windows, `~/.config/jobboard-mcp/watchlist.yaml`
+  elsewhere (`$XDG_CONFIG_HOME` is honored). `list_watchlist` returns its `path`.
 - Archiving: `update_company(archived=true)` keeps a company on the watchlist but stops
   sweeping it. `list_watchlist` hides archived companies unless `include_archived` is set.
 

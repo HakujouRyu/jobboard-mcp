@@ -72,7 +72,7 @@ These are what make the server trustworthy, and review checks for them.
    find board links. Don't extract job content from HTML. Every careers-page request goes
    through `get_text`, which keeps it on public addresses (`urlguard.py`). Don't fetch pages
    any other way.
-2. **Read-only, except the watchlist.** The server writes nothing except `data/watchlist.yaml`,
+2. **Read-only, except the watchlist.** The server writes nothing except the watchlist file,
    and only through `add_company` / `update_company`. Any new write tool must be removed when
    `WATCHLIST_READONLY=true` (add it to `WRITE_TOOLS` in `server.py`).
 3. **Never guess `remote_us`.** It needs positive evidence. When in doubt, return `unknown`.
@@ -130,9 +130,9 @@ Patterns to follow:
 - **Tool tests:** build a `JobBoardService` with a fixed `now` and an in-memory `watchlist`, set
   it with `server.set_service(...)`, and call `server.mcp.call_tool(name, args)`. See the
   `service` fixture and `call()` helper in [tests/test_tools.py](tests/test_tools.py).
-- **Watchlist writes:** use a copy in `tmp_path`, never `data/watchlist.yaml`.
-- **The example watchlist:** the live tests sweep `data/watchlist.example.yaml`, not your own
-  list. Keep at least one board per ATS in it.
+- **Watchlist writes:** use a copy in `tmp_path`, never your own watchlist.
+- **The example watchlist:** the live tests sweep `src/jobboard_mcp/watchlist.example.yaml`,
+  not your own list. Keep at least one board per ATS in it.
 - `asyncio_mode = "auto"` is on, so async tests need no decorator.
 - **DNS:** an autouse fixture in `conftest.py` makes every host resolve to one public address
   and turns off address pinning, so offline tests never do DNS and respx routes match on

@@ -250,9 +250,10 @@ async def test_live_rejects_unknown_url(service: JobBoardService) -> None:
 # ------------------------------------------------------------------ watchlist tools
 
 
-async def test_list_watchlist_filters(service: JobBoardService) -> None:
+async def test_list_watchlist_filters(service: JobBoardService, watchlist_path: Path) -> None:
     out = await call("list_watchlist", {})
     assert out["total"] == 4 and out["readonly"] is False
+    assert out["path"] == str(watchlist_path)
     assert [
         c["company"] for c in (await call("list_watchlist", {"has_board": False}))["companies"]
     ] == ["Posit"]

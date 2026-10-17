@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from jobboard_mcp.config import EXAMPLE_WATCHLIST
+from jobboard_mcp.config import EXAMPLE_WATCHLIST, default_watchlist_path
 from jobboard_mcp.models import Ats, WatchlistEntry
 from jobboard_mcp.watchlist import (
     WatchlistError,
@@ -56,6 +56,30 @@ def test_seed_watchlist_copies_only_when_missing(tmp_path: Path) -> None:
     path.write_text(SAMPLE, encoding="utf-8")
     assert not seed_watchlist(path, EXAMPLE_WATCHLIST)
     assert path.read_text(encoding="utf-8") == SAMPLE
+
+
+HOME = Path("/home/me")
+
+
+@pytest.mark.parametrize(
+    ("env", "platform", "base"),
+    [
+        ({"APPDATA": "C:/Users/me/AppData/Roaming"}, "win32", Path("C:/Users/me/AppData/Roaming")),
+        ({}, "win32", HOME / "AppData" / "Roaming"),
+        ({}, "linux", HOME / ".config"),
+        ({}, "darwin", HOME / ".config"),
+        ({"XDG_CONFIG_HOME": "/xdg"}, "linux", Path("/xdg")),
+        ({"XDG_CONFIG_HOME": "/xdg"}, "darwin", Path("/xdg")),
+        # The XDG spec says a relative path is ignored.
+        ({"XDG_CONFIG_HOME": "relative"}, "linux", HOME / ".config"),
+        ({"XDG_CONFIG_HOME": ""}, "linux", HOME / ".config"),
+        # Only Windows reads APPDATA.
+        ({"APPDATA": "/appdata"}, "linux", HOME / ".config"),
+    ],
+)
+def test_default_watchlist_path(env: dict[str, str], platform: str, base: Path) -> None:
+    expected = base / "jobboard-mcp" / "watchlist.yaml"
+    assert default_watchlist_path(env, platform, HOME) == expected
 
 
 def test_parse_errors() -> None:

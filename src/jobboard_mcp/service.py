@@ -341,6 +341,7 @@ class JobBoardService:
             companies=entries,
             total=len(entries),
             readonly=self.store.readonly,
+            path=str(self.store.path),
             archived_hidden=hidden,
         )
 

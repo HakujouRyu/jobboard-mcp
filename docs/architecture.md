@@ -32,7 +32,7 @@ flowchart LR
         http["http.py<br/>HttpClient"]
     end
 
-    yaml[("data/watchlist.yaml")]
+    yaml[("watchlist.yaml<br/>(per-user config folder)")]
     gh["boards-api.greenhouse.io"]
     ash["api.ashbyhq.com"]
     lev["api.lever.co"]

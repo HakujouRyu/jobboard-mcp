@@ -9,5 +9,5 @@ build/
 *.egg-info/
 .env
 
-# Your own watchlist. The server copies it from data/watchlist.example.yaml on first run.
+# The old default watchlist location, ignored so an unmoved copy is never committed.
 data/watchlist.yaml

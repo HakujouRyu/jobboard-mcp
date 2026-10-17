@@ -40,9 +40,10 @@ The full list is under "Ground rules" in CONTRIBUTING.md. The ones agents break 
   `HttpClient.get_text`, which keeps them on public addresses. Don't add another way to fetch a
   URL.
 - **Keep `normalize.py`, `filters.py`, `matching.py`, and `models.py` pure.** No I/O, no clock.
-- **Don't edit `data/watchlist.yaml`.** It's the user's own file and isn't in git. Change
-  `data/watchlist.example.yaml` only when asked, and keep one board per ATS in it, because the
-  live tests use it.
+- **Don't edit the user's watchlist** (`%APPDATA%\jobboard-mcp\watchlist.yaml` or
+  `~/.config/jobboard-mcp/watchlist.yaml`, or an old `data/watchlist.yaml`). Change
+  `src/jobboard_mcp/watchlist.example.yaml` only when asked, and keep one board per ATS in it,
+  because the live tests use it.
 - **Don't edit field values in `tests/fixtures/`.** They're real, trimmed API responses. To
   cover a new case, record a new fixture (see "Recording a fixture" in CONTRIBUTING.md).
 - **Don't add dependencies** without saying why. Use `uv add`, never pip.
