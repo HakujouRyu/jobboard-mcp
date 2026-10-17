@@ -85,6 +85,11 @@ These are what make the server trustworthy, and review checks for them.
    write JSON to stderr) and never `print()`.
 8. **Keep the pure modules pure.** `normalize.py`, `filters.py`, `matching.py`, and `models.py`
    don't do I/O and don't read the clock. Pass "today" in.
+9. **Patterns stay fast on any input.** Board text and client arguments can be any size and
+   shape, and matching runs on the event loop, so one slow match stalls every request. Don't
+   nest quantifiers (`(a+)+`) or repeat alternatives that overlap (`(a|ab)*`), and never compile
+   a regex from client input: escape it. Test new patterns on long, hostile input, not just
+   real postings.
 
 ## Where things go
 
