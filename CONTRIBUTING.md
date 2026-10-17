@@ -207,6 +207,11 @@ Workable, SmartRecruiters, and Recruitee are the candidates in SPEC.md §3.
   mode. Type everything, and start modules that hold code with
   `from __future__ import annotations`.
 - Every module starts with a docstring saying what it's for.
+- Keep look-alike characters out of source. When code must match one, such as the en dash
+  (U+2013) that real postings put in pay ranges (`$150K\u2013$180K`), write it as an
+  escape: `\u2013`. It's easy to type a hyphen where an en dash was meant, or the
+  reverse, and the two look the same in an editor. Ruff's RUF001-RUF003 rules enforce this.
+  Test fixtures are real API data and keep their characters.
 - Comments explain *why*, especially when the code handles a quirk of a real API. Point to
   `docs/api-notes.md` when that's where the evidence is.
 - Prefer small pure functions and frozen dataclasses. Jobs from `list_jobs` are shared through

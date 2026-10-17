@@ -273,7 +273,7 @@ _INTERVAL = (
 # separately by _PREFIX.
 _RANGE = re.compile(
     rf"(?P<asym>[$£€₹])\s?(?P<anum>{_NUM})\s?(?P<ak>[kK]\b)?"
-    rf"\s*(?:-|–|—|to)\s*"
+    rf"\s*(?:-|\u2013|\u2014|to)\s*"  # hyphen, en dash, em dash, or "to"
     rf"(?:(?:{_CODES})\s?)?(?:[A-Z]{{0,2}}[$£€₹])?\s?(?P<bnum>{_NUM})\s?(?P<bk>[kK]\b)?"
     rf"(?:\s?(?P<code>{_CODES})\b)?" + _INTERVAL,
     re.I,
@@ -376,7 +376,10 @@ def _plausible(lo: float, hi: float, interval: str | None) -> bool:
 
 
 def parse_pay_text(text: str | None) -> Pay:
-    """Find pay ranges ("$150,000 - $180,000", "$150K–$180K USD", "$75/hr") in free text."""
+    """Find pay ranges ("$150,000 - $180,000", "$150K-$180K USD", "$75/hr") in free text.
+
+    En and em dashes count as range dashes too.
+    """
     if not text or not _SYMBOL.search(text):
         return Pay()
     flat = re.sub(r"\s+", " ", text)
@@ -419,7 +422,7 @@ _CONTRACT_ROLE = (
 )
 _CONTRACT_TITLE = re.compile(
     rf"[(\[][^)\]]*\b{_CONTRACT_WORD}\b[^)\]]*[)\]]"  # "(Contract)", "[Contract, 6 months]"
-    rf"|[-–—,|:]\s*{_CONTRACT_WORD}\s*$"  # "Android Engineer - Contract"
+    rf"|[-\u2013\u2014,|:]\s*{_CONTRACT_WORD}\s*$"  # "Android Engineer - Contract"
     rf"|^\s*(?:contract|freelance|temporary)\s+(?!{_CONTRACT_ROLE}\b)",  # "Contract Engineer"
     re.I,
 )

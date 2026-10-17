@@ -159,10 +159,15 @@ def test_structured_onsite() -> None:
 @pytest.mark.parametrize(
     ("text", "lo", "hi", "interval"),
     [
-        ("United States Salary Range $139,200 – $235,200 USD How GitLab", 139_200, 235_200, "year"),
+        (
+            "United States Salary Range $139,200 \u2013 $235,200 USD How GitLab",
+            139_200,
+            235_200,
+            "year",
+        ),
         ("$150,000 - $180,000", 150_000, 180_000, "year"),
-        ("The range is $150K–$180K plus equity", 150_000, 180_000, "year"),
-        ("$172.8K – $283.5K", 172_800, 283_500, "year"),
+        ("The range is $150K\u2013$180K plus equity", 150_000, 180_000, "year"),
+        ("$172.8K \u2013 $283.5K", 172_800, 283_500, "year"),
         ("USD 120,000 to 140,000 per year", None, None, None),  # no $ symbol: not parsed
         ("$75/hr", 156_000, 156_000, "hour"),
         ("$60 - $80 per hour", 124_800, 166_400, "hour"),
@@ -200,7 +205,7 @@ def test_parse_pay_text_mixed_currency_keeps_only_usd() -> None:
         ("USD $120,000 - $150,000", "USD"),
         ("US$120,000 - US$150,000", "USD"),
         ("AU$120,000 - AU$150,000", "AUD"),
-        ("€80,000 – €95,000", "EUR"),
+        ("€80,000 \u2013 €95,000", "EUR"),
         ("pays a $120,000 - $150,000 salary", "USD"),  # the word "a" is not a prefix
     ],
 )
@@ -212,7 +217,7 @@ def test_parse_pay_text_currency_prefixes(text: str, currency: str) -> None:
     ("text", "currency", "interval"),
     [
         # Mozilla: European thousands separators are not decimals, so this isn't hourly
-        ("€68.000–€91.000 EUR", "EUR", "year"),
+        ("€68.000\u2013€91.000 EUR", "EUR", "year"),
         ("Gehalt: 58.000 € bis €77.000,00", "EUR", None),  # leading figure has no symbol
         ("€55.000,50 - €70.000,00", "EUR", "year"),
     ],
