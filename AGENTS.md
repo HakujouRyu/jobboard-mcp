@@ -68,4 +68,6 @@ Mermaid diagrams, which go stale most easily:
 ## Commits
 
 Small commits that each do one thing. Subjects are sentence case and imperative, with no
-trailing period. See `git log` and "Commits and pull requests" in CONTRIBUTING.md.
+trailing period. PRs are squash-merged, so a PR's title and description become the commit on
+`main` and follow the same style. See `git log` and "Commits and pull requests" in
+CONTRIBUTING.md.

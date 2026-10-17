@@ -48,9 +48,9 @@ failed before you change any code.
 
 GitHub Actions runs the three checks above on every PR
 ([pr-checks.yml](.github/workflows/pr-checks.yml)). When a PR merges,
-[pr-closed.yml](.github/workflows/pr-closed.yml) runs the live tests against the merge commit
-and deletes the head branch. A live failure there doesn't undo the merge, so check the run after
-merging. Closing a PR, merged or not, also deletes its Actions caches.
+[pr-closed.yml](.github/workflows/pr-closed.yml) runs the live tests against the merge commit.
+A live failure there doesn't undo the merge, so check the run after merging. Closing a PR,
+merged or not, also deletes its Actions caches.
 
 ## Ground rules
 
@@ -206,9 +206,11 @@ Workable, SmartRecruiters, and Recruitee are the candidates in SPEC.md §3.
 
 ## Commits and pull requests
 
-- Make small commits that each do one thing. Look at `git log` for the style: a sentence-case,
-  imperative subject with no trailing period ("Add resolve_board: token probes plus
-  careers-page board links").
-- A PR says what changed and why, and how you tested it. Say whether you ran the live tests,
-  and paste the relevant output if you did.
+- PRs are squash-merged, so each PR lands as one commit on `main`. Keep a PR to one thing; split
+  unrelated changes into separate PRs. Commits inside a PR can be whatever helps you work.
+- The PR title becomes the commit subject. Look at `git log` for the style: sentence case,
+  imperative, no trailing period ("Add resolve_board: token probes plus careers-page board
+  links").
+- The PR description becomes the commit body. It says what changed and why, and how you tested
+  it. Say whether you ran the live tests, and paste the relevant output if you did.
 - If a PR changes what a tool returns or accepts, it updates `docs/tools.md` too.
