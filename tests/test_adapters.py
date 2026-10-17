@@ -288,11 +288,12 @@ def test_build_job_flags_urls_and_title_signals() -> None:
     job = GH.to_job(raw, "Wikimedia Foundation", "wikimedia")
     assert job.url.startswith("https://www.circleci.com/")
     assert job.employment_type is EmploymentType.CONTRACT
-    # remote_unknown is set when the job is built, so get_posting and sweeps agree
-    assert job.remote is Remote.UNKNOWN and job.flags == ["remote_unknown"]
+    # Flags come from the job itself, so get_posting and sweeps agree
+    assert job.remote is Remote.UNKNOWN
+    assert job.flags == ["date_unknown", "remote_unknown"]
     assert (job.pay_min, job.pay_posted_interval) == (116_626, "hour")
 
 
-def test_build_job_known_remote_has_no_flags() -> None:
+def test_build_job_flags_missing_pay_and_date() -> None:
     raw = {"id": 1, "title": "Engineer", "location": {"name": "Remote, US"}}
-    assert GH.to_job(raw, "Acme", "acme").flags == []
+    assert GH.to_job(raw, "Acme", "acme").flags == ["pay_unknown", "date_unknown"]

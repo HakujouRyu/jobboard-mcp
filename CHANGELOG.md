@@ -25,7 +25,11 @@ All notable changes are recorded here. The format follows
   the ATS gives no workplace type.
 - `employment_type` is `contract` when the title marks the role as one ("(Contract)",
   "Contract Software Engineer").
-- `get_posting` sets the `remote_unknown` flag too, matching `sweep_boards`.
+- `flags` describe the job, not the search: `pay_unknown` and `date_unknown` appear whenever
+  the data is missing, not only when a sweep filters on it, and every tool shows the same
+  flags for a job.
+- New `pay_not_usd` flag for pay posted in another currency, which used to count as
+  `pay_unknown`.
 - Posting links are upgraded from `http://` to `https://`.
 
 ### Fixed

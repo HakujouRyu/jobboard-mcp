@@ -2,16 +2,16 @@ from datetime import date
 
 import pytest
 
-from jobboard_mcp.filters import (
+from jobboard_mcp.filters import SweepFilters, apply_filters, compile_terms, sort_jobs
+from jobboard_mcp.models import (
     FLAG_DATE_UNKNOWN,
+    FLAG_PAY_NOT_USD,
     FLAG_PAY_UNKNOWN,
     FLAG_REMOTE_UNKNOWN,
-    SweepFilters,
-    apply_filters,
-    compile_terms,
-    sort_jobs,
+    Ats,
+    Job,
+    Remote,
 )
-from jobboard_mcp.models import Ats, Job, Remote
 
 TODAY = date(2026, 10, 15)
 
@@ -116,9 +116,36 @@ def test_posted_within_days() -> None:
     assert got[1].flags == [FLAG_DATE_UNKNOWN]
 
 
-def test_flags_only_for_active_filters() -> None:
+def test_flags_do_not_depend_on_filters() -> None:
+    # Missing pay and date are flagged even when the sweep doesn't filter on them
     (job,) = apply_filters([make_job(1, pay_max=None, posted_at=None)], SweepFilters(today=TODAY))
-    assert job.flags == []
+    assert job.flags == [FLAG_PAY_UNKNOWN, FLAG_DATE_UNKNOWN]
+
+
+@pytest.mark.parametrize(
+    ("pay", "expected"),
+    [
+        ({"pay_max": 200_000}, []),
+        ({"pay_max": None, "pay_min": 120_000}, []),  # "$120,000+" is known pay
+        ({"pay_max": None}, [FLAG_PAY_UNKNOWN]),
+        # Mozilla posts EUR and CAD ranges: pay is known, just not comparable to min_pay
+        ({"pay_max": None, "pay_currency": "EUR"}, [FLAG_PAY_NOT_USD]),
+        ({"pay_max": 150_000, "pay_currency": "USD"}, []),
+    ],
+)
+def test_pay_flags(pay: dict[str, object], expected: list[str]) -> None:
+    assert make_job(1, **pay).flags == expected
+
+
+def test_flags_follow_pay_filled_in_later() -> None:
+    # Greenhouse list jobs lack pay until the sweep fetches the detail page
+    job = make_job(1, pay_max=None)
+    assert job.flags == [FLAG_PAY_UNKNOWN]
+    assert job.model_copy(update={"pay_max": 180_000}).flags == []
+
+
+def test_remote_unknown_flag() -> None:
+    assert make_job(1, remote=Remote.UNKNOWN).flags == [FLAG_REMOTE_UNKNOWN]
 
 
 def test_exclusions() -> None:

@@ -35,7 +35,7 @@ first, with a status for each company. One company failing never fails the sweep
 | `title_exclude` | string[] | `intern`, `internship`, `new grad`, `principal` | Drop titles matching any term. `[]` excludes nothing. |
 | `remote` | enum[] | `remote_us`, `remote_global` | Remote statuses to keep. |
 | `include_unknown_remote` | bool | `true` | Keep `unknown` remote jobs (flagged `remote_unknown`). |
-| `min_pay` | int ≥ 0 | none | Annual USD. Drops jobs whose posted **maximum** is below it. Unknown pay is kept and flagged. |
+| `min_pay` | int ≥ 0 | none | Annual USD. Drops jobs whose posted **maximum** is below it. Unknown and non-USD pay are kept (flagged `pay_unknown` / `pay_not_usd`). |
 | `posted_within_days` | int ≥ 0 | none | Unknown dates are kept and flagged. |
 | `exclude_ids` | string[] | none | `{ats}:{token}:{id}` values already seen. |
 | `exclude_fingerprints` | string[] | none | Fingerprints already seen. |

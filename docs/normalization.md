@@ -15,8 +15,8 @@ For where each ATS keeps the raw fields, see [api-notes.md](api-notes.md).
    evidence. Pay is reported in USD only when it was posted in USD.
 2. **Keep the raw value.** `pay_raw`, `date_source`, and `locations` show what the normalized
    fields came from, so any result can be checked.
-3. **Missing data is flagged, not dropped.** If a filter can't be checked because the data is
-   missing, the job stays in the results with a flag saying so.
+3. **Missing data is flagged, not dropped.** Every job says what's missing in its `flags`. If
+   a filter can't be checked because the data is missing, the job stays in the results.
 
 ## Remote status
 
@@ -206,13 +206,22 @@ flowchart LR
 
 ### Flags
 
-Each job has a `flags` list naming data that's missing:
+Each job has a `flags` list naming data that's missing. Flags describe the job, not the
+search: they don't depend on which filters were used, so `get_posting`, `find_company_posting`,
+and `sweep_boards` show the same flags for the same job.
 
 | Flag | When |
 |------|------|
-| `remote_unknown` | the job's remote status is `unknown`. Set when the job is built, so `get_posting` and `sweep_boards` agree |
-| `pay_unknown` | a sweep set `min_pay` and the job has no USD maximum |
-| `date_unknown` | a sweep set `posted_within_days` and the job has no date |
+| `pay_unknown` | no pay was posted: `pay_min` and `pay_max` are both null, and there's no other currency |
+| `pay_not_usd` | pay was posted in another currency (`pay_currency` says which), so `pay_min` and `pay_max` are null |
+| `date_unknown` | `posted_at` is null |
+| `remote_unknown` | `remote` is `unknown` |
+
+A USD minimum with no maximum ("$120,000+") is known pay and isn't flagged. `min_pay` keeps
+jobs flagged `pay_unknown` or `pay_not_usd`, since neither can be compared to it.
+
+`flags` is a computed field on `Job`, worked out from the job's other fields whenever it's read.
+That keeps it right after a sweep fills in Greenhouse pay from the detail endpoint.
 
 `flag_counts` in the sweep result totals them.
 

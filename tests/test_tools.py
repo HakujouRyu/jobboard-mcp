@@ -265,3 +265,12 @@ async def test_tools_have_descriptions_and_schemas() -> None:
             assert tool.annotations.destructive_hint is False
         for name, prop in tool.input_schema["properties"].items():
             assert prop.get("description"), f"{tool.name}.{name} has no description"
+
+
+async def test_flags_are_in_the_output_schema() -> None:
+    # flags is a computed field; Job publishes its serialization schema so clients see it
+    tools = {t.name: t for t in await server.mcp.list_tools()}
+    posting, sweep = tools["get_posting"].output_schema, tools["sweep_boards"].output_schema
+    assert posting is not None and sweep is not None
+    assert "pay_not_usd" in posting["properties"]["flags"]["description"]
+    assert "flags" in sweep["$defs"]["Job"]["properties"]

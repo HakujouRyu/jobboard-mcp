@@ -7,7 +7,7 @@ from datetime import date, datetime
 from enum import StrEnum
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, computed_field
 
 
 class Ats(StrEnum):
@@ -47,9 +47,9 @@ class CompanyStatus(StrEnum):
     TIMEOUT = "timeout"
 
 
-# Job.flags values. remote_unknown is set on every job whose remote status is unknown; the
-# other two only by a sweep that filters on pay or date.
+# Job.flags values: data that's missing from the job, whatever filters were used.
 FLAG_PAY_UNKNOWN = "pay_unknown"
+FLAG_PAY_NOT_USD = "pay_not_usd"
 FLAG_DATE_UNKNOWN = "date_unknown"
 FLAG_REMOTE_UNKNOWN = "remote_unknown"
 
@@ -101,13 +101,29 @@ class Job(BaseModel):
     url: str
     apply_url: str | None = None
     description_text: str | None = None
-    flags: list[str] = Field(
-        default_factory=list,
+
+    # Publish computed fields (flags) in the tool output schema, not only in the output.
+    model_config = ConfigDict(json_schema_mode_override="serialization")
+
+    @computed_field(
         description=(
-            "Missing data: remote_unknown on any job whose remote status is unknown; "
-            "pay_unknown and date_unknown when a sweep filtered on pay or date"
-        ),
+            "Missing data: pay_unknown (no pay posted), pay_not_usd (pay posted in another "
+            "currency, so pay_min/pay_max are null), date_unknown, remote_unknown"
+        )
     )
+    @property
+    def flags(self) -> list[str]:
+        """Worked out from the job's own fields, so it stays right after pay is filled in."""
+        flags: list[str] = []
+        if self.pay_currency and self.pay_currency.upper() != "USD":
+            flags.append(FLAG_PAY_NOT_USD)
+        elif self.pay_min is None and self.pay_max is None:
+            flags.append(FLAG_PAY_UNKNOWN)
+        if self.posted_at is None:
+            flags.append(FLAG_DATE_UNKNOWN)
+        if self.remote is Remote.UNKNOWN:
+            flags.append(FLAG_REMOTE_UNKNOWN)
+        return flags
 
     def set_pay(self, pay: Pay) -> None:
         self.pay_min, self.pay_max = pay.min, pay.max

@@ -47,6 +47,7 @@ resolve_board: work out a company's board. is_posting_live: check a posting is s
 list_watchlist / add_company / update_company: manage the watchlist (the only writes).
 Public data only. Remote status is never guessed: 'unknown' jobs are kept and flagged.
 pay_min / pay_max are always annual USD; pay_posted_interval says how the pay was posted.
+Each job's flags list missing data: pay_unknown, pay_not_usd, date_unknown, remote_unknown.
 """
 
 _service: JobBoardService | None = None

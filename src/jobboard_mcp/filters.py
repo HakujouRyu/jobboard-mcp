@@ -1,4 +1,4 @@
-"""Pure sweep filtering, flagging, and sorting.
+"""Pure sweep filtering and sorting.
 
 Filtering runs in two stages so the sweep can fetch Greenhouse pay details only for jobs that
 survive the cheap checks: ``prefilter`` (ids, title, remote, date) and then ``passes_pay``.
@@ -12,13 +12,7 @@ from dataclasses import dataclass, field
 from datetime import date, timedelta
 from urllib.parse import urlsplit
 
-from jobboard_mcp.models import (
-    FLAG_DATE_UNKNOWN,
-    FLAG_PAY_UNKNOWN,
-    FLAG_REMOTE_UNKNOWN,
-    Job,
-    Remote,
-)
+from jobboard_mcp.models import Job, Remote
 
 # "internship" is listed separately because "intern" matches whole words only.
 DEFAULT_TITLE_EXCLUDE = ("intern", "internship", "new grad", "principal")
@@ -109,18 +103,6 @@ def passes_pay(job: Job, f: SweepFilters) -> bool:
     return f.min_pay is None or job.pay_max is None or job.pay_max >= f.min_pay
 
 
-def flag(job: Job, f: SweepFilters) -> Job:
-    """Record which active filters a kept job could not be checked against."""
-    flags: list[str] = []
-    if f.min_pay is not None and job.pay_max is None:
-        flags.append(FLAG_PAY_UNKNOWN)
-    if f.posted_within_days is not None and job.posted_at is None:
-        flags.append(FLAG_DATE_UNKNOWN)
-    if job.remote is Remote.UNKNOWN:
-        flags.append(FLAG_REMOTE_UNKNOWN)
-    return job.model_copy(update={"flags": flags})
-
-
 def sort_jobs(jobs: Iterable[Job]) -> list[Job]:
     """Newest first, unknown dates last; ties broken deterministically."""
     return sorted(
@@ -136,12 +118,12 @@ def sort_jobs(jobs: Iterable[Job]) -> list[Job]:
 
 
 def apply_filters(jobs: Iterable[Job], f: SweepFilters) -> list[Job]:
-    """Single-stage convenience: prefilter, pay check, flags, dedupe by id, and sort."""
+    """Single-stage convenience: prefilter, pay check, dedupe by id, and sort."""
     seen: set[str] = set()
     kept: list[Job] = []
     for job in jobs:
         if job.id in seen or not (prefilter(job, f) and passes_pay(job, f)):
             continue
         seen.add(job.id)
-        kept.append(flag(job, f))
+        kept.append(job)
     return sort_jobs(kept)

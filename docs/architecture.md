@@ -26,7 +26,7 @@ flowchart LR
         adapters["adapters/<br/>greenhouse · ashby · lever"]
         resolve["resolve.py<br/>board detection"]
         matching["matching.py<br/>fuzzy titles"]
-        filters["filters.py<br/>filters, flags, sort"]
+        filters["filters.py<br/>filters, sort"]
         normalize["normalize.py<br/>remote, pay, dates, HTML"]
         store["watchlist.py<br/>WatchlistStore"]
         http["http.py<br/>HttpClient"]
@@ -62,7 +62,7 @@ flowchart LR
 | [service.py](../src/jobboard_mcp/service.py) | `JobBoardService`: the logic behind every tool. Kept apart from the MCP wiring so tests can call it directly. |
 | [adapters/](../src/jobboard_mcp/adapters/) | One module per ATS. Each turns that ATS's JSON into normalized `Job`s and knows its own URLs. `ADAPTERS` maps `Ats` to an adapter instance. |
 | [normalize.py](../src/jobboard_mcp/normalize.py) | Pure functions: HTML to text, date parsing, remote classification, pay parsing, employment type, fingerprints. |
-| [filters.py](../src/jobboard_mcp/filters.py) | Pure functions: title terms, the two filter stages, flags, sorting. |
+| [filters.py](../src/jobboard_mcp/filters.py) | Pure functions: title terms, the two filter stages, sorting. |
 | [matching.py](../src/jobboard_mcp/matching.py) | Pure functions: title normalization and rapidfuzz scoring for `find_company_posting`. |
 | [resolve.py](../src/jobboard_mcp/resolve.py) | Works out which board a company uses, from token probes and careers-page links. |
 | [watchlist.py](../src/jobboard_mcp/watchlist.py) | Loads and validates the YAML, and makes comment-preserving, atomic edits. |
@@ -148,7 +148,7 @@ sequenceDiagram
         A-->>Svc: Job with pay fields
     end
 
-    Svc->>Svc: passes_pay(), dedupe by id, flag(), sort_jobs()
+    Svc->>Svc: passes_pay(), dedupe by id, sort_jobs()
     Svc-->>S: SweepResult
     S-->>C: jobs[], per_company[], cache_hits, flag_counts
 ```
@@ -277,7 +277,7 @@ classDiagram
         pay_source: PaySource
         url, apply_url
         description_text: str?
-        flags: list~str~
+        flags: list~str~ (computed)
     }
     class WatchlistEntry {
         company: str

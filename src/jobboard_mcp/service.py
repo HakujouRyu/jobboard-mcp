@@ -20,7 +20,7 @@ from typing import Any
 from jobboard_mcp.adapters import ADAPTERS, parse_posting_url
 from jobboard_mcp.adapters.base import BoardListing
 from jobboard_mcp.config import Settings
-from jobboard_mcp.filters import SweepFilters, flag, passes_pay, prefilter, sort_jobs
+from jobboard_mcp.filters import SweepFilters, passes_pay, prefilter, sort_jobs
 from jobboard_mcp.http import FetchError, HttpClient, NotFound
 from jobboard_mcp.matching import rank_postings
 from jobboard_mcp.models import (
@@ -149,7 +149,7 @@ class JobBoardService:
             seen.add(job.id)
             if not include_description:
                 job = job.model_copy(update={"description_text": None})
-            kept.append(flag(job, filters))
+            kept.append(job)
             results[company].matched += 1
 
         jobs = sort_jobs(kept)

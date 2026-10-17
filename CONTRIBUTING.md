@@ -85,7 +85,7 @@ These are what make the server trustworthy, and review checks for them.
 | A new tool, or a change to a tool's arguments or description | `server.py` (schema only) and `service.py` (logic) |
 | How a field is parsed for every ATS | `normalize.py` |
 | How one ATS's JSON maps to a `Job` | `adapters/<ats>.py` |
-| Filtering, flags, sorting | `filters.py` |
+| Filtering, sorting | `filters.py` |
 | Request behavior: cache, retries, limits | `http.py` |
 | Which addresses careers-page fetches may reach | `urlguard.py` |
 | New settings | `config.py`, plus the table in the README |

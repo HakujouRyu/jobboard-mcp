@@ -92,8 +92,8 @@ returns this (abridged):
   "Contract Software Engineer").
 - **Titles:** plain filter terms match whole words plus a plural, so the default `intern`
   exclude keeps "Internal Tools Engineer". Prefix a term with `re:` for a regex.
-- **Missing data** never silently drops a job. It's kept and flagged `pay_unknown` or
-  `date_unknown`.
+- **Missing data** never silently drops a job. Every job's `flags` say what's missing
+  (`pay_unknown`, `pay_not_usd`, `date_unknown`, `remote_unknown`), whatever filters you use.
 
 The full rules, with decision diagrams, are in **[docs/normalization.md](docs/normalization.md)**.
 
