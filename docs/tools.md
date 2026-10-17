@@ -171,6 +171,18 @@ Ashby has no public per-job endpoint, so the job is looked up in the board listi
 Finds a role you saw on LinkedIn, Indeed, or elsewhere on the company's own board. It uses the
 watchlist board if there is one, and calls `resolve_board` if not.
 
+The company is looked up on the watchlist in this order. `watchlist_match` says which step
+found it, and `company` is then the watchlist's name, so `fingerprint`s match the ones from
+`sweep_boards`.
+
+1. `name`: the same name, ignoring case.
+2. `loose_name`: the one company whose name starts with the given one word for word, or the
+   other way round. "Temporal" and "Temporal Technologies, Inc." both find "Temporal
+   Technologies". If more than one company matches, none is used.
+3. `board`: the board `resolve_board` found is a watchlist company's board.
+
+`watchlist_match` is `null` when the company isn't on the watchlist.
+
 | Parameter | Type | |
 |-----------|------|---|
 | `company` | string | As shown on the other site |
@@ -199,6 +211,7 @@ Result shape (abridged):
 {
   "company": "Linear",
   "title": "Sr. Product Engineer (Remote)",
+  "watchlist_match": "name",
   "board_found": true,
   "ats": "ashby",
   "token": "linear",

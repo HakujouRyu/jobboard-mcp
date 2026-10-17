@@ -252,9 +252,18 @@ class PostingMatch(BaseModel):
     job: Job
 
 
+class WatchlistMatch(StrEnum):
+    NAME = "name"  # the name matched a watchlist company, ignoring case
+    LOOSE_NAME = "loose_name"  # one company's name starts with the other's, word for word
+    BOARD = "board"  # the resolved board belongs to a watchlist company
+
+
 class FindResult(BaseModel):
-    company: str
+    company: str = Field(description="The watchlist's name for the company when it's watched")
     title: str
+    watchlist_match: WatchlistMatch | None = Field(
+        default=None, description="How the company was found on the watchlist; null if it wasn't"
+    )
     board_found: bool
     ats: Ats | None = None
     token: str | None = None

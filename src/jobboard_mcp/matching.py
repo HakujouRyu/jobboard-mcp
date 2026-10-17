@@ -114,3 +114,19 @@ def rank_postings(
             )
     matches.sort(key=lambda m: (-m.score, m.job.title.lower(), m.job.id))
     return matches[:limit]
+
+
+def match_company(name: str, companies: Iterable[str]) -> str | None:
+    """The one company in ``companies`` whose name starts with ``name`` word for word, or that
+    ``name`` starts with: "Temporal" and "Temporal Technologies Inc." both find "Temporal
+    Technologies". Words are compared after ``normalize_text``, so case and punctuation don't
+    matter. None when no company or more than one matches, rather than guessing."""
+    words = normalize_text(name).split()
+    if not words:
+        return None
+    hits: list[str] = []
+    for company in companies:
+        other = normalize_text(company).split()
+        if other and (other[: len(words)] == words or words[: len(other)] == other):
+            hits.append(company)
+    return hits[0] if len(hits) == 1 else None

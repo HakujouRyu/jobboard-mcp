@@ -132,6 +132,31 @@ async def test_find_on_watched_board(service: JobBoardService) -> None:
 
 
 @respx.mock
+async def test_find_matches_a_shorter_name_and_keeps_sweep_fingerprints(
+    service: JobBoardService,
+) -> None:
+    mock_apis(respx.mock)
+    title = "Senior Product Manager, Hybrid Platform & Deployment Models"
+    out = await call("find_company_posting", {"company": "Temporal", "title": title})
+    assert out["company"] == "Temporal Technologies"
+    assert out["watchlist_match"] == "loose_name" and out["resolution"] is None
+    swept = await call("sweep_boards", {"companies": ["Temporal Technologies"]})
+    fingerprints = {j["id"]: j["fingerprint"] for j in swept["jobs"]}
+    top = out["candidates"][0]["job"]
+    assert top["title"] == title and top["fingerprint"] == fingerprints[top["id"]]
+
+
+@respx.mock
+async def test_find_maps_a_resolved_board_back_to_the_watchlist(service: JobBoardService) -> None:
+    mock_apis(respx.mock)
+    out = await call("find_company_posting", {"company": "Temporal.io", "title": "Engineer"})
+    assert (out["ats"], out["token"]) == ("ashby", "temporal")
+    assert out["company"] == "Temporal Technologies" and out["watchlist_match"] == "board"
+    assert out["resolution"] is not None
+    assert all(c["job"]["company"] == "Temporal Technologies" for c in out["candidates"])
+
+
+@respx.mock
 async def test_find_resolves_careers_page_only_company(service: JobBoardService) -> None:
     mock_apis(respx.mock)
     out = await call("find_company_posting", {"company": "Posit", "title": "Backend Engineer"})
@@ -144,7 +169,7 @@ async def test_find_without_board(service: JobBoardService) -> None:
     mock_apis(respx.mock)
     out = await call("find_company_posting", {"company": "Nowhere Co", "title": "Engineer"})
     assert out["board_found"] is False and out["candidates"] == []
-    assert out["resolution"]["ats"] is None
+    assert out["resolution"]["ats"] is None and out["watchlist_match"] is None
 
 
 # ------------------------------------------------------------------ resolve_board

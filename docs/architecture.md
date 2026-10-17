@@ -63,7 +63,7 @@ flowchart LR
 | [adapters/](../src/jobboard_mcp/adapters/) | One module per ATS. Each turns that ATS's JSON into normalized `Job`s and knows its own URLs. `ADAPTERS` maps `Ats` to an adapter instance. |
 | [normalize.py](../src/jobboard_mcp/normalize.py) | Pure functions: HTML to text, date parsing, remote classification, pay parsing, employment type, fingerprints. |
 | [filters.py](../src/jobboard_mcp/filters.py) | Pure functions: title terms, the two filter stages, sorting. |
-| [matching.py](../src/jobboard_mcp/matching.py) | Pure functions: title normalization and rapidfuzz scoring for `find_company_posting`. |
+| [matching.py](../src/jobboard_mcp/matching.py) | Pure functions: title normalization and rapidfuzz scoring for `find_company_posting`, and loose company-name lookup. |
 | [resolve.py](../src/jobboard_mcp/resolve.py) | Works out which board a company uses, from token probes and careers-page links. |
 | [watchlist.py](../src/jobboard_mcp/watchlist.py) | Loads and validates the YAML, and makes comment-preserving, atomic edits. |
 | [http.py](../src/jobboard_mcp/http.py) | `HttpClient`: cache, conditional requests, retries, request sharing, and concurrency caps for every outbound request. |
@@ -313,6 +313,7 @@ classDiagram
     }
     class FindResult {
         company, title
+        watchlist_match: WatchlistMatch?
         board_found: bool
         ats, token
         resolution: Resolution?
@@ -356,7 +357,8 @@ classDiagram
 
 Enums: `Ats` (greenhouse, ashby, lever), `Remote` (remote_us, remote_global, remote_other,
 hybrid, onsite, unknown), `EmploymentType`, `PaySource` (structured, parsed_from_text, none),
-`CompanyStatus` (ok, not_found, no_board, error, timeout), `Confidence` (high, medium, low).
+`CompanyStatus` (ok, not_found, no_board, error, timeout), `Confidence` (high, medium, low),
+`WatchlistMatch` (name, loose_name, board).
 
 ## Errors
 

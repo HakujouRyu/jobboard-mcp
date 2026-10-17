@@ -27,6 +27,7 @@ All notable changes are recorded here. The format follows
   was in another currency. `unverified_counts` totals them.
 - `sweep_boards` returns `term_hits`: how many titles on the swept boards each title term
   matched, before filtering. A 0 flags a term that matches nothing.
+- `find_company_posting` returns `watchlist_match` (`name`, `loose_name`, `board`, or null).
 
 ### Changed
 
@@ -58,6 +59,10 @@ All notable changes are recorded here. The format follows
 ### Fixed
 
 - Pay written with dots as thousands separators (`€68.000–€91.000`) was read as hourly.
+- `find_company_posting` found a watched company only by its exact name, so "Temporal" missed
+  "Temporal Technologies", got a guessed board, and gave its jobs different fingerprints than
+  `sweep_boards`. It now matches names loosely, maps a resolved board back to its watchlist
+  entry, and returns the watchlist's name.
 
 ### Security
 

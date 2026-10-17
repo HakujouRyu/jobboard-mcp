@@ -56,6 +56,7 @@ how the pay was posted. Each job's flags list missing data: pay_unknown, date_un
 remote_unknown. Filters keep jobs they can't check, so check a job's unverified_filters
 before treating it as meeting the user's criteria (unverified_counts totals them).
 Title terms are plain phrases, never regexes; term_hits shows how many titles each matched.
+find_company_posting returns the watchlist's company name when the company is watched.
 US-focused: remote_us is the only country-level remote status.
 Hosted servers may refuse careers_url arguments; resolve_board then uses the watchlist's.
 """
@@ -252,8 +253,11 @@ async def find_company_posting(
     refresh: Annotated[bool, Field(description="Bypass the cache.")] = False,
 ) -> FindResult:
     """Find a role seen on LinkedIn, Indeed, etc. on the company's own job board. Uses the
-    watchlist board if known, otherwise resolves it. Returns up to 5 candidates scored 0-100
-    (titles normalized: Sr./Senior, SWE, levels; seniority or role mismatches score lower)."""
+    watchlist board if known, otherwise resolves it. The company name is matched loosely
+    ("Temporal" finds "Temporal Technologies"), and a resolved board that's on the watchlist
+    takes the watchlist's name, so fingerprints match sweeps. Returns up to 5 candidates scored
+    0-100 (titles normalized: Sr./Senior, SWE, levels; seniority or role mismatches score
+    lower)."""
     try:
         return await get_service().find_company_posting(company, title, location, refresh=refresh)
     except (ValueError, FetchError, WatchlistError) as exc:

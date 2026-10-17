@@ -3,6 +3,7 @@ import pytest
 from jobboard_mcp.matching import (
     MIN_SCORE,
     location_score,
+    match_company,
     normalize_title,
     rank_postings,
     title_score,
@@ -95,3 +96,24 @@ def test_rank_postings_no_location_and_no_matches() -> None:
     assert got == []
     (only,) = rank_postings([job(1, "Backend Engineer")], "backend engineer")
     assert only.location_score is None and only.score == 100.0
+
+
+WATCHED = ["Temporal Technologies", "Scale AI", "Scale Computing", "Meta", "GitLab"]
+
+
+@pytest.mark.parametrize(
+    ("name", "found"),
+    [
+        ("Temporal", "Temporal Technologies"),  # LinkedIn's shorter name
+        ("temporal technologies, inc.", "Temporal Technologies"),
+        ("Meta Platforms", "Meta"),  # the watchlist's name is the shorter one
+        ("GitLab Inc.", "GitLab"),
+        ("Scale", None),  # two companies start with "Scale": don't guess
+        ("Temporal.io", None),  # "io" isn't "technologies"
+        ("Metabase", None),  # whole words only
+        ("Git", None),
+        ("", None),
+    ],
+)
+def test_match_company(name: str, found: str | None) -> None:
+    assert match_company(name, WATCHED) == found

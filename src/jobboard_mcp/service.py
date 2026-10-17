@@ -29,7 +29,7 @@ from jobboard_mcp.filters import (
     term_hits,
 )
 from jobboard_mcp.http import FetchError, HttpClient, NotFound
-from jobboard_mcp.matching import rank_postings
+from jobboard_mcp.matching import match_company, rank_postings
 from jobboard_mcp.models import (
     Ats,
     BoardCheck,
@@ -42,6 +42,7 @@ from jobboard_mcp.models import (
     SweepResult,
     WatchlistChange,
     WatchlistEntry,
+    WatchlistMatch,
     WatchlistView,
 )
 from jobboard_mcp.resolve import resolve_board
@@ -254,19 +255,33 @@ class JobBoardService:
         )
 
     def _company_for(self, ats: Ats, token: str) -> str:
+        entry = self._entry_for_board(ats, token)
+        return entry.company if entry else token
+
+    def _entry_for_board(self, ats: Ats, token: str) -> WatchlistEntry | None:
         key = token.casefold()
         return next(
-            (
-                e.company
-                for e in self._watchlist()
-                if e.ats is ats and (e.token or "").casefold() == key
-            ),
-            token,
+            (e for e in self._watchlist() if e.ats is ats and (e.token or "").casefold() == key),
+            None,
         )
 
     def _entry(self, company: str) -> WatchlistEntry | None:
+        """Exact name match, ignoring case. The write tools use only this."""
         key = company.strip().casefold()
         return next((e for e in self._watchlist() if e.company.casefold() == key), None)
+
+    def _lookup(self, company: str) -> tuple[WatchlistEntry | None, WatchlistMatch | None]:
+        """The watchlist entry for a name as another site shows it: an exact match, or else
+        the one entry whose name starts with this one word for word (or the other way round),
+        so "Temporal" finds "Temporal Technologies". Read tools only."""
+        exact = self._entry(company)
+        if exact is not None:
+            return exact, WatchlistMatch.NAME
+        entries = self._watchlist()
+        name = match_company(company, [e.company for e in entries])
+        if name is None:
+            return None, None
+        return next(e for e in entries if e.company == name), WatchlistMatch.LOOSE_NAME
 
     # ------------------------------------------------------------------ resolve / find
 
@@ -277,14 +292,14 @@ class JobBoardService:
         if careers_url and not self.settings.allow_custom_urls:
             raise ValueError(_NO_CUSTOM_URLS)
         if company and not careers_url:
-            entry = self._entry(company)
+            entry, _ = self._lookup(company)
             careers_url = entry.careers_url if entry else None
         return await resolve_board(self.http, company, careers_url, refresh=refresh)
 
     async def find_company_posting(
         self, company: str, title: str, location: str | None = None, *, refresh: bool = False
     ) -> FindResult:
-        entry = self._entry(company)
+        entry, how = self._lookup(company)
         name = entry.company if entry else company.strip()
         resolution: Resolution | None = None
         ats, token = (entry.ats, entry.token) if entry else (None, None)
@@ -293,7 +308,14 @@ class JobBoardService:
             careers_url = entry.careers_url if entry else None
             resolution = await resolve_board(self.http, name, careers_url)
             ats, token = resolution.ats, resolution.token
-        result = FindResult(company=name, title=title, board_found=False, resolution=resolution)
+            if entry is None and ats is not None and token is not None:
+                # A board the watchlist already has: use its name, so fingerprints match a sweep.
+                owner = self._entry_for_board(ats, token)
+                if owner is not None:
+                    name, how = owner.company, WatchlistMatch.BOARD
+        result = FindResult(
+            company=name, title=title, watchlist_match=how, board_found=False, resolution=resolution
+        )
         if ats is None or token is None:
             return result
         try:
