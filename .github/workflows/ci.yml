@@ -18,7 +18,8 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  checks:
+  # Lint, format, and types give the same answer everywhere, so they run once.
+  lint:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -31,9 +32,6 @@ jobs:
       - name: Install
         run: uv sync --locked
 
-      - name: Tests (offline)
-        run: uv run pytest
-
       - name: Lint
         run: uv run ruff check --output-format=github .
 
@@ -42,3 +40,44 @@ jobs:
 
       - name: Type check
         run: uv run pyright
+
+  # The oldest supported Python and the newest, on every OS.
+  test:
+    name: test (${{ matrix.os }}, ${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.12", "3.14"]
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          python-version: ${{ matrix.python }}
+
+      - name: Install
+        run: uv sync --locked
+
+      - name: Tests (offline)
+        run: uv run pytest
+
+  # The one status check the main ruleset requires, so adding a matrix entry doesn't mean
+  # editing the ruleset. It fails if any job above failed or was cancelled.
+  checks:
+    if: always()
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: All checks passed
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "Results: $RESULTS"
+          for result in $RESULTS; do
+            [ "$result" = success ] || exit 1
+          done
