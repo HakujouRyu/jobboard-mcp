@@ -45,6 +45,11 @@ should pass the user's title, remote, pay, and date filters on each call.
 | `exclude_urls` | string[] | none | Posting or apply URLs already seen. Matched without scheme, query, or trailing slash. |
 | `include_description` | bool | `false` | Include `description_text`. Makes the output much larger. |
 | `refresh` | bool | `false` | |
+| `limit` | int, 1 to 250 | 100 | Most jobs to return, newest first. A job is about 220 tokens without its description. |
+
+When more jobs match than `limit` allows, `truncated` is `true` and `matched` says how many
+there were. To get the next page, call again with the returned ids added to `exclude_ids`.
+Each company's `matched` counts all of its matches, including any cut by `limit`.
 
 Example call:
 
@@ -90,6 +95,8 @@ Example result, abridged. The job is real (from the recorded GitLab fixture). Th
       "flags": []
     }
   ],
+  "matched": 37,
+  "truncated": false,
   "per_company": [
     { "company": "GitLab", "ats": "greenhouse", "total": 218, "matched": 6, "status": "ok", "error": null },
     { "company": "Gone Co", "ats": "greenhouse", "total": 0, "matched": 0, "status": "not_found", "error": "HTTP 404" },
@@ -105,7 +112,7 @@ Example result, abridged. The job is real (from the recorded GitLab fixture). Th
 
 | Status | Meaning |
 |--------|---------|
-| `ok` | Board fetched. `total` is every listed job, `matched` is how many were returned. |
+| `ok` | Board fetched. `total` is every listed job, `matched` is how many passed the filters. |
 | `not_found` | The board token returned 404. The company may have moved to another board: try `resolve_board`. |
 | `no_board` | The watchlist entry has no `ats`/`token`. Nothing was fetched. |
 | `timeout` | No response within `HTTP_TIMEOUT_SECONDS`. |

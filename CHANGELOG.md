@@ -20,6 +20,8 @@ All notable changes are recorded here. The format follows
   elsewhere (`$XDG_CONFIG_HOME` is honored). `list_watchlist` returns its `path`.
 - Archiving: `update_company(archived=true)` keeps a company on the watchlist but stops
   sweeping it. `list_watchlist` hides archived companies unless `include_archived` is set.
+- `sweep_boards` takes `limit` (default 100, at most 250) and reports `matched` and `truncated`.
+  Passing the returned ids in `exclude_ids` gets the next page.
 
 ### Changed
 

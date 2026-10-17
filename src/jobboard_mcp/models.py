@@ -157,6 +157,13 @@ class CompanyResult(BaseModel):
 
 class SweepResult(BaseModel):
     jobs: list[Job]
+    matched: int = Field(description="Jobs that passed the filters, before limit was applied")
+    truncated: bool = Field(
+        description=(
+            "True when limit cut the list. Narrow the filters, or pass the returned ids in"
+            " exclude_ids to get the next page."
+        )
+    )
     per_company: list[CompanyResult]
     fetched_at: datetime
     cache_hits: int = Field(description="Boards served from cache instead of refetched")

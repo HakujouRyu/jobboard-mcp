@@ -105,7 +105,10 @@ class JobBoardService:
         companies: Sequence[str] | None = None,
         include_description: bool = False,
         refresh: bool = False,
+        limit: int | None = None,
     ) -> SweepResult:
+        """``limit`` caps the jobs returned, newest first. Per-company ``matched`` counts and
+        the result's ``matched`` count every job that passed the filters."""
         entries = self._watchlist()
         results: dict[str, CompanyResult] = {}
         # Archived companies are skipped unless asked for by name.
@@ -160,11 +163,13 @@ class JobBoardService:
             kept.append(job)
             results[company].matched += 1
 
-        jobs = sort_jobs(kept)
+        jobs = sort_jobs(kept)[:limit]
         flag_counts = Counter(fl for j in jobs for fl in j.flags)
         per_company = [results[n] for n in dict.fromkeys(order)]
         return SweepResult(
             jobs=jobs,
+            matched=len(kept),
+            truncated=len(jobs) < len(kept),
             per_company=per_company,
             fetched_at=self._now(),
             cache_hits=cache_hits,

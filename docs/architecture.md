@@ -148,9 +148,9 @@ sequenceDiagram
         A-->>Svc: Job with pay fields
     end
 
-    Svc->>Svc: passes_pay(), dedupe by id, sort_jobs()
+    Svc->>Svc: passes_pay(), dedupe by id, sort_jobs(), keep the first limit jobs
     Svc-->>S: SweepResult
-    S-->>C: jobs[], per_company[], cache_hits, flag_counts
+    S-->>C: jobs[], matched, truncated, per_company[], cache_hits, flag_counts
 ```
 
 Notes:
@@ -293,6 +293,8 @@ classDiagram
     }
     class SweepResult {
         jobs: list~Job~
+        matched: int
+        truncated: bool
         per_company: list~CompanyResult~
         fetched_at: datetime
         cache_hits: int

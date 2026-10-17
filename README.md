@@ -32,7 +32,7 @@ accounts or credentials, and the only file it writes is its own watchlist.
 
 | Tool | What it does |
 |------|--------------|
-| `sweep_boards` | Fetches every watched board in parallel, applies title / remote / pay / date / seen-before filters, and returns matching jobs newest first, with a status per company (`ok`, `not_found`, `no_board`, `error`, `timeout`). |
+| `sweep_boards` | Fetches every watched board in parallel, applies title / remote / pay / date / seen-before filters, and returns matching jobs newest first (up to `limit`, 100 by default), with a status per company (`ok`, `not_found`, `no_board`, `error`, `timeout`). |
 | `get_posting` | One posting by URL or `{ats, token, job_id}`, with its full plain-text description and the best pay data (Greenhouse pay-transparency ranges included). |
 | `find_company_posting` | Finds a role seen on LinkedIn, Indeed, etc. on the company's own board (the watchlist board, or one resolved on the fly). Returns up to 5 fuzzy-matched candidates scored 0-100. |
 | `resolve_board` | Works out which Greenhouse, Ashby, or Lever board a company uses, by probing likely tokens and scanning the careers page for board links. Read-only. |

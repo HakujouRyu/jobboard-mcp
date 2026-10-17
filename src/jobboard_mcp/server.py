@@ -55,6 +55,11 @@ Each job's flags list missing data: pay_unknown, pay_not_usd, date_unknown, remo
 Hosted servers may refuse careers_url arguments; resolve_board then uses the watchlist's.
 """
 
+# A job is about 220 tokens without its description (measured on the test fixtures), so the
+# max keeps one sweep's output near 55k tokens.
+SWEEP_LIMIT_DEFAULT = 100
+SWEEP_LIMIT_MAX = 250
+
 _service: JobBoardService | None = None
 
 
@@ -157,6 +162,17 @@ async def sweep_boards(
         bool, Field(description="Include plain-text descriptions (much larger output).")
     ] = False,
     refresh: Annotated[bool, Field(description="Bypass the 3-hour cache.")] = False,
+    limit: Annotated[
+        int,
+        Field(
+            description=(
+                "Most jobs to return, newest first. If the result is truncated, narrow the"
+                " filters or pass the returned ids in exclude_ids to get the next page."
+            ),
+            ge=1,
+            le=SWEEP_LIMIT_MAX,
+        ),
+    ] = SWEEP_LIMIT_DEFAULT,
 ) -> SweepResult:
     """Sweep every watched job board (or a named subset) in parallel and return matching jobs,
     newest first, with per-company status. One company failing never fails the sweep."""
@@ -179,6 +195,7 @@ async def sweep_boards(
             companies=companies,
             include_description=include_description,
             refresh=refresh,
+            limit=limit,
         )
     except WatchlistError as exc:
         raise ToolError(str(exc)) from exc

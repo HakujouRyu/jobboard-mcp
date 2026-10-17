@@ -129,6 +129,31 @@ async def test_sweep_all_boards_offline_under_one_second(
 
 
 @respx.mock(assert_all_called=False)
+async def test_sweep_limit_truncates_and_exclude_ids_pages(
+    respx_mock: respx.MockRouter, service: JobBoardService
+) -> None:
+    mock_boards(respx_mock)
+    full = await call("sweep_boards", {"limit": server.SWEEP_LIMIT_MAX})
+    assert not full["truncated"] and full["matched"] == len(full["jobs"]) > 6
+    ids = [j["id"] for j in full["jobs"]]
+
+    first = await call("sweep_boards", {"limit": 3})
+    assert first["truncated"] and first["matched"] == full["matched"]
+    assert [j["id"] for j in first["jobs"]] == ids[:3]
+    # per_company counts every match, not just the jobs that fit under the limit.
+    assert sum(c["matched"] for c in first["per_company"]) == full["matched"]
+
+    second = await call("sweep_boards", {"limit": 3, "exclude_ids": ids[:3]})
+    assert [j["id"] for j in second["jobs"]] == ids[3:6]
+
+
+@pytest.mark.parametrize("limit", [0, server.SWEEP_LIMIT_MAX + 1])
+async def test_sweep_limit_out_of_range_is_refused(limit: int, service: JobBoardService) -> None:
+    with pytest.raises(ToolError, match="limit"):
+        await server.mcp.call_tool("sweep_boards", {"limit": limit})
+
+
+@respx.mock(assert_all_called=False)
 async def test_sweep_acceptance_filters(
     respx_mock: respx.MockRouter, service: JobBoardService
 ) -> None:
