@@ -49,6 +49,7 @@ class SweepFilters:
     remote: Sequence[Remote] = ()  # empty keeps every status
     include_unknown_remote: bool = True
     min_pay: int | None = None
+    min_pay_currency: str = "USD"
     posted_within_days: int | None = None
     exclude_ids: Sequence[str] = ()
     exclude_fingerprints: Sequence[str] = ()
@@ -96,8 +97,12 @@ def prefilter(job: Job, f: SweepFilters) -> bool:
 
 
 def passes_pay(job: Job, f: SweepFilters) -> bool:
-    """Drop jobs whose posted maximum is below ``min_pay``. Unknown pay is kept."""
-    return f.min_pay is None or job.pay_max is None or job.pay_max >= f.min_pay
+    """Drop jobs whose maximum in ``min_pay_currency`` is below ``min_pay``. Jobs with no pay
+    in that currency are kept: currencies are never converted, so they can't be compared."""
+    if f.min_pay is None:
+        return True
+    top = job.pay_max_in(f.min_pay_currency)
+    return top is None or top >= f.min_pay
 
 
 def sort_jobs(jobs: Iterable[Job]) -> list[Job]:

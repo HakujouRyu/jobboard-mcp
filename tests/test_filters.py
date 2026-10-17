@@ -7,11 +7,11 @@ import pytest
 from jobboard_mcp.filters import SweepFilters, apply_filters, compile_terms, sort_jobs
 from jobboard_mcp.models import (
     FLAG_DATE_UNKNOWN,
-    FLAG_PAY_NOT_USD,
     FLAG_PAY_UNKNOWN,
     FLAG_REMOTE_UNKNOWN,
     Ats,
     Job,
+    PayAmount,
     Remote,
 )
 
@@ -30,6 +30,7 @@ def make_job(n: int = 1, **kw: object) -> Job:
         "remote": Remote.REMOTE_US,
         "posted_at": date(2026, 10, 10),
         "pay_max": 200_000,
+        "pay_currency": "USD",
         "url": f"https://jobs.ashbyhq.com/acme/{n}",
     }
     data.update(kw)
@@ -198,6 +199,24 @@ def test_min_pay_drops_low_max_and_flags_unknown() -> None:
     assert next(j for j in got if j.native_id == "2").flags == []
 
 
+def test_min_pay_compares_only_the_same_currency() -> None:
+    cad_too = [PayAmount(currency="CAD", min=130_000, max=150_000, interval="year")]
+    jobs = [
+        make_job(1, pay_max=90_000, pay_currency="EUR"),
+        make_job(2, pay_max=60_000, pay_currency="EUR"),
+        make_job(3, pay_max=200_000, pay_currency="USD", pay_other_currencies=cad_too),
+        make_job(4, pay_max=120_000, pay_currency="USD"),  # nothing in EUR: kept
+    ]
+    eur = SweepFilters(today=TODAY, min_pay=80_000, min_pay_currency="EUR")
+    assert sorted(j.native_id for j in apply_filters(jobs, eur)) == ["1", "3", "4"]
+    # The CAD tier is found even though USD is the primary currency.
+    cad = SweepFilters(today=TODAY, min_pay=160_000, min_pay_currency="CAD")
+    assert sorted(j.native_id for j in apply_filters(jobs, cad)) == ["1", "2", "4"]
+    # Default is USD, so EUR-only jobs are kept rather than compared.
+    usd = SweepFilters(today=TODAY, min_pay=150_000)
+    assert sorted(j.native_id for j in apply_filters(jobs, usd)) == ["1", "2", "3"]
+
+
 def test_posted_within_days() -> None:
     jobs = [
         make_job(1, posted_at=date(2026, 9, 24)),  # exactly 21 days
@@ -221,9 +240,9 @@ def test_flags_do_not_depend_on_filters() -> None:
         ({"pay_max": 200_000}, []),
         ({"pay_max": None, "pay_min": 120_000}, []),  # "$120,000+" is known pay
         ({"pay_max": None}, [FLAG_PAY_UNKNOWN]),
-        # Mozilla posts EUR and CAD ranges: pay is known, just not comparable to min_pay
-        ({"pay_max": None, "pay_currency": "EUR"}, [FLAG_PAY_NOT_USD]),
-        ({"pay_max": 150_000, "pay_currency": "USD"}, []),
+        # Pay in another currency is known pay, not missing data.
+        ({"pay_max": 90_000, "pay_currency": "EUR"}, []),
+        ({"pay_max": None, "pay_currency": "EUR"}, [FLAG_PAY_UNKNOWN]),
     ],
 )
 def test_pay_flags(pay: dict[str, object], expected: list[str]) -> None:

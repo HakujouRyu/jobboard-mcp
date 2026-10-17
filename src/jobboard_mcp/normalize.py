@@ -13,7 +13,7 @@ from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from datetime import UTC, date, datetime
 
-from jobboard_mcp.models import EmploymentType, Pay, PaySource, Remote
+from jobboard_mcp.models import EmploymentType, Pay, PayAmount, PaySource, Remote
 
 HOURS_PER_YEAR = 2080
 
@@ -321,24 +321,37 @@ class PayRange:
     interval: str | None  # year / hour / month / week / None (as posted, normalized)
 
 
-def combine_ranges(ranges: Sequence[PayRange], raw: str | None, source: PaySource) -> Pay:
-    """Overall min/max across tiers, annual USD only. Non-USD keeps currency but no numbers."""
-    if not ranges:
-        return Pay(raw=raw, source=PaySource.NONE if raw is None else source)
-    usd = [r for r in ranges if (r.currency or "").upper() == "USD"]
-    if not usd:
-        first = ranges[0]
-        return Pay(currency=first.currency, interval=first.interval, raw=raw, source=source)
-    mins = [v for r in usd if (v := annualize(r.min, r.interval)) is not None]
-    maxes = [v for r in usd if (v := annualize(r.max, r.interval)) is not None]
-    intervals = {r.interval for r in usd}
-    return Pay(
+def _amount(currency: str | None, ranges: Sequence[PayRange]) -> PayAmount:
+    """Overall annual min/max across one currency's tiers."""
+    mins = [v for r in ranges if (v := annualize(r.min, r.interval)) is not None]
+    maxes = [v for r in ranges if (v := annualize(r.max, r.interval)) is not None]
+    intervals = {r.interval for r in ranges}
+    return PayAmount(
+        currency=currency,
         min=min(mins) if mins else None,
         max=max(maxes) if maxes else None,
-        currency="USD",
         interval=intervals.pop() if len(intervals) == 1 else "mixed",
+    )
+
+
+def combine_ranges(ranges: Sequence[PayRange], raw: str | None, source: PaySource) -> Pay:
+    """Annual min/max per currency, never converted. USD is the primary currency when the
+    posting offers it, otherwise the first currency posted; the rest go in ``other``."""
+    if not ranges:
+        return Pay(raw=raw, source=PaySource.NONE if raw is None else source)
+    by_currency: dict[str | None, list[PayRange]] = {}
+    for r in ranges:
+        by_currency.setdefault(r.currency.upper() if r.currency else None, []).append(r)
+    primary = "USD" if "USD" in by_currency else next(iter(by_currency))
+    main = _amount(primary, by_currency.pop(primary))
+    return Pay(
+        min=main.min,
+        max=main.max,
+        currency=main.currency,
+        interval=main.interval,
         raw=raw,
         source=source,
+        other=[_amount(c, rs) for c, rs in by_currency.items()],
     )
 
 

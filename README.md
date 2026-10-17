@@ -64,12 +64,15 @@ returns this (abridged):
       "posted_at": "2026-08-19",
       "pay_min": 126400,
       "pay_max": 213600,
+      "pay_currency": "USD",
       "pay_raw": "$126,400–$213,600 USD",
       "pay_source": "parsed_from_text",
       "url": "https://job-boards.greenhouse.io/gitlab/jobs/8710061002",
       "flags": []
     }
   ],
+  "matched": 6,
+  "truncated": false,
   "per_company": [
     { "company": "GitLab", "ats": "greenhouse", "total": 218, "matched": 6, "status": "ok" }
   ],
@@ -85,16 +88,17 @@ returns this (abridged):
   only non-US countries or regions ("Portugal", "ANZ Region") are `remote_other`. Unknown jobs
   are kept and flagged `remote_unknown` (pass `include_unknown_remote: false` to drop them).
 - **Pay:** structured fields first, then ranges parsed from the description. `pay_min` /
-  `pay_max` are annual USD only (hourly × 2080), and `pay_posted_interval` says how the pay was
-  posted. Non-USD pay keeps its currency and raw text but has no numbers. Multi-tier pay reports
-  the overall range.
+  `pay_max` are annual amounts (hourly × 2080) in `pay_currency`, the currency the job was posted
+  in. Nothing is converted. A posting with several currencies reports USD first when offered,
+  and the others in `pay_other_currencies`. `min_pay` takes a `min_pay_currency` (default USD).
+  Multi-tier pay reports the overall range.
 - **Employment type:** from the ATS field, or `contract` when the title says so ("(Contract)",
   "Contract Software Engineer").
 - **Titles:** filter terms match whole words plus a plural, so excluding `intern` keeps
   "Internal Tools Engineer".
 - **No hidden filters:** every `sweep_boards` filter is off unless the call sets it.
 - **Missing data** never silently drops a job. Every job's `flags` say what's missing
-  (`pay_unknown`, `pay_not_usd`, `date_unknown`, `remote_unknown`), whatever filters you use.
+  (`pay_unknown`, `date_unknown`, `remote_unknown`), whatever filters you use.
 
 The full rules, with decision diagrams, are in **[docs/normalization.md](docs/normalization.md)**.
 

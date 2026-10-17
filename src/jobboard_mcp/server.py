@@ -50,8 +50,10 @@ list_watchlist / add_company / update_company: manage the watchlist (the only wr
 drop a company, archive it with update_company(archived=true); there is no delete.
 list_watchlist's path is the watchlist file, if the user wants to edit it by hand.
 Public data only. Remote status is never guessed: 'unknown' jobs are kept and flagged.
-pay_min / pay_max are always annual USD; pay_posted_interval says how the pay was posted.
-Each job's flags list missing data: pay_unknown, pay_not_usd, date_unknown, remote_unknown.
+pay_min / pay_max are annual amounts in pay_currency (USD when the posting offers it), never
+converted; pay_other_currencies lists any other currencies posted, and pay_posted_interval says
+how the pay was posted. Each job's flags list missing data: pay_unknown, date_unknown,
+remote_unknown. US-focused: remote_us is the only country-level remote status.
 Hosted servers may refuse careers_url arguments; resolve_board then uses the watchlist's.
 """
 
@@ -138,12 +140,19 @@ async def sweep_boards(
         int | None,
         Field(
             description=(
-                "Annual USD. Drops jobs whose posted maximum is below this. Jobs with no USD pay"
-                " are kept and flagged pay_unknown."
+                "Annual amount in min_pay_currency. Drops jobs whose posted maximum in that"
+                " currency is below this. Jobs with no pay in that currency are kept."
             ),
             ge=0,
         ),
     ] = None,
+    min_pay_currency: Annotated[
+        str,
+        Field(
+            description="ISO 4217 code that min_pay is in. Nothing is converted.",
+            pattern=r"^[A-Za-z]{3}$",
+        ),
+    ] = "USD",
     posted_within_days: Annotated[
         int | None,
         Field(
@@ -186,6 +195,7 @@ async def sweep_boards(
         remote=remote or (),
         include_unknown_remote=include_unknown_remote,
         min_pay=min_pay,
+        min_pay_currency=min_pay_currency.upper(),
         posted_within_days=posted_within_days,
         exclude_ids=exclude_ids or (),
         exclude_fingerprints=exclude_fingerprints or (),

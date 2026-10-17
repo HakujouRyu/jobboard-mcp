@@ -58,8 +58,9 @@ Stretch (v2): Workable, SmartRecruiters, Recruitee, and Workday (Workday's endpo
 | `posted_at` | date or null | Best available first-published date |
 | `updated_at` | date or null | |
 | `date_source` | str | Which raw field `posted_at` came from |
-| `pay_min`, `pay_max` | int or null | Annual USD only. Convert hourly at 2080 hours. Leave null for non-USD. |
-| `pay_currency`, `pay_posted_interval` | str or null | As posted (`pay_min`/`pay_max` are always annualized) |
+| `pay_min`, `pay_max` | int or null | Annual, in `pay_currency`. Convert hourly at 2080 hours. Never convert currencies. |
+| `pay_currency`, `pay_posted_interval` | str or null | As posted (`pay_min`/`pay_max` are always annualized). USD when the posting offers it, else the first currency posted. |
+| `pay_other_currencies` | list | `{currency, min, max, interval}` for each other currency the posting lists, annualized the same way |
 | `pay_raw` | str or null | Original text or structure, for auditing |
 | `pay_source` | enum | `structured`, `parsed_from_text`, `none` |
 | `url` | str | Human-readable posting URL |

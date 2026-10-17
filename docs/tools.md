@@ -38,7 +38,8 @@ should pass the user's title, remote, pay, and date filters on each call.
 | `title_exclude` | string[] | none | Drop titles matching any term. |
 | `remote` | enum[] | every status | Remote statuses to keep. |
 | `include_unknown_remote` | bool | `true` | Keep `unknown` remote jobs (flagged `remote_unknown`). |
-| `min_pay` | int ≥ 0 | none | Annual USD. Drops jobs whose posted **maximum** is below it. Unknown and non-USD pay are kept (flagged `pay_unknown` / `pay_not_usd`). |
+| `min_pay` | int ≥ 0 | none | Annual amount in `min_pay_currency`. Drops jobs whose posted **maximum** in that currency is below it. Unknown pay (flagged `pay_unknown`) and pay only in other currencies are kept. |
+| `min_pay_currency` | 3-letter code | `USD` | The currency `min_pay` is in. It's matched against the job's primary currency and `pay_other_currencies`. Nothing is converted. |
 | `posted_within_days` | int ≥ 0 | none | Unknown dates are kept and flagged. |
 | `exclude_ids` | string[] | none | `{ats}:{token}:{id}` values already seen. |
 | `exclude_fingerprints` | string[] | none | Fingerprints already seen. |
@@ -86,6 +87,7 @@ Example result, abridged. The job is real (from the recorded GitLab fixture). Th
       "pay_min": 126400,
       "pay_max": 213600,
       "pay_currency": "USD",
+      "pay_other_currencies": [],
       "pay_posted_interval": "year",
       "pay_raw": "$126,400–$213,600 USD",
       "pay_source": "parsed_from_text",

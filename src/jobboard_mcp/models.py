@@ -49,13 +49,24 @@ class CompanyStatus(StrEnum):
 
 # Job.flags values: data that's missing from the job, whatever filters were used.
 FLAG_PAY_UNKNOWN = "pay_unknown"
-FLAG_PAY_NOT_USD = "pay_not_usd"
 FLAG_DATE_UNKNOWN = "date_unknown"
 FLAG_REMOTE_UNKNOWN = "remote_unknown"
 
+_ANNUAL = "Annual, in pay_currency (hourly pay x 2080, monthly x 12, weekly x 52); null if unknown"
+
+
+class PayAmount(BaseModel):
+    """Annualized pay in one currency, as posted. Never converted."""
+
+    currency: str | None = None
+    min: int | None = None
+    max: int | None = None
+    interval: str | None = None  # as posted: year / hour / month / week / mixed
+
 
 class Pay(BaseModel):
-    """Result of pay normalization. min/max are annual USD or null."""
+    """Result of pay normalization: the primary currency (USD when posted, else the first
+    one posted), plus any other currencies the posting lists."""
 
     min: int | None = None
     max: int | None = None
@@ -63,6 +74,7 @@ class Pay(BaseModel):
     interval: str | None = None  # as posted: year / hour / month / week / mixed
     raw: str | None = None
     source: PaySource = PaySource.NONE
+    other: list[PayAmount] = Field(default_factory=list)
 
 
 class Job(BaseModel):
@@ -80,15 +92,16 @@ class Job(BaseModel):
     posted_at: date | None = None
     updated_at: date | None = None
     date_source: str | None = None
-    pay_min: int | None = Field(
+    pay_min: int | None = Field(default=None, description=_ANNUAL)
+    pay_max: int | None = Field(default=None, description=_ANNUAL)
+    pay_currency: str | None = Field(
         default=None,
-        description="Annual USD (hourly pay x 2080, monthly x 12); null if unknown or non-USD",
+        description="Currency of pay_min/pay_max as posted: USD when offered, else the first",
     )
-    pay_max: int | None = Field(
-        default=None,
-        description="Annual USD (hourly pay x 2080, monthly x 12); null if unknown or non-USD",
+    pay_other_currencies: list[PayAmount] = Field(
+        default_factory=list,
+        description="The same role's pay in other currencies the posting lists, annualized",
     )
-    pay_currency: str | None = None
     pay_posted_interval: str | None = Field(
         default=None,
         description=(
@@ -106,18 +119,13 @@ class Job(BaseModel):
     model_config = ConfigDict(json_schema_mode_override="serialization")
 
     @computed_field(
-        description=(
-            "Missing data: pay_unknown (no pay posted), pay_not_usd (pay posted in another "
-            "currency, so pay_min/pay_max are null), date_unknown, remote_unknown"
-        )
+        description="Missing data: pay_unknown (no pay posted), date_unknown, remote_unknown"
     )
     @property
     def flags(self) -> list[str]:
         """Worked out from the job's own fields, so it stays right after pay is filled in."""
         flags: list[str] = []
-        if self.pay_currency and self.pay_currency.upper() != "USD":
-            flags.append(FLAG_PAY_NOT_USD)
-        elif self.pay_min is None and self.pay_max is None:
+        if self.pay_min is None and self.pay_max is None:
             flags.append(FLAG_PAY_UNKNOWN)
         if self.posted_at is None:
             flags.append(FLAG_DATE_UNKNOWN)
@@ -129,6 +137,17 @@ class Job(BaseModel):
         self.pay_min, self.pay_max = pay.min, pay.max
         self.pay_currency, self.pay_posted_interval = pay.currency, pay.interval
         self.pay_raw, self.pay_source = pay.raw, pay.source
+        self.pay_other_currencies = list(pay.other)
+
+    def pay_max_in(self, currency: str) -> int | None:
+        """The annual maximum posted in ``currency``, or None if none was."""
+        want = currency.upper()
+        if (self.pay_currency or "").upper() == want:
+            return self.pay_max
+        for amount in self.pay_other_currencies:
+            if (amount.currency or "").upper() == want:
+                return amount.max
+        return None
 
 
 class WatchlistEntry(BaseModel):

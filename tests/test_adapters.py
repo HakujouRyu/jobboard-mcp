@@ -138,8 +138,11 @@ async def test_ashby_temporal_pay_tiers_and_hybrid(http: HttpClient) -> None:
     assert tiered.pay_min and tiered.pay_max and tiered.pay_min < tiered.pay_max
     assert "Equity" not in (tiered.pay_raw or "")  # salary components only
 
+    # GBP, EUR, INR, and SGD roles keep their own numbers; nothing is converted.
     non_usd = [j for j in jobs if j.pay_currency not in (None, "USD")]
-    assert non_usd and all(j.pay_min is None and j.pay_max is None for j in non_usd)
+    assert {j.pay_currency for j in non_usd} >= {"GBP", "EUR"}
+    assert all(j.pay_min and j.pay_max and j.pay_min <= j.pay_max for j in non_usd)
+    assert all(not j.flags or "pay_unknown" not in j.flags for j in non_usd)
 
     # isRemote=true on hybrid roles: workplaceType must win.
     hybrid = [j for j in jobs if j.remote is Remote.HYBRID]

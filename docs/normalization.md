@@ -12,7 +12,7 @@ For where each ATS keeps the raw fields, see [api-notes.md](api-notes.md).
 ## Principles
 
 1. **Never guess in the job seeker's favor.** A posting is `remote_us` only with positive
-   evidence. Pay is reported in USD only when it was posted in USD.
+   evidence. Pay is reported in the currency it was posted in, never converted.
 2. **Keep the raw value.** `pay_raw`, `date_source`, and `locations` show what the normalized
    fields came from, so any result can be checked.
 3. **Missing data is flagged, not dropped.** Every job says what's missing in its `flags`. If
@@ -92,15 +92,21 @@ flowchart TD
     s -- no --> text{"a range in the text?<br/>Ashby: comp summaries, then description<br/>Lever: salaryDescriptionPlain, then description<br/>Greenhouse: description"}
     text -- yes --> ranges
     text -- no --> none(["pay_source: none"])
-    ranges --> usd{"any USD range?"}
-    usd -- no --> nonusd(["currency and pay_raw kept,<br/>pay_min / pay_max null"])
-    usd -- yes --> ann["annualize each USD range:<br/>hour × 2080, month × 12, week × 52"]
-    ann --> combine(["pay_min = lowest min<br/>pay_max = highest max (both annual)<br/>pay_posted_interval: as posted, or 'mixed'"])
+    ranges --> ann["annualize each range in its own currency:<br/>hour × 2080, month × 12, week × 52"]
+    ann --> group["group by currency:<br/>lowest min, highest max,<br/>interval as posted or 'mixed'"]
+    group --> usd{"any USD range?"}
+    usd -- yes --> primusd(["USD fills pay_min / pay_max / pay_currency;<br/>other currencies go in pay_other_currencies"])
+    usd -- no --> primfirst(["the first currency posted fills pay_min / pay_max / pay_currency;<br/>the rest go in pay_other_currencies"])
 ```
 
 Rules:
 
-- `pay_min` and `pay_max` are **annual USD or null**. Nothing is converted between currencies.
+- `pay_min` and `pay_max` are **annual amounts in `pay_currency`, or null**. Nothing is
+  converted between currencies. When a posting lists pay in several currencies (US and Canada
+  tiers, say), USD is the primary currency if it's offered, otherwise the first one posted, and
+  each other currency gets its own annual range in `pay_other_currencies`.
+- Annualizing uses the US convention of 2080 hours a year for every currency. Hourly pay in
+  other countries may assume fewer hours, so treat annualized non-US hourly figures as rough.
 - `pay_posted_interval` is how the pay was posted (`year`, `hour`, `month`, `week`, or `mixed`
   across tiers). An hourly posting has `pay_posted_interval: "hour"` and annualized numbers:
   $56.07/hour gives `pay_min: 116626`.
@@ -129,13 +135,15 @@ descriptions cheap to scan. It recognizes:
 | `$150K–$180K USD` | same |
 | `$126,400—$213,600 USD` | en and em dashes, or `to` |
 | `$75/hr`, `$60 - $80 per hour` | hourly, annualized × 2080 |
-| `CA$120,000 - CA$140,000`, `C$...` | CAD (no USD numbers) |
-| `£60,000 - £80,000` | GBP (no USD numbers) |
+| `CA$120,000 - CA$140,000`, `C$...` | 120000 to 140000 CAD, year |
+| `£60,000 - £80,000` | 60000 to 80000 GBP, year |
 | `€68.000–€91.000` | EUR, year. A dot before exactly three digits is a thousands separator, but `$56.07` is still cents |
 
 Matches are thrown out when they don't look like pay: a figure followed by "million" or "bn", or
 a range outside salary sizes (an annual range has to fall between $10,000 and $2,000,000), so a
-"$500 stipend" or "$2B in funding" isn't read as pay.
+"$500 stipend" or "$2B in funding" isn't read as pay. The same bounds apply in every currency,
+so annual pay in currencies with large figures (INR, JPY) is rejected when it's written in
+the text, and the job is flagged `pay_unknown`. Structured pay isn't bounded this way.
 
 ## Dates
 
@@ -197,7 +205,7 @@ flowchart LR
     rem -- yes --> date{"posted within N days?<br/>(unknown date kept)"}
     date -- no --> drop
     date -- yes --> detail["Greenhouse pay<br/>detail fetch, if needed"]
-    detail --> pay{"pay_max >= min_pay?<br/>(unknown pay kept)"}
+    detail --> pay{"max in min_pay_currency >= min_pay?<br/>(unknown pay, or none in that currency, kept)"}
     pay -- no --> drop
     pay -- yes --> keep(["kept, with flags"])
 ```
@@ -242,13 +250,14 @@ and `sweep_boards` show the same flags for the same job.
 
 | Flag | When |
 |------|------|
-| `pay_unknown` | no pay was posted: `pay_min` and `pay_max` are both null, and there's no other currency |
-| `pay_not_usd` | pay was posted in another currency (`pay_currency` says which), so `pay_min` and `pay_max` are null |
+| `pay_unknown` | no pay was posted: `pay_min` and `pay_max` are both null |
 | `date_unknown` | `posted_at` is null |
 | `remote_unknown` | `remote` is `unknown` |
 
-A USD minimum with no maximum ("$120,000+") is known pay and isn't flagged. `min_pay` keeps
-jobs flagged `pay_unknown` or `pay_not_usd`, since neither can be compared to it.
+A minimum with no maximum ("$120,000+") is known pay and isn't flagged. Pay in a currency
+other than USD is known pay too. `min_pay` is compared with the job's range in
+`min_pay_currency` (USD by default), primary or other. It keeps jobs flagged `pay_unknown` and
+jobs with no range in that currency, since neither can be compared to it.
 
 `flags` is a computed field on `Job`, worked out from the job's other fields whenever it's read.
 That keeps it right after a sweep fills in Greenhouse pay from the detail endpoint.

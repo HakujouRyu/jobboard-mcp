@@ -39,8 +39,12 @@ All notable changes are recorded here. The format follows
 - `flags` describe the job, not the search: `pay_unknown` and `date_unknown` appear whenever
   the data is missing, not only when a sweep filters on it, and every tool shows the same
   flags for a job.
-- New `pay_not_usd` flag for pay posted in another currency, which used to count as
-  `pay_unknown`.
+- Pay in any currency now has numbers. `pay_min` and `pay_max` are annual amounts in
+  `pay_currency` (USD when the posting offers it, otherwise the first currency posted), and
+  other currencies the posting lists are in the new `pay_other_currencies`. Nothing is
+  converted. Non-USD pay used to have null numbers and count as `pay_unknown`.
+- `min_pay` takes a `min_pay_currency` (default `USD`) and compares against the job's range in
+  that currency. Jobs with no range in that currency are kept.
 - Posting links are upgraded from `http://` to `https://`.
 
 ### Fixed

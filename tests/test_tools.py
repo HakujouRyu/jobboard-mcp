@@ -298,5 +298,5 @@ async def test_flags_are_in_the_output_schema() -> None:
     tools = {t.name: t for t in await server.mcp.list_tools()}
     posting, sweep = tools["get_posting"].output_schema, tools["sweep_boards"].output_schema
     assert posting is not None and sweep is not None
-    assert "pay_not_usd" in posting["properties"]["flags"]["description"]
+    assert "pay_unknown" in posting["properties"]["flags"]["description"]
     assert "flags" in sweep["$defs"]["Job"]["properties"]

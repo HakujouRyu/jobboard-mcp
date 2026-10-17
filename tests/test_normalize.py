@@ -2,7 +2,7 @@ from datetime import date
 
 import pytest
 
-from jobboard_mcp.models import EmploymentType, PaySource, Remote
+from jobboard_mcp.models import EmploymentType, PayAmount, PaySource, Remote
 from jobboard_mcp.normalize import (
     PayRange,
     annualize,
@@ -189,10 +189,11 @@ def test_parse_pay_text_multiple_tiers_report_overall_range() -> None:
     assert pay.raw is not None and "Zone" not in pay.raw and " | " in pay.raw
 
 
-def test_parse_pay_text_mixed_currency_keeps_only_usd() -> None:
-    text = "US: $150,000 - $180,000 USD. Canada: $140,000 - $170,000 CAD."
+def test_parse_pay_text_mixed_currency_puts_usd_first() -> None:
+    text = "Canada: $140,000 - $170,000 CAD. US: $150,000 - $180,000 USD."
     pay = parse_pay_text(text)
     assert (pay.min, pay.max, pay.currency) == (150_000, 180_000, "USD")
+    assert pay.other == [PayAmount(currency="CAD", min=140_000, max=170_000, interval="year")]
     assert pay.raw is not None and "CAD" in pay.raw
 
 
@@ -237,7 +238,7 @@ def test_parse_pay_text_cents_are_not_thousands() -> None:
 
 def test_parse_pay_text_non_usd_only() -> None:
     pay = parse_pay_text("Salary £70,000 - £90,000")
-    assert (pay.min, pay.max, pay.currency) == (None, None, "GBP")
+    assert (pay.min, pay.max, pay.currency, pay.other) == (70_000, 90_000, "GBP", [])
     assert pay.source is PaySource.PARSED_FROM_TEXT
 
 
@@ -264,9 +265,18 @@ def test_combine_ranges_usd_and_hourly() -> None:
     assert (pay.min, pay.max, pay.interval) == (83_200, 104_000, "hour")
 
 
-def test_combine_ranges_non_usd() -> None:
-    pay = combine_ranges([PayRange(1, 2, "GBP", "year")], raw="r", source=PaySource.STRUCTURED)
-    assert (pay.min, pay.max, pay.currency) == (None, None, "GBP")
+def test_combine_ranges_non_usd_keeps_its_own_numbers() -> None:
+    ranges = [PayRange(60_000, 80_000, "GBP", "year"), PayRange(70_000, 95_000, "eur", "year")]
+    pay = combine_ranges(ranges, raw="r", source=PaySource.STRUCTURED)
+    # No USD, so the first currency posted is primary. Nothing is converted.
+    assert (pay.min, pay.max, pay.currency, pay.interval) == (60_000, 80_000, "GBP", "year")
+    assert pay.other == [PayAmount(currency="EUR", min=70_000, max=95_000, interval="year")]
+
+
+def test_combine_ranges_tiers_in_one_currency_report_the_overall_range() -> None:
+    ranges = [PayRange(50, 60, "CAD", "hour"), PayRange(120_000, 140_000, "CAD", "year")]
+    pay = combine_ranges(ranges, raw="r", source=PaySource.STRUCTURED)
+    assert (pay.min, pay.max, pay.interval, pay.other) == (104_000, 140_000, "mixed", [])
 
 
 @pytest.mark.parametrize(

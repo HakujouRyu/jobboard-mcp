@@ -277,6 +277,7 @@ classDiagram
         date_source: str?
         pay_min, pay_max: int?
         pay_currency, pay_posted_interval, pay_raw
+        pay_other_currencies: list~PayAmount~
         pay_source: PaySource
         url, apply_url
         description_text: str?
@@ -347,7 +348,8 @@ classDiagram
     WatchlistChange *-- WatchlistEntry
 ```
 
-`Job.id` is `{ats}:{token}:{native_id}`, and `pay_min` / `pay_max` are annual USD.
+`Job.id` is `{ats}:{token}:{native_id}`, and `pay_min` / `pay_max` are annual amounts in
+`pay_currency`, never converted.
 
 Enums: `Ats` (greenhouse, ashby, lever), `Remote` (remote_us, remote_global, remote_other,
 hybrid, onsite, unknown), `EmploymentType`, `PaySource` (structured, parsed_from_text, none),
