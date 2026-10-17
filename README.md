@@ -1,6 +1,6 @@
 # jobboard-mcp
 
-[![PR checks](https://github.com/HakujouRyu/jobboard-mcp/actions/workflows/pr-checks.yml/badge.svg)](https://github.com/HakujouRyu/jobboard-mcp/actions/workflows/pr-checks.yml)
+[![CI](https://github.com/HakujouRyu/jobboard-mcp/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/HakujouRyu/jobboard-mcp/actions/workflows/ci.yml?query=branch%3Amain)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 

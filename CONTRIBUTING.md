@@ -46,8 +46,8 @@ failed before you change any code.
 
 ### CI
 
-GitHub Actions runs the three checks above on every PR
-([pr-checks.yml](.github/workflows/pr-checks.yml)). When a PR merges,
+GitHub Actions runs the three checks above on every PR and every push to `main`
+([ci.yml](.github/workflows/ci.yml)). When a PR merges,
 [pr-closed.yml](.github/workflows/pr-closed.yml) runs the live tests against the merge commit.
 A live failure there doesn't undo the merge, so check the run after merging. Closing a PR,
 merged or not, also deletes its Actions caches.
