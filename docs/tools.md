@@ -113,7 +113,9 @@ Example result, abridged. The job is real (from the recorded GitLab fixture). Th
 ## `get_posting`
 
 One posting with its full plain-text description and the best pay data available. For
-Greenhouse, that means the detail endpoint with `pay_transparency=true`.
+Greenhouse, that means the detail endpoint with `pay_transparency=true`. A sweep can show the
+same Greenhouse job with `pay_source: "parsed_from_text"` where `get_posting` says
+`"structured"`; the numbers match. See [normalization.md](normalization.md#pay).
 
 Pass **either** `url` **or** all of `ats`, `token`, and `job_id`.
 

@@ -110,6 +110,13 @@ Rules:
 - Greenhouse `pay_input_ranges` are in cents and have no interval field. A maximum under $1,000
   is read as hourly.
 - `pay_source` says where the numbers came from: `structured`, `parsed_from_text`, or `none`.
+- For Greenhouse, a sweep and `get_posting` can report the same pay with a different
+  `pay_source` and `pay_raw`. The list endpoint has no structured pay, so a sweep parses the
+  description (`parsed_from_text`) and fetches the detail endpoint only for jobs where that finds
+  nothing. `get_posting` always reads the detail endpoint's `pay_input_ranges` (`structured`).
+  On live boards (2026-10-16), all 225 Greenhouse jobs with pay in the description had the same
+  `pay_min`, `pay_max`, currency, and interval both ways, so fetching every detail page in a sweep
+  wouldn't change the numbers, only add a request per job.
 
 ### Parsing pay from text
 
