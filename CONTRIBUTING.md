@@ -49,10 +49,16 @@ failed before you change any code.
 GitHub Actions runs the three checks above on every PR and every push to `main`
 ([ci.yml](.github/workflows/ci.yml)). The tests run on Linux, Windows, and macOS, each with
 Python 3.12 (the oldest supported) and 3.14 (the newest). Lint and type checks run once. The
-`checks` job passes only when all of those do, and it's the one a merge waits on. When a PR merges,
-[pr-closed.yml](.github/workflows/pr-closed.yml) runs the live tests against the merge commit.
-A live failure there doesn't undo the merge, so check the run after merging. Closing a PR,
-merged or not, also deletes its Actions caches.
+`checks` job passes only when all of those do, and it's the one a merge waits on.
+
+[live.yml](.github/workflows/live.yml) runs the live tests on every push to `main` and every
+Monday, since boards change without any commit here. A failure opens an issue labeled
+`live-tests`, or comments on the one already open, and the next passing run closes it. GitHub
+turns off scheduled workflows after 60 days without a commit, so on a quiet repo, re-enable it
+from the Actions tab or run it by hand.
+
+When a PR closes, merged or not, [pr-closed.yml](.github/workflows/pr-closed.yml) deletes its
+Actions caches.
 
 ## Ground rules
 

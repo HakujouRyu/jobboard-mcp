@@ -1,9 +1,8 @@
-# Housekeeping when a PR closes: live tests against the merged code, then cache cleanup. GitHub's
-# "Automatically delete head branches" setting removes the branch.
+# Deletes a PR's Actions caches when it closes, merged or not. GitHub's "Automatically delete
+# head branches" setting removes the branch.
 #
-# pull_request_target so the token can delete caches for PRs from forks too. That's
-# safe here because nothing runs the PR's code: the live tests check out the merge commit, which
-# is already on the base branch.
+# pull_request_target so the token can delete caches for PRs from forks too. That's safe here
+# because nothing checks out or runs the PR's code.
 name: PR closed
 
 on:
@@ -13,29 +12,9 @@ on:
 permissions: {}
 
 jobs:
-  live-tests:
-    if: github.event.pull_request.merged
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
-          persist-credentials: false
-
-      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
-
-      - name: Install
-        run: uv sync --locked
-
-      # A failure can mean a board changed rather than a bug. See "Checks" in CONTRIBUTING.md.
-      - name: Live tests
-        run: uv run pytest -m live
-
   delete-caches:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     permissions:
       actions: write
     steps:
