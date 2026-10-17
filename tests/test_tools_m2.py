@@ -224,6 +224,34 @@ async def test_list_watchlist_filters(service: JobBoardService) -> None:
 
 
 @respx.mock
+async def test_archived_companies_are_skipped_and_hidden(
+    service: JobBoardService, watchlist_path: Path
+) -> None:
+    mock_apis(respx.mock)
+    out = await call("update_company", {"company": "outreach", "archived": True})
+    assert out["entry"]["archived"] is True and out["board_check"] is None
+    assert "  archived: true\n" in watchlist_path.read_text(encoding="utf-8")
+
+    listed = await call("list_watchlist", {})
+    assert "Outreach" not in {c["company"] for c in listed["companies"]}
+    assert (listed["total"], listed["archived_hidden"]) == (3, 1)
+    everything = await call("list_watchlist", {"include_archived": True})
+    assert (everything["total"], everything["archived_hidden"]) == (4, 0)
+
+    sweep = await call("sweep_boards", {"title_exclude": []})
+    assert "Outreach" not in {c["company"] for c in sweep["per_company"]}
+    assert all(j["company"] != "Outreach" for j in sweep["jobs"])
+    named = await call("sweep_boards", {"companies": ["Outreach"], "title_exclude": []})
+    assert [c["status"] for c in named["per_company"]] == ["ok"] and named["jobs"]
+
+    with pytest.raises(ToolError, match="archived; restore it with update_company"):
+        await server.mcp.call_tool("add_company", {"company": "Outreach"})
+    out = await call("update_company", {"company": "Outreach", "archived": False})
+    assert out["entry"]["archived"] is False
+    assert watchlist_path.read_text(encoding="utf-8") == WATCHLIST
+
+
+@respx.mock
 async def test_add_company_validates_board_first(
     service: JobBoardService, watchlist_path: Path
 ) -> None:

@@ -14,6 +14,8 @@ All notable changes are recorded here. The format follows
 - `list_watchlist`, `add_company`, and `update_company`, plus `WATCHLIST_READONLY` to turn the
   write tools off.
 - An example watchlist, copied to `data/watchlist.yaml` on first run.
+- Archiving: `update_company(archived=true)` keeps a company on the watchlist but stops
+  sweeping it. `list_watchlist` hides archived companies unless `include_archived` is set.
 
 ### Changed
 

@@ -37,8 +37,8 @@ accounts or credentials, and the only file it writes is its own watchlist.
 | `find_company_posting` | Finds a role seen on LinkedIn, Indeed, etc. on the company's own board (the watchlist board, or one resolved on the fly). Returns up to 5 fuzzy-matched candidates scored 0-100. |
 | `resolve_board` | Works out which Greenhouse, Ashby, or Lever board a company uses, by probing likely tokens and scanning the careers page for board links. Read-only. |
 | `is_posting_live` | Whether a posting is still open, checked through the ATS API. |
-| `list_watchlist` | Watched companies, filterable by board / tag / domain. |
-| `add_company`, `update_company` | The only writes, and only to `data/watchlist.yaml`. Boards are validated with a live fetch before saving, and comments and formatting are kept. Not registered when `WATCHLIST_READONLY=true`. |
+| `list_watchlist` | Watched companies, filterable by board / tag / domain. Archived companies are hidden unless asked for. |
+| `add_company`, `update_company` | The only writes, and only to `data/watchlist.yaml`. Boards are validated with a live fetch before saving, and comments and formatting are kept. To drop a company, archive it with `update_company`; sweeps then skip it. Not registered when `WATCHLIST_READONLY=true`. |
 
 Full parameters and example outputs are in **[docs/tools.md](docs/tools.md)**.
 

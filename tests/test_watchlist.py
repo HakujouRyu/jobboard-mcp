@@ -110,6 +110,28 @@ def test_update_appending_last_field_keeps_entry_spacing(store: WatchlistStore) 
     )
 
 
+def test_archive_and_restore_round_trip(store: WatchlistStore) -> None:
+    # Archiving appends the key without splitting entries; restoring removes it again
+    assert store.update("GitLab", {"archived": True}).archived is True
+    store.update("Posit", {"archived": True})
+    text = store.path.read_text(encoding="utf-8")
+    assert "    spans two lines.\n  archived: true\n\n- company: Posit\n" in text
+    assert "  interview_note: Take-home project\n  archived: true\n\n# Dropped on review:" in text
+    assert all(e.archived for e in store.load())
+
+    assert store.update("GitLab", {"archived": False}).archived is False
+    store.update("Posit", {"archived": False})
+    assert store.path.read_text(encoding="utf-8") == SAMPLE
+
+
+def test_add_omits_archived_unless_set(store: WatchlistStore) -> None:
+    store.add(WatchlistEntry(company="Linear", ats=Ats.ASHBY, token="linear"))
+    store.add(WatchlistEntry(company="Replit", archived=True))
+    text = store.path.read_text(encoding="utf-8")
+    assert "- company: Linear\n  ats: ashby\n  token: linear\n" in text
+    assert text.count("archived") == 1 and "  archived: true\n" in text
+
+
 def test_update_validates(store: WatchlistStore) -> None:
     with pytest.raises(WatchlistError, match="unknown watchlist fields"):
         store.update("GitLab", {"color": "blue"})

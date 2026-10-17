@@ -21,6 +21,7 @@ A YAML list with one mapping per company:
   tags: []                         # e.g. [hww] = hiring-without-whiteboards
   interview_note: null
   notes: Old Greenhouse board is gone
+  archived: true                   # optional; only written when true
 ```
 
 | Field | Required | |
@@ -30,11 +31,32 @@ A YAML list with one mapping per company:
 | `careers_url` | no | `resolve_board` uses it when no URL is passed. |
 | `domains`, `tags` | no | Free-form. Used by `list_watchlist` filters. |
 | `interview_note`, `notes` | no | Free-form. |
+| `archived` | no | `true` keeps the entry but stops sweeping it. See [Archiving](#archiving). |
 
 The file is validated every time it's read: it must be a list, every entry must match the
 schema, names must be unique, and `ats`/`token` must be set together. An invalid file makes
 watchlist-based tools fail with a message naming the problem. They don't fall back to a partial
 list.
+
+## Archiving
+
+There's no delete tool. To stop sweeping a company, archive it:
+
+```text
+update_company(company="Replit", archived=true)
+```
+
+- Sweeps skip archived companies, unless you name one in `companies`.
+- `list_watchlist` hides them and reports how many in `archived_hidden`. Pass
+  `include_archived: true` to see them.
+- `get_posting`, `find_company_posting`, and `is_posting_live` still use their boards, so you can
+  check on a role you applied to.
+- `add_company` with an archived name fails and points you to `update_company`.
+- `archived=false` restores the entry. The `archived: true` line is removed rather than set to
+  false, so restoring leaves the entry exactly as it was.
+
+The notes, tags, and interview notes stay in place. To remove an entry for good, delete it from
+the file by hand.
 
 ## Finding a board token
 

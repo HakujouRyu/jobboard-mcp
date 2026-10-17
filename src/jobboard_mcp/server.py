@@ -44,7 +44,8 @@ Searches public Greenhouse, Ashby, and Lever job boards for a watchlist of compa
 normalized jobs. sweep_boards: filtered sweep of every watched board. get_posting: one full
 posting. find_company_posting: find a role seen elsewhere on the company's own board.
 resolve_board: work out a company's board. is_posting_live: check a posting is still open.
-list_watchlist / add_company / update_company: manage the watchlist (the only writes).
+list_watchlist / add_company / update_company: manage the watchlist (the only writes). To
+drop a company, archive it with update_company(archived=true); there is no delete.
 Public data only. Remote status is never guessed: 'unknown' jobs are kept and flagged.
 pay_min / pay_max are always annual USD; pay_posted_interval says how the pay was posted.
 Each job's flags list missing data: pay_unknown, pay_not_usd, date_unknown, remote_unknown.
@@ -89,7 +90,12 @@ _READ_ONLY = ToolAnnotations(read_only_hint=True, idempotent_hint=True, open_wor
 async def sweep_boards(
     companies: Annotated[
         list[str] | None,
-        Field(description="Watchlist company names to sweep. Default: the whole watchlist."),
+        Field(
+            description=(
+                "Watchlist company names to sweep, archived ones included. "
+                "Default: every company that isn't archived."
+            )
+        ),
     ] = None,
     title_include: Annotated[
         list[str] | None,
@@ -268,10 +274,15 @@ async def list_watchlist(
     domain: Annotated[
         str | None, Field(description="Only companies whose domains contain this text.")
     ] = None,
+    include_archived: Annotated[
+        bool, Field(description="Also list archived companies (hidden by default).")
+    ] = False,
 ) -> WatchlistView:
     """List watched companies with their boards, domains, tags, and interview notes."""
     try:
-        return get_service().list_watchlist(has_board=has_board, tag=tag, domain=domain)
+        return get_service().list_watchlist(
+            has_board=has_board, tag=tag, domain=domain, include_archived=include_archived
+        )
     except WatchlistError as exc:
         raise ToolError(str(exc)) from exc
 
@@ -324,9 +335,19 @@ async def update_company(
     tags: Annotated[list[str] | None, Field(description="Replace tags; [] clears.")] = None,
     interview_note: Annotated[str | None, Field(description="New note; '' clears.")] = None,
     notes: Annotated[str | None, Field(description="New notes; '' clears.")] = None,
+    archived: Annotated[
+        bool | None,
+        Field(
+            description=(
+                "true archives the company: sweeps skip it and list_watchlist hides it, but "
+                "its notes are kept. false restores it."
+            )
+        ),
+    ] = None,
 ) -> WatchlistChange:
-    """Change a watchlist entry. Only the fields you pass change. A new board is validated with a
-    live fetch first; nothing is saved if that fails. Writes only data/watchlist.yaml."""
+    """Change a watchlist entry. Only the fields you pass change. Archive a company you no longer
+    want swept with archived=true. A new board is validated with a live fetch first; nothing is
+    saved if that fails. Writes only data/watchlist.yaml."""
     changes: dict[str, object] = {}
     if new_name is not None:
         changes["company"] = new_name.strip()
@@ -349,6 +370,8 @@ async def update_company(
         changes["domains"] = domains
     if tags is not None:
         changes["tags"] = tags
+    if archived is not None:
+        changes["archived"] = archived
     if not changes:
         raise ToolError("nothing to change")
     try:

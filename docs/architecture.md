@@ -286,6 +286,7 @@ classDiagram
         careers_url: str?
         domains, tags: list~str~
         interview_note, notes: str?
+        archived: bool
     }
     class SweepResult {
         jobs: list~Job~

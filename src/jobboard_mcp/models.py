@@ -140,6 +140,10 @@ class WatchlistEntry(BaseModel):
     tags: list[str] = Field(default_factory=list)
     interview_note: str | None = None
     notes: str | None = None
+    archived: bool = Field(
+        default=False,
+        description="Archived companies are skipped by sweeps and hidden by list_watchlist",
+    )
 
 
 class CompanyResult(BaseModel):
@@ -234,6 +238,9 @@ class WatchlistView(BaseModel):
     companies: list[WatchlistEntry]
     total: int
     readonly: bool
+    archived_hidden: int = Field(
+        default=0, description="Archived companies left out; pass include_archived to see them"
+    )
 
 
 class WatchlistChange(BaseModel):

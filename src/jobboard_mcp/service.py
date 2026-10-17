@@ -103,7 +103,8 @@ class JobBoardService:
     ) -> SweepResult:
         entries = self._watchlist()
         results: dict[str, CompanyResult] = {}
-        order = [e.company for e in entries]  # per_company follows this order
+        # Archived companies are skipped unless asked for by name.
+        order = [e.company for e in entries if not e.archived]  # per_company follows this order
         if companies:
             by_name = {e.company.casefold(): e for e in entries}
             picked: list[WatchlistEntry] = []
@@ -119,6 +120,8 @@ class JobBoardService:
                     picked.append(entry)
                     order.append(entry.company)
             entries = picked
+        else:
+            entries = [e for e in entries if not e.archived]
 
         fetches = await asyncio.gather(*(self._fetch_board(e, refresh) for e in entries))
         cache_hits = 0
@@ -311,8 +314,13 @@ class JobBoardService:
         has_board: bool | None = None,
         tag: str | None = None,
         domain: str | None = None,
+        include_archived: bool = False,
     ) -> WatchlistView:
         entries = self._watchlist()
+        hidden = 0
+        if not include_archived:
+            hidden = sum(e.archived for e in entries)
+            entries = [e for e in entries if not e.archived]
         if has_board is not None:
             entries = [e for e in entries if (e.ats is not None) is has_board]
         if tag:
@@ -320,7 +328,12 @@ class JobBoardService:
         if domain:
             d = domain.casefold()
             entries = [e for e in entries if any(d in x.casefold() for x in e.domains)]
-        return WatchlistView(companies=entries, total=len(entries), readonly=self.store.readonly)
+        return WatchlistView(
+            companies=entries,
+            total=len(entries),
+            readonly=self.store.readonly,
+            archived_hidden=hidden,
+        )
 
     async def _check_board(self, entry: WatchlistEntry) -> BoardCheck:
         assert entry.ats is not None and entry.token is not None
@@ -349,8 +362,10 @@ class JobBoardService:
     async def add_company(self, entry: WatchlistEntry) -> WatchlistChange:
         """Validate the board with a live fetch, then append. Nothing is saved on failure."""
         self._require_writable()
-        if self._entry(entry.company) is not None:
-            raise WatchlistError(f"{entry.company!r} is already on the watchlist")
+        existing = self._entry(entry.company)
+        if existing is not None:
+            hint = " (archived; restore it with update_company)" if existing.archived else ""
+            raise WatchlistError(f"{entry.company!r} is already on the watchlist{hint}")
         check = None
         if entry.ats is not None and entry.token is not None:
             check = await self._validated(entry)

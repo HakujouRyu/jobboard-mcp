@@ -30,7 +30,7 @@ first, with a status for each company. One company failing never fails the sweep
 
 | Parameter | Type | Default | |
 |-----------|------|---------|---|
-| `companies` | string[] | whole watchlist | Watchlist names, case-insensitive. A name that isn't on the watchlist gets status `error`. |
+| `companies` | string[] | every company that isn't archived | Watchlist names, case-insensitive. Archived companies can be named. A name that isn't on the watchlist gets status `error`. |
 | `title_include` | string[] | none | Keep titles matching **any** term. See [title terms](normalization.md#title-terms). |
 | `title_exclude` | string[] | `intern`, `internship`, `new grad`, `principal` | Drop titles matching any term. `[]` excludes nothing. |
 | `remote` | enum[] | `remote_us`, `remote_global` | Remote statuses to keep. |
@@ -275,8 +275,10 @@ a fresh answer. `from_cache` says whether the answer came from the cache.
 | `has_board` | bool? | `true`: only companies with a known board. `false`: only careers-page entries. |
 | `tag` | string? | Exact tag, case-insensitive, such as `hww` |
 | `domain` | string? | Substring of any domain, such as `infra` |
+| `include_archived` | bool | Also list archived companies. Default `false`. |
 
-Returns `{ companies: WatchlistEntry[], total, readonly }`.
+Returns `{ companies: WatchlistEntry[], total, readonly, archived_hidden }`. `archived_hidden`
+counts the archived companies left out.
 
 ---
 
@@ -308,6 +310,7 @@ saved.
 | `clear_board` | `true` removes `ats` and `token`. Can't be combined with them. |
 | `careers_url`, `interview_note`, `notes` | `""` clears |
 | `domains`, `tags` | Replace the list. `[]` clears. |
+| `archived` | `true` archives: sweeps skip the company and `list_watchlist` hides it. `false` restores it. This is how to drop a company; there's no delete. |
 
 Both write tools keep the file's comments and layout and replace it atomically. See
 [watchlist.md](watchlist.md).

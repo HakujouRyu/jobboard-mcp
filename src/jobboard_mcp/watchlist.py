@@ -18,6 +18,7 @@ from pydantic import TypeAdapter, ValidationError
 from ruamel.yaml import YAML
 from ruamel.yaml.comments import CommentedMap, CommentedSeq
 from ruamel.yaml.error import YAMLError
+from ruamel.yaml.scalarstring import FoldedScalarString, LiteralScalarString
 
 from jobboard_mcp.models import WatchlistEntry
 
@@ -25,6 +26,7 @@ _ENTRIES = TypeAdapter(list[WatchlistEntry])
 # Field order for new entries, matching the existing file.
 _FIELDS = list(WatchlistEntry.model_fields)
 _LIST_FIELDS = {"domains", "tags"}
+_BLOCK_SCALARS = (FoldedScalarString, LiteralScalarString)
 
 
 class WatchlistError(ValueError):
@@ -100,6 +102,38 @@ def _plain(entry: WatchlistEntry) -> CommentedMap:
     return out
 
 
+def _move_trailing(item: CommentedMap, src: str, dst: str) -> None:
+    """Move the blank line (or comment block) after an entry from one key to another.
+
+    ruamel attaches it to the entry's last key. After a plain value the comment text starts with
+    that line's own newline; a block scalar (``notes: >-``) ends its own line, so the text has
+    one newline fewer. Moving between the two kinds adds or drops that newline.
+    """
+    trailing = item.ca.items.pop(src, None)
+    if trailing is None or trailing[2] is None:
+        if trailing is not None:
+            item.ca.items[dst] = trailing
+        return
+    src_block = isinstance(item.get(src), _BLOCK_SCALARS)
+    dst_block = isinstance(item.get(dst), _BLOCK_SCALARS)
+    token = trailing[2]
+    if src_block and not dst_block:
+        token.value = "\n" + token.value
+    elif dst_block and not src_block and token.value.startswith("\n"):
+        token.value = token.value[1:]
+    item.ca.items[dst] = trailing
+
+
+def _remove_key(item: CommentedMap, key: str) -> None:
+    """Delete a key, keeping the blank line or comments that follow the entry."""
+    was_last = next(reversed(item), None) == key
+    keys = list(item)
+    if was_last and len(keys) > 1:
+        _move_trailing(item, key, keys[-2])
+    item.ca.items.pop(key, None)
+    del item[key]
+
+
 class WatchlistStore:
     """Read and edit the watchlist file. Edits re-read the file first, so manual edits made
     while the server runs are never overwritten."""
@@ -150,7 +184,10 @@ class WatchlistStore:
         y, doc = self._read_doc()
         if any(str(item.get("company", "")).casefold() == entry.company.casefold() for item in doc):
             raise WatchlistError(f"{entry.company!r} is already on the watchlist")
-        doc.append(_plain(entry))
+        plain = _plain(entry)
+        if not entry.archived:
+            del plain["archived"]  # only archived entries carry the key
+        doc.append(plain)
         if len(doc) > 1:
             doc.yaml_set_comment_before_after_key(len(doc) - 1, before="\n", indent=0)
         self._write_doc(y, doc)
@@ -173,7 +210,10 @@ class WatchlistStore:
             if field not in changes:
                 continue
             value = fresh[field]
-            if field in item:
+            if field == "archived" and not value:
+                if field in item:
+                    _remove_key(item, field)  # unarchived entries don't carry the key
+            elif field in item:
                 item[field] = value
             elif value not in (None, []):
                 # Keep the usual field order: insert after the fields that precede it.
@@ -182,10 +222,7 @@ class WatchlistStore:
                 last = next(reversed(item), None)
                 item.insert(pos, field, value)
                 if pos == len(item) - 1 and last is not None:
-                    # The blank line (or comment block) after an entry is attached to its last
-                    # key; move it so it still follows the entry instead of splitting it.
-                    trailing = item.ca.items.pop(last, None)
-                    if trailing is not None:
-                        item.ca.items[field] = trailing
+                    # Keep the blank line after the entry instead of splitting the entry.
+                    _move_trailing(item, last, field)
         self._write_doc(y, doc)
         return merged
