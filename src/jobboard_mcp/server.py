@@ -49,6 +49,7 @@ drop a company, archive it with update_company(archived=true); there is no delet
 Public data only. Remote status is never guessed: 'unknown' jobs are kept and flagged.
 pay_min / pay_max are always annual USD; pay_posted_interval says how the pay was posted.
 Each job's flags list missing data: pay_unknown, pay_not_usd, date_unknown, remote_unknown.
+Hosted servers may refuse careers_url arguments; resolve_board then uses the watchlist's.
 """
 
 _service: JobBoardService | None = None
@@ -226,7 +227,12 @@ async def resolve_board(
     company: Annotated[str | None, Field(description="Company name.")] = None,
     careers_url: Annotated[
         str | None,
-        Field(description="Careers page. Default: the watchlist's careers_url for the company."),
+        Field(
+            description=(
+                "Careers page. Default: the watchlist's careers_url for the company. "
+                "Refused if the server disallows custom URLs."
+            )
+        ),
     ] = None,
     refresh: Annotated[bool, Field(description="Bypass the cache.")] = False,
 ) -> Resolution:

@@ -151,6 +151,7 @@ Environment variables, all optional:
 | `HTTP_TIMEOUT_SECONDS` | `15` | 429s and 5xxs are retried twice with backoff, honoring `Retry-After` |
 | `LOG_LEVEL` | `INFO` | JSON logs go to stderr (stdout is the MCP transport) |
 | `WATCHLIST_READONLY` | `false` | `true` removes `add_company` and `update_company`, for a public deployment |
+| `ALLOW_CUSTOM_URLS` | `true` | `false` refuses careers URLs from the client, so careers pages are fetched only from the watchlist. Set it for a public deployment. |
 
 ## Documentation
 

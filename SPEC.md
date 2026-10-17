@@ -177,7 +177,7 @@ tests/
 
 - **Language and stack:** Python 3.12+, the official MCP Python SDK (`mcp`, FastMCP), httpx, pydantic v2, PyYAML. Managed with `uv`, tested with pytest + respx (HTTP mocking), linted with ruff, type-checked with mypy or pyright.
 - **Transports:** `stdio` by default, for the Claude desktop app; `streamable-http` when run with `--http` or `MCP_TRANSPORT=http`, for hosting.
-- **Config:** environment variables, documented in the README (`WATCHLIST_PATH`, `CACHE_TTL_SECONDS`, `MAX_CONCURRENCY`, `SEC_USER_AGENT`, `WATCHLIST_READONLY`, `LOG_LEVEL`).
+- **Config:** environment variables, documented in the README (`WATCHLIST_PATH`, `CACHE_TTL_SECONDS`, `MAX_CONCURRENCY`, `SEC_USER_AGENT`, `WATCHLIST_READONLY`, `ALLOW_CUSTOM_URLS`, `LOG_LEVEL`).
 
 ## 8. Deployment
 

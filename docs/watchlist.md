@@ -112,3 +112,6 @@ sequenceDiagram
 Set `WATCHLIST_READONLY=true` for any deployment other people can reach. `add_company` and
 `update_company` then aren't registered at all, and `list_watchlist` reports
 `readonly: true`.
+
+Set `ALLOW_CUSTOM_URLS=false` too, so `resolve_board` won't fetch a careers URL the client
+passes. The watchlist's own `careers_url` values are still used.

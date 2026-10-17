@@ -163,6 +163,46 @@ async def test_resolve_needs_input(service: JobBoardService) -> None:
         await server.mcp.call_tool("resolve_board", {})
 
 
+@respx.mock
+async def test_custom_urls_disallowed(watchlist_path: Path) -> None:
+    mock_apis(respx.mock)
+    settings = Settings(allow_custom_urls=False)
+    svc = JobBoardService(settings, store=WatchlistStore(watchlist_path), now=lambda: NOW)
+    server.set_service(svc)
+    before = watchlist_path.read_text(encoding="utf-8")
+    try:
+        with pytest.raises(ToolError, match="ALLOW_CUSTOM_URLS"):
+            await server.mcp.call_tool(
+                "resolve_board", {"company": "Posit", "careers_url": "https://example.com/jobs"}
+            )
+        with pytest.raises(ToolError, match="ALLOW_CUSTOM_URLS"):
+            await server.mcp.call_tool(
+                "add_company", {"company": "X", "careers_url": "https://example.com/jobs"}
+            )
+        with pytest.raises(ToolError, match="ALLOW_CUSTOM_URLS"):
+            await server.mcp.call_tool(
+                "update_company", {"company": "GitLab", "careers_url": "https://example.com"}
+            )
+        assert watchlist_path.read_text(encoding="utf-8") == before
+        # The watchlist's own careers_url is still used, and clearing one is still allowed.
+        out = await call("resolve_board", {"company": "Posit"})
+        assert (out["ats"], out["token"]) == ("greenhouse", "rstudio")
+        out = await call("find_company_posting", {"company": "Posit", "title": "Engineer"})
+        assert out["board_found"]
+        out = await call("update_company", {"company": "Posit", "careers_url": ""})
+        assert out["entry"]["careers_url"] is None
+    finally:
+        server.set_service(None)
+        await svc.aclose()
+
+
+def test_allow_custom_urls_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("ALLOW_CUSTOM_URLS", raising=False)
+    assert Settings.from_env().allow_custom_urls is True
+    monkeypatch.setenv("ALLOW_CUSTOM_URLS", "false")
+    assert Settings.from_env().allow_custom_urls is False
+
+
 # ------------------------------------------------------------------ is_posting_live
 
 

@@ -203,7 +203,8 @@ Works out which Greenhouse, Ashby, or Lever board a company uses. It never write
 | `careers_url` | string? | Defaults to the watchlist's `careers_url` for the company |
 | `refresh` | bool | |
 
-At least one of `company` or `careers_url` is required.
+At least one of `company` or `careers_url` is required. With `ALLOW_CUSTOM_URLS=false`, passing
+`careers_url` is an error; only the watchlist's is used.
 
 Example result:
 
@@ -293,7 +294,7 @@ live first, and nothing is saved unless that fetch succeeds.
 |-----------|------|---|
 | `company` | string | Display name. Must not already be on the watchlist. |
 | `ats`, `token` | | Both or neither |
-| `careers_url` | string? | |
+| `careers_url` | string? | Refused when `ALLOW_CUSTOM_URLS=false` |
 | `domains`, `tags` | string[]? | |
 | `interview_note`, `notes` | string? | |
 
@@ -310,7 +311,7 @@ saved.
 | `new_name` | Rename |
 | `ats`, `token` | Set the board |
 | `clear_board` | `true` removes `ats` and `token`. Can't be combined with them. |
-| `careers_url`, `interview_note`, `notes` | `""` clears |
+| `careers_url`, `interview_note`, `notes` | `""` clears. Setting a `careers_url` is refused when `ALLOW_CUSTOM_URLS=false`; clearing one isn't. |
 | `domains`, `tags` | Replace the list. `[]` clears. |
 | `archived` | `true` archives: sweeps skip the company and `list_watchlist` hides it. `false` restores it. This is how to drop a company; there's no delete. |
 

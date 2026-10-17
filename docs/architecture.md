@@ -208,9 +208,12 @@ flowchart TD
 
 ### Careers pages
 
-Careers URLs come from the MCP client, so `get_text` sends them through `GuardedTransport`
-(in `urlguard.py`) to stop the server being pointed at internal addresses (SSRF). JSON requests
-skip it, because their hosts are fixed in the adapters. For every request, redirects included:
+Careers URLs come from the watchlist or the MCP client. `ALLOW_CUSTOM_URLS=false` refuses the
+client's: the service rejects a `careers_url` passed to `resolve_board`, `add_company`, or
+`update_company`, so pages are fetched only from URLs the operator put in the watchlist. Either
+way, `get_text` sends them through `GuardedTransport` (in `urlguard.py`) to stop the server
+being pointed at internal addresses (SSRF). JSON requests skip it, because their hosts are fixed
+in the adapters. For every request, redirects included:
 
 1. The URL must be `http` or `https` on the default port, with no username or password.
 2. The host is resolved, and every address it resolves to must be public. Loopback, private,

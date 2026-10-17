@@ -42,6 +42,11 @@ from jobboard_mcp.watchlist import WatchlistError, WatchlistStore
 
 log = logging.getLogger(__name__)
 
+_NO_CUSTOM_URLS = (
+    "this server doesn't accept careers URLs from the client (ALLOW_CUSTOM_URLS=false); "
+    "only the watchlist's careers_url is used"
+)
+
 _PAY_FIELDS = (
     "pay_min",
     "pay_max",
@@ -251,6 +256,8 @@ class JobBoardService:
         self, company: str | None, careers_url: str | None = None, *, refresh: bool = False
     ) -> Resolution:
         """Read-only. Falls back to the watchlist's careers_url when none is given."""
+        if careers_url and not self.settings.allow_custom_urls:
+            raise ValueError(_NO_CUSTOM_URLS)
         if company and not careers_url:
             entry = self._entry(company)
             careers_url = entry.careers_url if entry else None
@@ -264,7 +271,9 @@ class JobBoardService:
         resolution: Resolution | None = None
         ats, token = (entry.ats, entry.token) if entry else (None, None)
         if ats is None or token is None:
-            resolution = await self.resolve_board(name, entry.careers_url if entry else None)
+            # The watchlist's URL is the operator's, so this skips the custom-URL check.
+            careers_url = entry.careers_url if entry else None
+            resolution = await resolve_board(self.http, name, careers_url)
             ats, token = resolution.ats, resolution.token
         result = FindResult(company=name, title=title, board_found=False, resolution=resolution)
         if ats is None or token is None:
@@ -362,6 +371,8 @@ class JobBoardService:
     async def add_company(self, entry: WatchlistEntry) -> WatchlistChange:
         """Validate the board with a live fetch, then append. Nothing is saved on failure."""
         self._require_writable()
+        if entry.careers_url and not self.settings.allow_custom_urls:
+            raise WatchlistError(_NO_CUSTOM_URLS)
         existing = self._entry(entry.company)
         if existing is not None:
             hint = " (archived; restore it with update_company)" if existing.archived else ""
@@ -374,6 +385,9 @@ class JobBoardService:
     async def update_company(self, company: str, changes: Mapping[str, Any]) -> WatchlistChange:
         """Partial update. A new or changed board is validated live before saving."""
         self._require_writable()
+        # Clearing careers_url is fine; setting one isn't.
+        if changes.get("careers_url") and not self.settings.allow_custom_urls:
+            raise WatchlistError(_NO_CUSTOM_URLS)
         current = self._entry(company)
         if current is None:
             raise WatchlistError(f"{company!r} is not on the watchlist")

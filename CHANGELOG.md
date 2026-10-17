@@ -13,6 +13,8 @@ All notable changes are recorded here. The format follows
 - `find_company_posting`, `resolve_board`, and `is_posting_live`.
 - `list_watchlist`, `add_company`, and `update_company`, plus `WATCHLIST_READONLY` to turn the
   write tools off.
+- `ALLOW_CUSTOM_URLS=false` refuses careers URLs from the client, so a public server fetches
+  careers pages only from its own watchlist.
 - An example watchlist, copied to `data/watchlist.yaml` on first run.
 - Archiving: `update_company(archived=true)` keeps a company on the watchlist but stops
   sweeping it. `list_watchlist` hides archived companies unless `include_archived` is set.

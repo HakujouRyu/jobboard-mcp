@@ -19,9 +19,10 @@ Only the latest release gets fixes. The project is pre-1.0, so a fix may also ch
 The server reads public job-board APIs and writes only its own watchlist file. The areas most
 worth a look:
 
-- **Outbound requests.** `resolve_board` and `find_company_posting` fetch a careers URL that the
-  MCP client supplies, plus up to two same-site links from that page. These must stay on public
-  addresses (SSRF).
+- **Outbound requests.** `resolve_board` and `find_company_posting` fetch a careers URL from the
+  watchlist or the MCP client, plus up to two same-site links from that page. These must stay on
+  public addresses (SSRF). With `ALLOW_CUSTOM_URLS=false`, no client-supplied URL should be
+  fetched at all.
 - **Watchlist writes.** `add_company` and `update_company` edit `data/watchlist.yaml` from client
   input. Anything that writes outside that file, or leaves it invalid, is a bug.
 - **Parsing untrusted data.** Board responses, careers-page HTML, and the watchlist YAML all come

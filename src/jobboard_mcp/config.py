@@ -44,6 +44,8 @@ class Settings:
     log_level: str = "INFO"
     user_agent: str = f"jobboard-mcp/{__version__} (+{REPO_URL})"
     watchlist_readonly: bool = False  # used by the M2 watchlist tools
+    # Accept careers URLs from the client. Off means careers pages come only from the watchlist.
+    allow_custom_urls: bool = True
 
     @classmethod
     def from_env(cls) -> Settings:
@@ -56,6 +58,7 @@ class Settings:
             timeout_seconds=float(os.environ.get("HTTP_TIMEOUT_SECONDS") or d.timeout_seconds),
             log_level=(os.environ.get("LOG_LEVEL") or d.log_level).upper(),
             watchlist_readonly=_bool("WATCHLIST_READONLY", d.watchlist_readonly),
+            allow_custom_urls=_bool("ALLOW_CUSTOM_URLS", d.allow_custom_urls),
         )
 
 
