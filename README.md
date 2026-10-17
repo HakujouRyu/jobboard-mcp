@@ -28,6 +28,11 @@ one exception to "JSON APIs only" is `resolve_board`, which reads a company's ca
 at most two same-site careers links from it) only to find which board it links to. It needs no
 accounts or credentials, and the only file it writes is its own watchlist.
 
+**Scope:** it's built for job seekers in the US. `remote_us` is the only remote status tied to
+one country; a remote role elsewhere is `remote_global` or `remote_other`, which don't say
+which countries qualify. Pay works in any currency and is never converted, but hourly pay is
+annualized at the US figure of 2080 hours a year. Wider location support may come later.
+
 ## Tools
 
 | Tool | What it does |
