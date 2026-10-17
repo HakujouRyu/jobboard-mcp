@@ -213,6 +213,27 @@ flowchart LR
   backtrack for seconds on a short title and stall the whole server.
 - Neither list has a default. With no terms, no title is filtered out.
 
+#### Useful terms
+
+Starting points for `title_include` and `title_exclude`. Every term here is checked against the
+example titles in `test_useful_terms` in [tests/test_filters.py](../tests/test_filters.py).
+Keep the two in step.
+
+| Goal | Terms | Watch out for |
+|------|-------|---------------|
+| Early-career roles | `intern`, `internship`, `new grad`, `graduate`, `entry level`, `junior`, `jr`, `apprentice`, `co-op` | `intern` doesn't match "Internship", so list both. |
+| Senior and above | `senior`, `sr`, `staff`, `principal`, `distinguished`, `lead` | `lead` also matches "Lead Generation Specialist". |
+| Leadership | `manager`, `director`, `head of`, `vp`, `vice president`, `chief` | `manager` also matches "Product Manager"; `chief` matches "Chief of Staff". |
+| Software engineering | `engineer`, `engineering`, `developer`, `programmer`, `swe` | `engineer` doesn't match "Engineering Manager"; add `engineering` if you want those. |
+| Web | `frontend`, `front end`, `backend`, `back end`, `full stack`, `fullstack` | Titles spell these three ways. `front end` covers "Front End" and "Front-End"; `frontend` covers "Frontend". |
+| Infrastructure | `sre`, `site reliability`, `devops`, `platform`, `infrastructure` | |
+| Data and ML | `data engineer`, `data scientist`, `machine learning`, `ml`, `ai` | |
+| Product and design | `product manager`, `designer`, `ux` | |
+
+Some companies mark level with numerals ("Engineer III"). `ii` and `iii` work as terms, but
+levels mean different things at different companies. Use the `remote` filter for location,
+not title terms: "(Remote, US)" in a title is already read as remote evidence.
+
 ### Flags
 
 Each job has a `flags` list naming data that's missing. Flags describe the job, not the

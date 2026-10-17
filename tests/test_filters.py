@@ -1,4 +1,6 @@
+import re
 from datetime import date
+from pathlib import Path
 
 import pytest
 
@@ -64,6 +66,76 @@ def test_compile_terms(term: str, title: str, hit: bool) -> None:
 
 def test_blank_and_separator_only_terms_are_ignored() -> None:
     assert compile_terms(["", "  ", "-", " - "]) == []
+
+
+# Keep in step with "Useful terms" in docs/normalization.md. Each term, then titles it must
+# match, then titles it must not (the gotchas the table warns about).
+USEFUL_TERMS: list[tuple[str, list[str], list[str]]] = [
+    ("intern", ["Software Engineering Intern", "Interns - Summer 2027"], ["Internship"]),
+    ("internship", ["Summer Internship 2027"], ["Internal Tools Engineer"]),
+    ("new grad", ["Software Engineer, New Grad"], []),
+    ("graduate", ["Graduate Software Engineer"], []),
+    ("entry level", ["Entry-Level Data Analyst", "Entry Level Engineer"], []),
+    ("junior", ["Junior Developer"], []),
+    ("jr", ["Jr. Developer", "Developer (Jr)"], []),
+    ("apprentice", ["Software Apprentice"], []),
+    ("co-op", ["Co-op Student, Engineering", "Co op Student"], ["Coop"]),
+    ("senior", ["Senior Backend Engineer"], []),
+    ("sr", ["Sr. Backend Engineer", "Sr Backend Engineer"], ["Srinivasan"]),
+    ("staff", ["Staff Engineer"], ["Staffing Coordinator"]),
+    ("principal", ["Principal Engineer"], []),
+    ("distinguished", ["Distinguished Engineer"], []),
+    ("lead", ["Tech Lead", "Lead Generation Specialist"], ["Leadership Coach"]),
+    ("manager", ["Engineering Manager", "Product Manager"], ["Management Consultant"]),
+    ("director", ["Director of Engineering"], []),
+    ("head of", ["Head of Platform"], []),
+    ("vp", ["VP, Engineering", "VP of Product"], []),
+    ("vice president", ["Vice President, Sales"], []),
+    ("chief", ["Chief Technology Officer", "Chief of Staff"], []),
+    ("engineer", ["Backend Engineer", "Forward Deployed Engineers"], ["Engineering Manager"]),
+    ("engineering", ["Engineering Manager"], ["Backend Engineer"]),
+    ("developer", ["iOS Developer"], ["Development Manager"]),
+    ("programmer", ["Gameplay Programmer"], []),
+    ("swe", ["SWE II"], ["Swedish Speaking Support"]),
+    ("frontend", ["Frontend Engineer"], ["Front-End Engineer"]),
+    ("front end", ["Front-End Engineer", "Front End Engineer"], ["Frontend Engineer"]),
+    ("backend", ["Backend Engineer"], ["Back-End Engineer"]),
+    ("back end", ["Back-End Engineer", "Back End Engineer"], ["Backend Engineer"]),
+    ("full stack", ["Full-Stack Engineer", "Full Stack Engineer"], ["Fullstack Engineer"]),
+    ("fullstack", ["Fullstack Engineer"], ["Full-Stack Engineer"]),
+    ("sre", ["SRE", "Senior SREs"], ["Presales Engineer"]),
+    ("site reliability", ["Site Reliability Engineer"], []),
+    ("devops", ["DevOps Engineer"], []),
+    ("platform", ["Platform Engineer"], []),
+    ("infrastructure", ["Infrastructure Engineer"], []),
+    ("data engineer", ["Senior Data Engineer"], ["Data Engineering Manager"]),
+    ("data scientist", ["Data Scientist, Growth"], []),
+    ("machine learning", ["Machine Learning Engineer"], []),
+    ("ml", ["ML Engineer", "ML/AI Engineer"], ["HTML Developer"]),
+    ("ai", ["AI Engineer", "Applied AI Researcher"], ["Maintenance Technician"]),
+    ("product manager", ["Senior Product Manager"], ["Product Marketing Manager"]),
+    ("designer", ["Product Designer"], ["Design Engineer"]),
+    ("ux", ["UX Researcher", "UX/UI Designer"], ["Luxury Retail Associate"]),
+    ("iii", ["Software Engineer III"], ["Software Engineer II"]),
+]
+
+
+@pytest.mark.parametrize(("term", "hits", "misses"), USEFUL_TERMS)
+def test_useful_terms(term: str, hits: list[str], misses: list[str]) -> None:
+    (pattern,) = compile_terms([term])
+    for title in hits:
+        assert pattern.search(title), f"{term!r} should match {title!r}"
+    for title in misses:
+        assert not pattern.search(title), f"{term!r} should not match {title!r}"
+
+
+def test_useful_terms_table_lists_the_tested_terms() -> None:
+    doc = (Path(__file__).parents[1] / "docs" / "normalization.md").read_text(encoding="utf-8")
+    table = doc.split("#### Useful terms", 1)[1].split("\n\n|", 1)[1].split("\n\n", 1)[0]
+    documented = {
+        t for row in table.splitlines()[2:] for t in re.findall(r"`([^`]+)`", row.split("|")[2])
+    }
+    assert documented == {term for term, _, _ in USEFUL_TERMS} - {"iii"}
 
 
 def test_title_include_and_exclude() -> None:
