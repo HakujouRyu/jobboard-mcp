@@ -31,6 +31,8 @@ All notable changes are recorded here. The format follows
 
 ### Changed
 
+- Careers pages on one host are spaced at least `PER_HOST_INTERVAL_SECONDS` apart (default 1).
+  The job board APIs aren't paced.
 - Careers pages are fetched only where the site's robots.txt allows. A disallowed page shows
   up in `resolve_board`'s `pages_checked` with the reason, and token probing still runs.
 - `sweep_boards` has no built-in filters. `title_exclude` used to default to intern, internship,

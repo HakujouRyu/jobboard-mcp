@@ -54,6 +54,9 @@ class Settings:
     cache_ttl_seconds: int = 3 * 60 * 60
     max_concurrency: int = 8
     per_host_concurrency: int = 4
+    # Minimum gap between request starts to one host, for careers pages and other sites whose
+    # host comes from data. Documented job board APIs aren't paced.
+    per_host_interval_seconds: float = 1.0
     timeout_seconds: float = 15.0
     max_retries: int = 2
     log_level: str = "INFO"
@@ -70,6 +73,9 @@ class Settings:
             cache_ttl_seconds=_int("CACHE_TTL_SECONDS", d.cache_ttl_seconds),
             max_concurrency=_int("MAX_CONCURRENCY", d.max_concurrency),
             per_host_concurrency=_int("PER_HOST_CONCURRENCY", d.per_host_concurrency),
+            per_host_interval_seconds=float(
+                os.environ.get("PER_HOST_INTERVAL_SECONDS") or d.per_host_interval_seconds
+            ),
             timeout_seconds=float(os.environ.get("HTTP_TIMEOUT_SECONDS") or d.timeout_seconds),
             log_level=(os.environ.get("LOG_LEVEL") or d.log_level).upper(),
             watchlist_readonly=_bool("WATCHLIST_READONLY", d.watchlist_readonly),

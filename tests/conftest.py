@@ -23,8 +23,8 @@ def fixture_text(name: str) -> str:
 @pytest.fixture(autouse=True)
 def public_dns(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> None:
     """Offline tests: every host resolves to one public address, requests keep their hostname
-    so respx routes match, and robots.txt isn't checked (test_http.py turns it back on). Live
-    tests use real DNS, pinning, and robots.txt."""
+    so respx routes match, and robots.txt isn't checked or pages paced (test_http.py turns
+    them back on). Live tests use real DNS, pinning, robots.txt, and pacing."""
     if request.node.get_closest_marker("live"):
         return
 
@@ -34,6 +34,7 @@ def public_dns(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) 
     monkeypatch.setattr(urlguard, "resolve_host", resolve)
     monkeypatch.setattr(urlguard.GuardedTransport, "pin", False)
     monkeypatch.setattr(HttpClient, "check_robots", False)
+    monkeypatch.setattr(HttpClient, "pace_requests", False)
 
 
 @pytest.fixture

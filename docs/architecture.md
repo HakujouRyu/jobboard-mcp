@@ -179,7 +179,7 @@ flowchart TD
     fresh -- yes --> hit(["return cached data<br/>cache_hit = true"])
     fresh -- no --> inflight{"same URL already<br/>being fetched?"}
     inflight -- yes --> join(["await that request"])
-    inflight -- no --> slots["acquire per-host slot (PER_HOST_CONCURRENCY),<br/>then global slot (MAX_CONCURRENCY)"]
+    inflight -- no --> slots["acquire per-host slot (PER_HOST_CONCURRENCY),<br/>wait for the host's next start (pages only,<br/>PER_HOST_INTERVAL_SECONDS),<br/>then global slot (MAX_CONCURRENCY)"]
     slots --> send["GET, sending ETag / Last-Modified<br/>from any stale entry"]
     send --> exc{"timeout or<br/>transport error?"}
     exc -- "blocked address or<br/>robots.txt (text only)" --> fb(["raise Blocked"])
@@ -204,6 +204,11 @@ flowchart TD
 - The cache lives in memory, keyed by request kind plus URL, and lasts as long as the process.
 - The per-host slot is taken before the global one, so a request waiting on a busy host doesn't
   hold up requests to other hosts.
+- Careers pages are paced: each request to a host starts at least `PER_HOST_INTERVAL_SECONDS`
+  (default 1) after the previous one, retries included. Slots are reserved in order, so
+  concurrent requests queue rather than burst. The job board APIs aren't paced; their hosts are
+  built for this traffic, and a sweep sends dozens of requests to each. The robots.txt fetch
+  isn't paced separately, and a redirect is paced by the host it started on.
 - Requests send a `User-Agent` of `jobboard-mcp/{version} (+repo URL)`.
 - Error pages from careers sites are returned instead of raised, because even a 404 page can
   link to the right board.

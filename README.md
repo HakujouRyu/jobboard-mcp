@@ -197,6 +197,7 @@ Environment variables, all optional:
 | `CACHE_TTL_SECONDS` | `10800` (3 h) | Boards are refetched at most once per TTL unless `refresh: true`. Stale entries revalidate with ETag / Last-Modified. |
 | `MAX_CONCURRENCY` | `8` | Global cap on requests in flight |
 | `PER_HOST_CONCURRENCY` | `4` | Cap per host |
+| `PER_HOST_INTERVAL_SECONDS` | `1` | Minimum gap between requests to one careers site. The job board APIs aren't paced. |
 | `HTTP_TIMEOUT_SECONDS` | `15` | 429s and 5xxs are retried twice with backoff, honoring `Retry-After` |
 | `LOG_LEVEL` | `INFO` | JSON logs go to stderr (stdout is the MCP transport) |
 | `WATCHLIST_READONLY` | `false` | `true` removes `add_company` and `update_company`, for a public deployment |

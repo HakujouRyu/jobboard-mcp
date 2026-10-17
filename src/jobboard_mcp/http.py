@@ -1,4 +1,4 @@
-"""Shared async HTTP client: cache, conditional requests, retries, and concurrency caps.
+"""Shared async HTTP client: cache, conditional requests, retries, concurrency caps, and pacing.
 
 Careers pages (``get_text``) are fetched through ``urlguard.GuardedTransport``, which keeps them
 on the public internet, and only where the site's robots.txt allows. JSON requests only ever go
@@ -96,8 +96,10 @@ def _retry_after(response: httpx.Response, attempt: int) -> float:
 
 
 class HttpClient:
-    # Tests turn this off so careers-page routes don't each need a robots.txt; see conftest.py.
+    # Tests turn these off so careers-page routes don't each need a robots.txt, and pages
+    # aren't spaced out in real time; see conftest.py.
     check_robots = True
+    pace_requests = True
 
     def __init__(
         self,
@@ -139,6 +141,7 @@ class HttpClient:
         self._inflight: dict[str, asyncio.Task[Fetched]] = {}
         self._global = asyncio.Semaphore(settings.max_concurrency)
         self._hosts: dict[str, asyncio.Semaphore] = {}
+        self._next_start: dict[str, float] = {}
 
     async def aclose(self) -> None:
         await self._client.aclose()
@@ -223,6 +226,19 @@ class HttpClient:
             sem = self._hosts[host] = asyncio.Semaphore(self._settings.per_host_concurrency)
         return sem
 
+    async def _pace(self, url: str) -> None:
+        """Wait for this host's next request slot, PER_HOST_INTERVAL_SECONDS after the last.
+        Slots are reserved before sleeping, so concurrent requests queue up in order."""
+        interval = self._settings.per_host_interval_seconds
+        if not self.pace_requests or interval <= 0:
+            return
+        host = urlsplit(url).netloc
+        now = self._clock()
+        start = max(now, self._next_start.get(host, now))
+        self._next_start[host] = start + interval
+        if start > now:
+            await self._sleep(start - now)
+
     async def _fetch(self, url: str, key: str, kind: str, entry: _Entry | None) -> Fetched:
         headers: dict[str, str] = {}
         if kind == "text":
@@ -234,13 +250,18 @@ class HttpClient:
                 headers["If-Modified-Since"] = entry.last_modified
 
         client = self._pages if kind == "text" else self._client
+        paced = kind == "text"
         attempt = 0
         while True:
             started = self._clock()
             try:
-                # Host slot first, so waiting on a busy host doesn't hold a global slot.
-                async with self._host_sem(url), self._global:
-                    response = await client.get(url, headers=headers)
+                # Host slot and pacing first, so waiting on a busy host doesn't hold a
+                # global slot.
+                async with self._host_sem(url):
+                    if paced:
+                        await self._pace(url)
+                    async with self._global:
+                        response = await client.get(url, headers=headers)
             except BlockedURL as exc:
                 raise Blocked(url, f"blocked: {exc}") from exc
             except httpx.TimeoutException as exc:

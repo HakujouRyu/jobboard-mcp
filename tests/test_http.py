@@ -338,3 +338,85 @@ async def test_blocked_address_reports_the_address_not_robots(
     finally:
         await c.aclose()
     assert respx.calls.call_count == 0
+
+
+# ------------------------------------------------------------------ pacing
+
+
+@pytest.fixture
+def paced(monkeypatch: pytest.MonkeyPatch, clock: FakeClock) -> tuple[HttpClient, list[float]]:
+    monkeypatch.setattr(HttpClient, "pace_requests", True)
+    waits: list[float] = []
+
+    async def advancing_sleep(seconds: float) -> None:
+        waits.append(seconds)
+        clock.now += seconds
+
+    return HttpClient(
+        Settings(per_host_interval_seconds=1.0), clock=clock, sleep=advancing_sleep
+    ), waits
+
+
+@respx.mock
+async def test_pages_on_one_host_are_spaced(paced: tuple[HttpClient, list[float]]) -> None:
+    client, waits = paced
+    respx.get(url__regex=r"https://co\.test/p\d").mock(return_value=httpx.Response(200))
+    respx.get(url__regex=r"https://other\.test/p\d").mock(return_value=httpx.Response(200))
+    try:
+        await client.get_text("https://co.test/p1")
+        await client.get_text("https://other.test/p1")  # another host: no wait
+        await client.get_text("https://co.test/p2")
+        await client.get_text("https://co.test/p3")
+    finally:
+        await client.aclose()
+    assert waits == [1.0, 1.0]
+
+
+@respx.mock
+async def test_concurrent_pages_queue_in_order(
+    paced: tuple[HttpClient, list[float]], clock: FakeClock
+) -> None:
+    client, _ = paced
+    starts: list[float] = []
+
+    def record(_request: httpx.Request) -> httpx.Response:
+        starts.append(clock.now)
+        return httpx.Response(200)
+
+    respx.get(url__regex=r"https://co\.test/p\d").mock(side_effect=record)
+    try:
+        await asyncio.gather(*(client.get_text(f"https://co.test/p{i}") for i in range(3)))
+    finally:
+        await client.aclose()
+    assert starts == [1000.0, 1001.0, 1002.0]
+
+
+@respx.mock
+async def test_job_board_apis_are_not_paced(paced: tuple[HttpClient, list[float]]) -> None:
+    client, waits = paced
+    respx.get(url__startswith=URL).mock(return_value=httpx.Response(200, json={}))
+    try:
+        for i in range(3):
+            await client.get_json(f"{URL}/{i}")
+    finally:
+        await client.aclose()
+    assert waits == []
+
+
+@respx.mock
+async def test_interval_zero_turns_pacing_off(
+    monkeypatch: pytest.MonkeyPatch, clock: FakeClock, sleeps: list[float]
+) -> None:
+    monkeypatch.setattr(HttpClient, "pace_requests", True)
+
+    async def record(seconds: float) -> None:
+        sleeps.append(seconds)
+
+    client = HttpClient(Settings(per_host_interval_seconds=0), clock=clock, sleep=record)
+    respx.get(url__regex=r"https://co\.test/p\d").mock(return_value=httpx.Response(200))
+    try:
+        await client.get_text("https://co.test/p1")
+        await client.get_text("https://co.test/p2")
+    finally:
+        await client.aclose()
+    assert sleeps == []
