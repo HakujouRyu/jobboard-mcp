@@ -36,9 +36,11 @@ The full list is under "Ground rules" in CONTRIBUTING.md. The ones agents break 
 
 - **Never print to stdout.** It's the MCP transport. Log through `logging`.
 - **Never guess `remote_us`.** Ambiguous means `unknown`. Missing data is flagged, never dropped.
-- **No new scraping.** Public JSON APIs only. Careers pages are fetched only through
-  `HttpClient.get_text`, which keeps them on public addresses. Don't add another way to fetch a
-  URL.
+- **Structured data only, best tier first.** Ground rule 1 has three tiers: documented public
+  APIs, then the JSON a careers site loads for itself, then schema.org JSON-LD. Never use a
+  lower tier for a system a higher one covers, and never read job content from page layout.
+  Every request goes through `HttpClient`, and careers pages only through `get_text`, which
+  keeps them on public addresses. Don't add another way to fetch a URL.
 - **Keep `normalize.py`, `filters.py`, `matching.py`, and `models.py` pure.** No I/O, no clock.
 - **Don't edit the user's watchlist** (`%APPDATA%\jobboard-mcp\watchlist.yaml` or
   `~/.config/jobboard-mcp/watchlist.yaml`, or an old `data/watchlist.yaml`). Change

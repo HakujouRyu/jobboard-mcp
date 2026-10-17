@@ -396,7 +396,7 @@ classDiagram
 
 | Decision | Why |
 |----------|-----|
-| Public JSON APIs only; careers pages are only scanned for board links | Stays within each site's terms, and the APIs return full boards. A generic web fetch truncates large ones. |
+| Structured data only, best tier first ([ground rule 1](../CONTRIBUTING.md#ground-rules)); careers pages are only scanned for board links | Stays within each site's terms, and structured sources return full boards. A generic web fetch truncates large ones. Documented APIs come first because they don't change without notice. |
 | `remote_us` needs positive evidence | A false "remote US" costs an application; an `unknown` costs one look. See [normalization.md](normalization.md). |
 | Missing data is flagged, never dropped | Plenty of good postings omit pay or dates. The caller decides what to do with them. |
 | Two-phase sweep | Greenhouse pay is only on the detail endpoint. Fetching details only for survivors keeps a cold sweep to a few dozen requests instead of hundreds. |

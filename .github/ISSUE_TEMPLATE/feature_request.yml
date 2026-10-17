@@ -5,8 +5,9 @@ body:
   - type: markdown
     attributes:
       value: |
-        The server only reads public JSON APIs. Requests to scrape LinkedIn, Indeed, or job
-        content from web pages are out of scope (see "Ground rules" in CONTRIBUTING.md).
+        The server only reads structured data: documented APIs first, then a careers site's own
+        JSON, then schema.org JSON-LD. Requests to scrape LinkedIn, Indeed, or job content from
+        page layout are out of scope (see "Ground rules" in CONTRIBUTING.md).
   - type: textarea
     id: problem
     attributes:

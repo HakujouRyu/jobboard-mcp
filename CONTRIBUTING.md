@@ -64,11 +64,27 @@ from the Actions tab or run it by hand.
 
 These are what make the server trustworthy, and review checks for them.
 
-1. **Public JSON APIs only.** Don't scrape LinkedIn, Indeed, Glassdoor, or any site whose terms
-   forbid it. The only HTML the server reads is careers pages, in `resolve_board`, and only to
-   find board links. Don't extract job content from HTML. Every careers-page request goes
-   through `get_text`, which keeps it on public addresses (`urlguard.py`). Don't fetch pages
-   any other way.
+1. **Structured data only, from the most official source there is.** Every source is in one of
+   three tiers, and the tiers are also the order of preference: an adapter never uses tier 2
+   or 3 for a system that tier 1 covers, or tier 3 for one that tier 2 covers.
+   1. **Documented public APIs**, such as the Greenhouse, Ashby, and Lever job board APIs.
+   2. **Undocumented JSON that the employer's own careers site loads without signing in**,
+      such as Workday's. Only if the adapter sends the requests a visitor's browser would send,
+      with no login, no cookies carried over, and nothing that gets around bot protection;
+      respects robots.txt; is rate-limited; has a live test; and is recorded in
+      `docs/api-notes.md` as undocumented and liable to change without notice. A POST is
+      allowed only where the careers site itself searches that way, and never changes
+      anything.
+   3. **schema.org `JobPosting` JSON-LD** in careers pages, which sites publish for search
+      engines. Opt-in per watchlist entry, robots.txt respected, and only the JSON-LD block is
+      read.
+
+   Jobs from a tier 2 or 3 source say so, so a client can tell. At every tier, never: read job
+   content from a page's layout or visible text; read a site whose terms forbid it (LinkedIn,
+   Indeed, Glassdoor); or read anything behind a login. Apart from tier 3, the only HTML the
+   server reads is careers pages, in `resolve_board`, and only to find board links. Every
+   request goes through `HttpClient`, and careers pages through `get_text`, which keeps them on
+   public addresses (`urlguard.py`). Don't fetch URLs any other way.
 2. **Read-only, except the watchlist.** The server writes nothing except the watchlist file,
    and only through `add_company` / `update_company`. Any new write tool must be removed when
    `WATCHLIST_READONLY=true` (add it to `WRITE_TOOLS` in `server.py`).

@@ -21,7 +21,7 @@ It replaces the slowest and least reliable part of a job search run through an A
 - Tested offline against recorded fixtures.
 
 **Non-goals**
-- No scraping of LinkedIn, Indeed, Glassdoor, or any site whose terms forbid it, and no HTML scraping of careers pages beyond detecting which ATS they link to.
+- No scraping of LinkedIn, Indeed, Glassdoor, or any site whose terms forbid it, and no reading job content from a page's layout. Sources are limited to the structured tiers in CONTRIBUTING.md ground rule 1, most official first.
 - No writes anywhere except the server's own watchlist file. The server touches public data only.
 - No accounts, credentials, résumés, or applying to jobs.
 - No judging fit or legitimacy. That stays with the MCP client and its user.
