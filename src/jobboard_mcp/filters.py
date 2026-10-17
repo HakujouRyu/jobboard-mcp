@@ -105,6 +105,26 @@ def passes_pay(job: Job, f: SweepFilters) -> bool:
     return top is None or top >= f.min_pay
 
 
+def unverified(job: Job, f: SweepFilters) -> list[str]:
+    """Filters the job was kept under without being checked against, because the data
+    needed to check it is missing (or, for pay, posted only in other currencies).
+    Named as the sweep_boards arguments are, in their order."""
+    names: list[str] = []
+    if f.remote and job.remote is Remote.UNKNOWN:
+        names.append("remote")
+    if f.min_pay is not None and job.pay_max_in(f.min_pay_currency) is None:
+        names.append("min_pay")
+    if f.cutoff is not None and job.posted_at is None:
+        names.append("posted_within_days")
+    return names
+
+
+def mark_unverified(job: Job, f: SweepFilters) -> Job:
+    """A copy of ``job`` with ``unverified_filters`` set for this search. Never changes
+    ``job`` itself: listed jobs are shared through the adapters' memo."""
+    return job.model_copy(update={"unverified_filters": unverified(job, f)})
+
+
 def sort_jobs(jobs: Iterable[Job]) -> list[Job]:
     """Newest first, unknown dates last; ties broken deterministically."""
     return sorted(
@@ -120,12 +140,13 @@ def sort_jobs(jobs: Iterable[Job]) -> list[Job]:
 
 
 def apply_filters(jobs: Iterable[Job], f: SweepFilters) -> list[Job]:
-    """Single-stage convenience: prefilter, pay check, dedupe by id, and sort."""
+    """Single-stage convenience: prefilter, pay check, dedupe by id, mark unverified filters,
+    and sort."""
     seen: set[str] = set()
     kept: list[Job] = []
     for job in jobs:
         if job.id in seen or not (prefilter(job, f) and passes_pay(job, f)):
             continue
         seen.add(job.id)
-        kept.append(job)
+        kept.append(mark_unverified(job, f))
     return sort_jobs(kept)

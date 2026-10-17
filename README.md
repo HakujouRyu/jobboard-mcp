@@ -73,7 +73,8 @@ returns this (abridged):
       "pay_raw": "$126,400–$213,600 USD",
       "pay_source": "parsed_from_text",
       "url": "https://job-boards.greenhouse.io/gitlab/jobs/8710061002",
-      "flags": []
+      "flags": [],
+      "unverified_filters": []
     }
   ],
   "matched": 6,
@@ -82,7 +83,8 @@ returns this (abridged):
     { "company": "GitLab", "ats": "greenhouse", "total": 218, "matched": 6, "status": "ok" }
   ],
   "cache_hits": 0,
-  "flag_counts": { "pay_unknown": 3, "remote_unknown": 2 }
+  "flag_counts": { "pay_unknown": 3, "remote_unknown": 2 },
+  "unverified_counts": { "min_pay": 3 }
 }
 ```
 
@@ -103,7 +105,9 @@ returns this (abridged):
   "Internal Tools Engineer".
 - **No hidden filters:** every `sweep_boards` filter is off unless the call sets it.
 - **Missing data** never silently drops a job. Every job's `flags` say what's missing
-  (`pay_unknown`, `date_unknown`, `remote_unknown`), whatever filters you use.
+  (`pay_unknown`, `date_unknown`, `remote_unknown`), whatever filters you use. When that keeps a
+  job a filter couldn't check, such as an unknown date under `posted_within_days` or EUR pay
+  under a USD `min_pay`, its `unverified_filters` names the filter.
 
 The full rules, with decision diagrams, are in **[docs/normalization.md](docs/normalization.md)**.
 

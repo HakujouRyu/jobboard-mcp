@@ -114,6 +114,15 @@ class Job(BaseModel):
     url: str
     apply_url: str | None = None
     description_text: str | None = None
+    unverified_filters: list[str] = Field(
+        default_factory=list,
+        description=(
+            "sweep_boards filters this job was kept under without being checked, because the"
+            " data was missing: remote (status unknown), min_pay (no pay, or none in"
+            " min_pay_currency), posted_within_days (date unknown). Check before treating the"
+            " job as meeting the search. Always empty outside sweep_boards."
+        ),
+    )
 
     # Publish computed fields (flags) in the tool output schema, not only in the output.
     model_config = ConfigDict(json_schema_mode_override="serialization")
@@ -188,6 +197,10 @@ class SweepResult(BaseModel):
     cache_hits: int = Field(description="Boards served from cache instead of refetched")
     flag_counts: dict[str, int] = Field(
         default_factory=dict, description="How many returned jobs carry each flag"
+    )
+    unverified_counts: dict[str, int] = Field(
+        default_factory=dict,
+        description="How many returned jobs list each filter in unverified_filters",
     )
 
 

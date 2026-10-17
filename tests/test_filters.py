@@ -217,6 +217,28 @@ def test_min_pay_compares_only_the_same_currency() -> None:
     assert sorted(j.native_id for j in apply_filters(jobs, usd)) == ["1", "2", "3"]
 
 
+def test_unverified_filters_name_what_could_not_be_checked() -> None:
+    jobs = [
+        make_job(1),  # every filter checked
+        make_job(2, pay_max=90_000, pay_currency="EUR"),  # the old pay_not_usd case
+        make_job(3, pay_max=None, posted_at=None, remote=Remote.UNKNOWN),
+    ]
+    f = SweepFilters(today=TODAY, remote=[Remote.REMOTE_US], min_pay=150_000, posted_within_days=30)
+    got = {j.native_id: j for j in apply_filters(jobs, f)}
+    assert got["1"].unverified_filters == []
+    assert got["2"].unverified_filters == ["min_pay"]
+    assert got["2"].flags == []  # pay is known, so it isn't a flag
+    assert got["3"].unverified_filters == ["remote", "min_pay", "posted_within_days"]
+    assert jobs[2].unverified_filters == []  # the input job isn't changed
+
+
+def test_unverified_filters_empty_when_the_filter_is_off() -> None:
+    job = make_job(1, pay_max=None, posted_at=None, remote=Remote.UNKNOWN)
+    (got,) = apply_filters([job], SweepFilters(today=TODAY))
+    assert got.unverified_filters == []
+    assert got.flags == [FLAG_PAY_UNKNOWN, FLAG_DATE_UNKNOWN, FLAG_REMOTE_UNKNOWN]
+
+
 def test_posted_within_days() -> None:
     jobs = [
         make_job(1, posted_at=date(2026, 9, 24)),  # exactly 21 days

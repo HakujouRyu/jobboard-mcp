@@ -75,8 +75,9 @@ These are what make the server trustworthy, and review checks for them.
 3. **Never guess `remote_us`.** It needs positive evidence. When in doubt, return `unknown`.
    The same goes for pay: no currency conversion, and no annual figure unless the posting gives
    one or an interval you can annualize.
-4. **Flag, don't drop.** If a filter can't be checked because data is missing, keep the job and
-   flag it.
+4. **Flag, don't drop.** If a filter can't be checked because data is missing, keep the job,
+   flag the missing data in `flags`, and name the filter in `unverified_filters` (see
+   `filters.unverified`). A new filter that can be unchecked must add itself there.
 5. **One company never fails a sweep.** Errors from a single board become its `per_company`
    status.
 6. **Deterministic output.** The same boards and filters give the same output, in the same

@@ -53,7 +53,9 @@ Public data only. Remote status is never guessed: 'unknown' jobs are kept and fl
 pay_min / pay_max are annual amounts in pay_currency (USD when the posting offers it), never
 converted; pay_other_currencies lists any other currencies posted, and pay_posted_interval says
 how the pay was posted. Each job's flags list missing data: pay_unknown, date_unknown,
-remote_unknown. US-focused: remote_us is the only country-level remote status.
+remote_unknown. Filters keep jobs they can't check, so check a job's unverified_filters
+before treating it as meeting the user's criteria (unverified_counts totals them).
+US-focused: remote_us is the only country-level remote status.
 Hosted servers may refuse careers_url arguments; resolve_board then uses the watchlist's.
 """
 

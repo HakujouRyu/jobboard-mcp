@@ -52,6 +52,11 @@ When more jobs match than `limit` allows, `truncated` is `true` and `matched` sa
 there were. To get the next page, call again with the returned ids added to `exclude_ids`.
 Each company's `matched` counts all of its matches, including any cut by `limit`.
 
+Filters keep jobs they can't check (an unknown date, no pay in `min_pay_currency`, an
+`unknown` remote status). Each such job names those filters in `unverified_filters`, and
+`unverified_counts` totals them. A job with an empty list verifiably meets every filter that
+was set. See [unverified filters](normalization.md#unverified-filters).
+
 Example call:
 
 ```json
@@ -94,7 +99,8 @@ Example result, abridged. The job is real (from the recorded GitLab fixture). Th
       "url": "https://job-boards.greenhouse.io/gitlab/jobs/8710061002",
       "apply_url": null,
       "description_text": null,
-      "flags": []
+      "flags": [],
+      "unverified_filters": []
     }
   ],
   "matched": 37,
@@ -106,7 +112,8 @@ Example result, abridged. The job is real (from the recorded GitLab fixture). Th
   ],
   "fetched_at": "2026-10-15T18:00:00Z",
   "cache_hits": 0,
-  "flag_counts": { "pay_unknown": 3, "remote_unknown": 2 }
+  "flag_counts": { "pay_unknown": 3, "remote_unknown": 2 },
+  "unverified_counts": { "min_pay": 3, "remote": 2 }
 }
 ```
 

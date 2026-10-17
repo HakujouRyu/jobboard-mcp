@@ -174,11 +174,27 @@ async def test_sweep_acceptance_filters(
     pattern = re.compile(r"\b(engineers?|sres?|products?)\b", re.I)
     for j in jobs:
         assert pattern.search(j["title"]), j["title"]
-        assert j["remote"] in ("remote_us", "remote_global", "unknown")
-        assert j["pay_max"] is None or j["pay_max"] >= 100_000
-        assert j["posted_at"] is None or j["posted_at"] >= "2026-08-16"
-        if j["pay_max"] is None:
-            assert "pay_unknown" in j["flags"]
+        # Each filter either verifiably holds or is listed as unverified.
+        unverified = set(j["unverified_filters"])
+        if "remote" in unverified:
+            assert j["remote"] == "unknown"
+        else:
+            assert j["remote"] in ("remote_us", "remote_global")
+        usd_max = j["pay_max"] if j["pay_currency"] == "USD" else None
+        if "min_pay" in unverified:
+            assert usd_max is None
+        else:
+            assert usd_max is not None and usd_max >= 100_000
+        if "posted_within_days" in unverified:
+            assert j["posted_at"] is None
+        else:
+            assert j["posted_at"] >= "2026-08-16"
+    assert any(j["unverified_filters"] for j in jobs)
+    counts: dict[str, int] = {}
+    for j in jobs:
+        for name in j["unverified_filters"]:
+            counts[name] = counts.get(name, 0) + 1
+    assert out["unverified_counts"] == dict(sorted(counts.items()))
     by_company = {c["company"]: c for c in out["per_company"]}
     assert by_company["GitLab"]["matched"] == sum(j["company"] == "GitLab" for j in jobs)
 

@@ -16,7 +16,8 @@ For where each ATS keeps the raw fields, see [api-notes.md](api-notes.md).
 2. **Keep the raw value.** `pay_raw`, `date_source`, and `locations` show what the normalized
    fields came from, so any result can be checked.
 3. **Missing data is flagged, not dropped.** Every job says what's missing in its `flags`. If
-   a filter can't be checked because the data is missing, the job stays in the results.
+   a filter can't be checked because the data is missing, the job stays in the results and
+   names that filter in `unverified_filters`.
 
 ## Remote status
 
@@ -207,7 +208,7 @@ flowchart LR
     date -- yes --> detail["Greenhouse pay<br/>detail fetch, if needed"]
     detail --> pay{"max in min_pay_currency >= min_pay?<br/>(unknown pay, or none in that currency, kept)"}
     pay -- no --> drop
-    pay -- yes --> keep(["kept, with flags"])
+    pay -- yes --> keep(["kept, with flags and<br/>unverified_filters"])
 ```
 
 ### Title terms
@@ -255,14 +256,29 @@ and `sweep_boards` show the same flags for the same job.
 | `remote_unknown` | `remote` is `unknown` |
 
 A minimum with no maximum ("$120,000+") is known pay and isn't flagged. Pay in a currency
-other than USD is known pay too. `min_pay` is compared with the job's range in
-`min_pay_currency` (USD by default), primary or other. It keeps jobs flagged `pay_unknown` and
-jobs with no range in that currency, since neither can be compared to it.
+other than USD is known pay too.
 
 `flags` is a computed field on `Job`, worked out from the job's other fields whenever it's read.
 That keeps it right after a sweep fills in Greenhouse pay from the detail endpoint.
 
 `flag_counts` in the sweep result totals them.
+
+### Unverified filters
+
+Flags say what a job is missing. `unverified_filters` says what that meant for this search:
+the `sweep_boards` filters the job was kept under without being checked against. A job with
+an empty list verifiably meets every filter that was set.
+
+| Filter | Listed when |
+|--------|-------------|
+| `remote` | `remote` was set and the job's status is `unknown` (kept because `include_unknown_remote` is on) |
+| `min_pay` | `min_pay` was set and the job has no maximum in `min_pay_currency`: no pay posted, only a minimum, or pay only in other currencies |
+| `posted_within_days` | `posted_within_days` was set and `posted_at` is null |
+
+A filter that wasn't set is never listed, so an unfiltered sweep has empty lists. A job listing
+`min_pay` but not flagged `pay_unknown` has pay in another currency: `pay_currency` and
+`pay_other_currencies` say which. `unverified_counts` in the sweep result totals them.
+The list is empty outside `sweep_boards`, which is the only tool that filters.
 
 ### Sorting
 

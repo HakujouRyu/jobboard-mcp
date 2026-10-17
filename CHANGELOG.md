@@ -22,6 +22,9 @@ All notable changes are recorded here. The format follows
   sweeping it. `list_watchlist` hides archived companies unless `include_archived` is set.
 - `sweep_boards` takes `limit` (default 100, at most 250) and reports `matched` and `truncated`.
   Passing the returned ids in `exclude_ids` gets the next page.
+- `unverified_filters` on each swept job names the filters it was kept under without being
+  checked (`remote`, `min_pay`, `posted_within_days`) because the data was missing or the pay
+  was in another currency. `unverified_counts` totals them.
 
 ### Changed
 

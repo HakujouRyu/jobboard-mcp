@@ -150,7 +150,7 @@ sequenceDiagram
 
     Svc->>Svc: passes_pay(), dedupe by id, sort_jobs(), keep the first limit jobs
     Svc-->>S: SweepResult
-    S-->>C: jobs[], matched, truncated, per_company[], cache_hits, flag_counts
+    S-->>C: jobs[], matched, truncated, per_company[], cache_hits, flag_counts, unverified_counts
 ```
 
 Notes:
@@ -281,6 +281,7 @@ classDiagram
         pay_source: PaySource
         url, apply_url
         description_text: str?
+        unverified_filters: list~str~
         flags: list~str~ (computed)
     }
     class WatchlistEntry {
@@ -300,6 +301,7 @@ classDiagram
         fetched_at: datetime
         cache_hits: int
         flag_counts: dict
+        unverified_counts: dict
     }
     class CompanyResult {
         company: str

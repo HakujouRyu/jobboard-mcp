@@ -99,7 +99,7 @@ Input:
 - `exclude_ids`, `exclude_fingerprints`, `exclude_urls`: lists, optional (leads the client has already seen)
 - `include_description`: bool, default false
 
-Output: `{ jobs: Job[], per_company: [{company, ats, total, matched, status, error?}], fetched_at, cache_hits }`
+Output: `{ jobs: Job[], matched, truncated, per_company: [{company, ats, total, matched, status, error?}], fetched_at, cache_hits, flag_counts, unverified_counts }`. Each swept job lists in `unverified_filters` the filters it was kept under without being checked.
 
 Sort jobs by `posted_at` descending, unknown last.
 

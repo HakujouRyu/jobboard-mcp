@@ -20,7 +20,13 @@ from typing import Any
 from jobboard_mcp.adapters import ADAPTERS, parse_posting_url
 from jobboard_mcp.adapters.base import BoardListing
 from jobboard_mcp.config import Settings
-from jobboard_mcp.filters import SweepFilters, passes_pay, prefilter, sort_jobs
+from jobboard_mcp.filters import (
+    SweepFilters,
+    mark_unverified,
+    passes_pay,
+    prefilter,
+    sort_jobs,
+)
 from jobboard_mcp.http import FetchError, HttpClient, NotFound
 from jobboard_mcp.matching import rank_postings
 from jobboard_mcp.models import (
@@ -158,6 +164,7 @@ class JobBoardService:
             if job.id in seen or not passes_pay(job, filters):
                 continue
             seen.add(job.id)
+            job = mark_unverified(job, filters)
             if not include_description:
                 job = job.model_copy(update={"description_text": None})
             kept.append(job)
@@ -165,6 +172,7 @@ class JobBoardService:
 
         jobs = sort_jobs(kept)[:limit]
         flag_counts = Counter(fl for j in jobs for fl in j.flags)
+        unverified_counts = Counter(n for j in jobs for n in j.unverified_filters)
         per_company = [results[n] for n in dict.fromkeys(order)]
         return SweepResult(
             jobs=jobs,
@@ -174,6 +182,7 @@ class JobBoardService:
             fetched_at=self._now(),
             cache_hits=cache_hits,
             flag_counts=dict(sorted(flag_counts.items())),
+            unverified_counts=dict(sorted(unverified_counts.items())),
         )
 
     async def _fetch_board(self, entry: WatchlistEntry, refresh: bool) -> _Fetch:
