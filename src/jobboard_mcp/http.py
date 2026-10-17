@@ -1,12 +1,14 @@
 """Shared async HTTP client: cache, conditional requests, retries, and concurrency caps.
 
 Careers pages (``get_text``) are fetched through ``urlguard.GuardedTransport``, which keeps them
-on the public internet. JSON requests only ever go to the job board APIs.
+on the public internet, and only where the site's robots.txt allows. JSON requests only ever go
+to the job board APIs.
 """
 
 from __future__ import annotations
 
 import asyncio
+import contextvars
 import email.utils
 import logging
 import math
@@ -19,12 +21,17 @@ from urllib.parse import urlsplit
 import httpx
 
 from jobboard_mcp.config import Settings
+from jobboard_mcp.robots import ALLOW_ALL, RobotsRules, parse_robots
 from jobboard_mcp.urlguard import BlockedURL, GuardedTransport, Resolver
 
 log = logging.getLogger(__name__)
 
 RETRY_STATUSES = {429, 500, 502, 503, 504}
 MAX_BACKOFF_SECONDS = 10.0
+ROBOTS_MAX_AGE_SECONDS = 24 * 3600  # RFC 9309: don't use a cached robots.txt longer than a day
+
+# Set while robots.txt itself is being fetched, so that request (and its redirects) isn't checked.
+_FETCHING_ROBOTS = contextvars.ContextVar("fetching_robots", default=False)
 
 
 class FetchError(Exception):
@@ -89,6 +96,9 @@ def _retry_after(response: httpx.Response, attempt: int) -> float:
 
 
 class HttpClient:
+    # Tests turn this off so careers-page routes don't each need a robots.txt; see conftest.py.
+    check_robots = True
+
     def __init__(
         self,
         settings: Settings,
@@ -119,7 +129,11 @@ class HttpClient:
                 resolver=resolver,
             ),
             trust_env=False,
+            event_hooks={"request": [self._robots_hook]},
         )
+        self._product = settings.user_agent.split("/", 1)[0]
+        self._robots: dict[str, tuple[RobotsRules, float]] = {}
+        self._robots_inflight: dict[str, asyncio.Task[RobotsRules]] = {}
         self._clock, self._sleep = clock, sleep
         self._cache: dict[str, _Entry] = {}
         self._inflight: dict[str, asyncio.Task[Fetched]] = {}
@@ -132,6 +146,7 @@ class HttpClient:
 
     def clear_cache(self) -> None:
         self._cache.clear()
+        self._robots.clear()
 
     async def get_json(self, url: str, *, refresh: bool = False) -> Fetched:
         """GET a JSON document. Fresh cache entries are served without a request; stale ones
@@ -141,7 +156,8 @@ class HttpClient:
     async def get_text(self, url: str, *, refresh: bool = False) -> Fetched:
         """GET a web page. ``data`` is a TextPage; 4xx pages are returned (not raised) because
         even an error page can link to the right place. Only 2xx pages are cached. Raises
-        ``Blocked`` for a URL, or a redirect, that isn't a public http(s) address."""
+        ``Blocked`` for a URL, or a redirect, that isn't a public http(s) address or that the
+        site's robots.txt disallows."""
         return await self._get(url, "text", refresh)
 
     async def _get(self, url: str, kind: str, refresh: bool) -> Fetched:
@@ -160,6 +176,45 @@ class HttpClient:
             self._inflight[key] = task
             task.add_done_callback(lambda _t: self._inflight.pop(key, None))
         return await asyncio.shield(task)
+
+    async def _robots_hook(self, request: httpx.Request) -> None:
+        """Runs before every careers-page request, redirects included."""
+        url = request.url
+        if not self.check_robots or _FETCHING_ROBOTS.get() or url.path == "/robots.txt":
+            return
+        rules = await self._robots_rules(url)
+        target = url.raw_path.decode("ascii")
+        if not rules.allows(target):
+            raise BlockedURL(f"robots.txt on {url.host} disallows {target}")
+
+    async def _robots_rules(self, url: httpx.URL) -> RobotsRules:
+        origin = f"{url.scheme}://{url.netloc.decode('ascii')}"
+        cached = self._robots.get(origin)
+        max_age = min(self._settings.cache_ttl_seconds, ROBOTS_MAX_AGE_SECONDS)
+        if cached is not None and self._clock() - cached[1] < max_age:
+            return cached[0]
+        task = self._robots_inflight.get(origin)
+        if task is None:
+            task = asyncio.ensure_future(self._fetch_robots(url))
+            self._robots_inflight[origin] = task
+            task.add_done_callback(lambda _t: self._robots_inflight.pop(origin, None))
+        rules = await asyncio.shield(task)
+        self._robots[origin] = (rules, self._clock())
+        return rules
+
+    async def _fetch_robots(self, url: httpx.URL) -> RobotsRules:
+        """RFC 9309: a 4xx means no rules, and a 5xx or 429 means stay away. A transport error
+        (refused address, DNS failure, timeout) propagates as is: the page would hit it too."""
+        robots_url = url.copy_with(path="/robots.txt", query=None, fragment=None)
+        _FETCHING_ROBOTS.set(True)  # this runs in its own task, so it doesn't leak
+        response = await self._pages.get(robots_url, headers={"Accept": "text/plain"})
+        status = response.status_code
+        log.debug("robots", extra={"fields": {"url": str(robots_url), "status": status}})
+        if 200 <= status < 300:
+            return parse_robots(response.content, self._product)
+        if 400 <= status < 500 and status != 429:
+            return ALLOW_ALL
+        raise BlockedURL(f"robots.txt on {url.host} returned HTTP {status}")
 
     def _host_sem(self, url: str) -> asyncio.Semaphore:
         host = urlsplit(url).netloc

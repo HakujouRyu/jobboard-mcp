@@ -100,8 +100,8 @@ These are what make the server trustworthy, and review checks for them.
    order. Sort with a full tiebreak.
 7. **Nothing on stdout.** stdout is the MCP transport. Log through `logging` (configured to
    write JSON to stderr) and never `print()`.
-8. **Keep the pure modules pure.** `normalize.py`, `filters.py`, `matching.py`, and `models.py`
-   don't do I/O and don't read the clock. Pass "today" in.
+8. **Keep the pure modules pure.** `normalize.py`, `filters.py`, `matching.py`, `robots.py`,
+   and `models.py` don't do I/O and don't read the clock. Pass "today" in.
 9. **Patterns stay fast on any input.** Board text and client arguments can be any size and
    shape, and matching runs on the event loop, so one slow match stalls every request. Don't
    nest quantifiers (`(a+)+`) or repeat alternatives that overlap (`(a|ab)*`), and never compile

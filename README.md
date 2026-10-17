@@ -54,7 +54,7 @@ a supported ATS.
   URL, but sweeps skip it with the status `no_board`.
 - **No scraping.** It doesn't read job content from web pages. The only pages it reads are a
   company's careers page and at most two same-site careers links from it, in `resolve_board`,
-  and only to find which board they link to.
+  only to find which board they link to, and only where the site's robots.txt allows.
 - **US-focused.** `remote_us` is the only remote status tied to one country. A remote role
   elsewhere is `remote_global` or `remote_other`, which don't say which countries qualify. Pay
   works in any currency and is never converted, but hourly pay is annualized at the US figure of

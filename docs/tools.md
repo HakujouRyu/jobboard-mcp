@@ -276,11 +276,15 @@ When nothing is found, `ats` and `token` are null, and `evidence` lists the toke
 unsupported ATS the pages mention (Workday, Workable, and so on).
 
 Careers pages are only fetched from public addresses over `http`/`https` on the default port,
-redirects included (see [architecture.md](architecture.md#careers-pages)). A page that's refused
-still counts as checked, with the reason, and the token probes still run:
+and only where the site's robots.txt allows, redirects included (see
+[architecture.md](architecture.md#careers-pages)). A page that's refused still counts as
+checked, with the reason, and the token probes still run:
 
 ```json
-"pages_checked": ["http://localhost:8080/careers (blocked: only default ports are fetched, not 8080)"]
+"pages_checked": [
+  "http://localhost:8080/careers (blocked: only default ports are fetched, not 8080)",
+  "https://shy.example/careers (blocked: robots.txt on shy.example disallows /careers)"
+]
 ```
 
 ---

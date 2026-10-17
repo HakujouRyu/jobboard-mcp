@@ -5,7 +5,7 @@ import pytest
 import respx
 
 from jobboard_mcp.config import Settings
-from jobboard_mcp.http import FetchError, FetchTimeout, HttpClient, NotFound
+from jobboard_mcp.http import Blocked, FetchError, FetchTimeout, HttpClient, NotFound
 
 URL = "https://api.example.test/board"
 
@@ -196,3 +196,145 @@ async def test_text_and_json_cache_separately(client: HttpClient) -> None:
     assert (await client.get_json(URL)).data == {"a": 1}
     text = await client.get_text(URL)
     assert not text.cache_hit and '"a"' in text.data.text
+
+
+# ------------------------------------------------------------------ robots.txt
+
+
+@pytest.fixture
+def robots_on(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(HttpClient, "check_robots", True)
+
+
+def page(text: str = "<p>jobs</p>") -> httpx.Response:
+    return httpx.Response(200, text=text)
+
+
+@respx.mock
+async def test_robots_disallowed_page_is_blocked(client: HttpClient, robots_on: None) -> None:
+    robots = respx.get("https://co.test/robots.txt").mock(
+        return_value=httpx.Response(200, text="User-agent: *\nDisallow: /internal\n")
+    )
+    careers = respx.get("https://co.test/careers").mock(return_value=page())
+    internal = respx.get("https://co.test/internal/jobs").mock(return_value=page())
+    assert (await client.get_text("https://co.test/careers")).data.status == 200
+    with pytest.raises(Blocked, match=r"robots\.txt on co\.test disallows /internal/jobs"):
+        await client.get_text("https://co.test/internal/jobs")
+    assert (careers.call_count, internal.call_count, robots.call_count) == (1, 0, 1)
+    assert robots.calls.last.request.headers["User-Agent"].startswith("jobboard-mcp/")
+
+
+@respx.mock
+async def test_robots_checks_our_own_group(client: HttpClient, robots_on: None) -> None:
+    respx.get("https://co.test/robots.txt").mock(
+        return_value=httpx.Response(
+            200, text="User-agent: *\nAllow: /\n\nUser-agent: jobboard-mcp\nDisallow: /\n"
+        )
+    )
+    with pytest.raises(Blocked, match="disallows"):
+        await client.get_text("https://co.test/careers")
+
+
+@respx.mock
+async def test_robots_query_counts(client: HttpClient, robots_on: None) -> None:
+    respx.get("https://co.test/robots.txt").mock(
+        return_value=httpx.Response(200, text="User-agent: *\nDisallow: /jobs?page=\n")
+    )
+    respx.get("https://co.test/jobs").mock(return_value=page())
+    assert (await client.get_text("https://co.test/jobs")).data.status == 200
+    with pytest.raises(Blocked, match=r"disallows /jobs\?page=2"):
+        await client.get_text("https://co.test/jobs?page=2")
+
+
+@pytest.mark.parametrize("status", [401, 403, 404, 410])
+@respx.mock
+async def test_robots_4xx_means_no_rules(client: HttpClient, robots_on: None, status: int) -> None:
+    respx.get("https://co.test/robots.txt").mock(return_value=httpx.Response(status))
+    respx.get("https://co.test/careers").mock(return_value=page())
+    assert (await client.get_text("https://co.test/careers")).data.status == 200
+
+
+@pytest.mark.parametrize("status", [429, 500, 503])
+@respx.mock
+async def test_robots_5xx_or_429_blocks(client: HttpClient, robots_on: None, status: int) -> None:
+    respx.get("https://co.test/robots.txt").mock(return_value=httpx.Response(status))
+    careers = respx.get("https://co.test/careers").mock(return_value=page())
+    with pytest.raises(Blocked, match=rf"robots\.txt on co\.test returned HTTP {status}"):
+        await client.get_text("https://co.test/careers")
+    assert careers.call_count == 0
+
+
+@respx.mock
+async def test_robots_unreachable_fails_like_the_page(client: HttpClient, robots_on: None) -> None:
+    respx.get("https://co.test/robots.txt").mock(side_effect=httpx.ConnectTimeout("slow"))
+    careers = respx.get("https://co.test/careers").mock(return_value=page())
+    with pytest.raises(FetchTimeout):
+        await client.get_text("https://co.test/careers")
+    assert careers.call_count == 0
+
+
+@respx.mock
+async def test_robots_checked_on_every_redirect(client: HttpClient, robots_on: None) -> None:
+    respx.get("https://co.test/robots.txt").mock(return_value=httpx.Response(404))
+    respx.get("https://co.test/careers").mock(
+        return_value=httpx.Response(302, headers={"Location": "https://ats.test/private/co"})
+    )
+    respx.get("https://ats.test/robots.txt").mock(
+        return_value=httpx.Response(200, text="User-agent: *\nDisallow: /private\n")
+    )
+    target = respx.get("https://ats.test/private/co").mock(return_value=page())
+    with pytest.raises(Blocked, match=r"robots\.txt on ats\.test disallows /private/co"):
+        await client.get_text("https://co.test/careers")
+    assert target.call_count == 0
+
+
+@respx.mock
+async def test_robots_cached_per_origin_until_ttl(
+    client: HttpClient, robots_on: None, clock: FakeClock
+) -> None:
+    robots = respx.get("https://co.test/robots.txt").mock(return_value=httpx.Response(404))
+    other = respx.get("https://other.test/robots.txt").mock(return_value=httpx.Response(404))
+    respx.get(url__regex=r"https://(co|other)\.test/p\d").mock(return_value=page())
+    await client.get_text("https://co.test/p1")
+    await client.get_text("https://co.test/p2")
+    await client.get_text("https://other.test/p1")
+    assert (robots.call_count, other.call_count) == (1, 1)
+    clock.now += 61  # past CACHE_TTL_SECONDS (60 in this fixture)
+    await client.get_text("https://co.test/p3")
+    assert robots.call_count == 2
+
+
+@respx.mock
+async def test_robots_fetched_once_for_concurrent_pages(
+    client: HttpClient, robots_on: None
+) -> None:
+    robots = respx.get("https://co.test/robots.txt").mock(return_value=httpx.Response(404))
+    respx.get(url__regex=r"https://co\.test/p\d").mock(return_value=page())
+    await asyncio.gather(*(client.get_text(f"https://co.test/p{i}") for i in range(5)))
+    assert robots.call_count == 1
+
+
+@respx.mock
+async def test_robots_not_used_for_json(client: HttpClient, robots_on: None) -> None:
+    respx.get(URL).mock(return_value=httpx.Response(200, json={}))
+    await client.get_json(URL)
+    assert respx.calls.call_count == 1
+
+
+@respx.mock
+async def test_blocked_address_reports_the_address_not_robots(
+    robots_on: None, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from jobboard_mcp import urlguard
+
+    async def private(_host: str, _port: int) -> list[str]:
+        return ["10.0.0.5"]
+
+    monkeypatch.setattr(urlguard, "resolve_host", private)
+    c = HttpClient(Settings())
+    try:
+        with pytest.raises(Blocked, match="non-public address"):
+            await c.get_text("https://intranet.test/careers")
+    finally:
+        await c.aclose()
+    assert respx.calls.call_count == 0

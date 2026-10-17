@@ -68,6 +68,7 @@ flowchart LR
 | [watchlist.py](../src/jobboard_mcp/watchlist.py) | Loads and validates the YAML, and makes comment-preserving, atomic edits. |
 | [http.py](../src/jobboard_mcp/http.py) | `HttpClient`: cache, conditional requests, retries, request sharing, and concurrency caps for every outbound request. |
 | [urlguard.py](../src/jobboard_mcp/urlguard.py) | Keeps careers-page fetches on the public internet: checks every request and redirect, and pins the connection to the checked address. |
+| [robots.py](../src/jobboard_mcp/robots.py) | Pure functions: parses robots.txt and decides whether a path may be fetched (RFC 9309). `HttpClient` fetches and caches the file. |
 | [config.py](../src/jobboard_mcp/config.py) | `Settings` from environment variables, and JSON logging to stderr. |
 | [models.py](../src/jobboard_mcp/models.py) | Pydantic models for jobs, watchlist entries, and every tool result. |
 
@@ -84,6 +85,7 @@ flowchart TB
     resolve --> adapters
     adapters --> http["http.py"]
     http --> config["config.py"]
+    http --> robots["robots.py"]
     service --> matching["matching.py"]
     service --> filters["filters.py"]
     adapters --> normalize["normalize.py"]
@@ -95,7 +97,7 @@ flowchart TB
     watchlist --> models
 
     classDef pure fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20
-    class normalize,filters,matching,models pure
+    class normalize,filters,matching,models,robots pure
 ```
 
 Green modules are pure: no network, no files, no clock. (`filters` gets "today" from the caller.)
@@ -180,7 +182,7 @@ flowchart TD
     inflight -- no --> slots["acquire per-host slot (PER_HOST_CONCURRENCY),<br/>then global slot (MAX_CONCURRENCY)"]
     slots --> send["GET, sending ETag / Last-Modified<br/>from any stale entry"]
     send --> exc{"timeout or<br/>transport error?"}
-    exc -- "blocked (text only)" --> fb(["raise Blocked"])
+    exc -- "blocked address or<br/>robots.txt (text only)" --> fb(["raise Blocked"])
     exc -- timeout --> ft(["raise FetchTimeout"])
     exc -- other --> fe(["raise FetchError"])
     exc -- no --> retry{"429 or 5xx, with<br/>retries left (max 2)?"}
@@ -222,6 +224,16 @@ in the adapters. For every request, redirects included:
 3. The request connects to the checked address, with the original `Host` header and TLS name
    (`sni_hostname`), so a DNS answer that changes between the check and the connect can't get
    through.
+
+Before each of those requests, redirects included, the client checks the site's robots.txt
+(RFC 9309), fetched once per origin and cached for `CACHE_TTL_SECONDS`, at most a day:
+
+- The group for `jobboard-mcp` applies, else the `*` group, else nothing is disallowed. The
+  longest matching rule wins, and `Allow` wins a tie. Paths include the query, and `*` and `$`
+  wildcards are supported.
+- A 4xx for robots.txt (401 and 403 included) means no rules. A 429 or 5xx means stay away, so
+  the page is refused. A timeout or connection error fails the page the same way.
+- `crawl-delay` is ignored; the concurrency caps above still apply.
 
 A refused URL raises `Blocked`, which is never retried, and `resolve_board` lists the page in
 `pages_checked` with the reason. Because connections are pinned by IP, the careers-page client

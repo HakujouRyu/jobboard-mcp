@@ -199,6 +199,23 @@ async def test_unreachable_careers_page_still_probes(http: HttpClient) -> None:
     assert r.pages_checked == ["https://down.test/careers"]
 
 
+@respx.mock
+async def test_robots_disallowed_careers_page_is_listed_and_skipped(
+    http: HttpClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(HttpClient, "check_robots", True)
+    respx.get("https://shy.test/robots.txt").mock(
+        return_value=httpx.Response(200, text="User-agent: *\nDisallow: /careers\n")
+    )
+    careers = respx.get("https://shy.test/careers").mock(return_value=httpx.Response(200, text=MUX))
+    not_found_everywhere_else(respx.mock)
+    r = await resolve_board(http, "Shy", "https://shy.test/careers")
+    assert r.ats is None and careers.call_count == 0
+    assert r.pages_checked == [
+        "https://shy.test/careers (blocked: robots.txt on shy.test disallows /careers)"
+    ]
+
+
 async def test_requires_company_or_url(http: HttpClient) -> None:
     with pytest.raises(ValueError, match="company and/or careers_url"):
         await resolve_board(http)

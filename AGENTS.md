@@ -41,7 +41,8 @@ The full list is under "Ground rules" in CONTRIBUTING.md. The ones agents break 
   lower tier for a system a higher one covers, and never read job content from page layout.
   Every request goes through `HttpClient`, and careers pages only through `get_text`, which
   keeps them on public addresses. Don't add another way to fetch a URL.
-- **Keep `normalize.py`, `filters.py`, `matching.py`, and `models.py` pure.** No I/O, no clock.
+- **Keep `normalize.py`, `filters.py`, `matching.py`, `robots.py`, and `models.py` pure.** No
+  I/O, no clock.
 - **Don't edit the user's watchlist** (`%APPDATA%\jobboard-mcp\watchlist.yaml` or
   `~/.config/jobboard-mcp/watchlist.yaml`, or an old `data/watchlist.yaml`). Change
   `src/jobboard_mcp/watchlist.example.yaml` only when asked, and keep one board per ATS in it,
