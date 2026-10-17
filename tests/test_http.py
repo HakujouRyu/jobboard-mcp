@@ -1,4 +1,5 @@
 import asyncio
+import json
 
 import httpx
 import pytest
@@ -420,3 +421,76 @@ async def test_interval_zero_turns_pacing_off(
     finally:
         await client.aclose()
     assert sleeps == []
+
+
+# ------------------------------------------------------------------ careers-site JSON (tier 2)
+
+SITE = "https://acme.wd5.myworkdayjobs.test/wday/cxs/acme/External/jobs"
+
+
+@respx.mock
+async def test_post_site_json_sends_body_and_caches_by_body(client: HttpClient) -> None:
+    route = respx.post(SITE).mock(return_value=httpx.Response(200, json={"total": 1}))
+    first = await client.post_site_json(SITE, {"searchText": "engineer", "offset": 0})
+    again = await client.post_site_json(SITE, {"offset": 0, "searchText": "engineer"})
+    other = await client.post_site_json(SITE, {"searchText": "designer", "offset": 0})
+    assert first.data == {"total": 1} and not first.cache_hit
+    assert again.cache_hit and not other.cache_hit
+    assert route.call_count == 2
+    request = route.calls[0].request
+    assert request.method == "POST"
+    assert json.loads(request.content) == {"searchText": "engineer", "offset": 0}
+    assert request.headers["Content-Type"] == "application/json"
+    assert "If-None-Match" not in request.headers
+
+
+@respx.mock
+async def test_site_json_errors_match_get_json(client: HttpClient) -> None:
+    respx.get(f"{SITE}/gone").mock(return_value=httpx.Response(404))
+    respx.get(f"{SITE}/broken").mock(return_value=httpx.Response(200, text="<html>"))
+    with pytest.raises(NotFound):
+        await client.get_site_json(f"{SITE}/gone")
+    with pytest.raises(FetchError, match="not valid JSON"):
+        await client.get_site_json(f"{SITE}/broken")
+
+
+@respx.mock
+async def test_site_json_is_robots_checked(client: HttpClient, robots_on: None) -> None:
+    respx.get("https://acme.wd5.myworkdayjobs.test/robots.txt").mock(
+        return_value=httpx.Response(200, text="User-agent: *\nDisallow: /wday/cxs/\n")
+    )
+    route = respx.post(SITE).mock(return_value=httpx.Response(200, json={}))
+    with pytest.raises(Blocked, match="disallows /wday/cxs/acme/External/jobs"):
+        await client.post_site_json(SITE, {"offset": 0})
+    assert route.call_count == 0
+
+
+@respx.mock
+async def test_site_json_is_paced(
+    paced: tuple[HttpClient, list[float]],
+) -> None:
+    client, waits = paced
+    respx.post(SITE).mock(return_value=httpx.Response(200, json={}))
+    try:
+        await client.post_site_json(SITE, {"offset": 0})
+        await client.post_site_json(SITE, {"offset": 20})
+    finally:
+        await client.aclose()
+    assert waits == [1.0]
+
+
+@respx.mock
+async def test_site_json_is_kept_to_public_addresses(monkeypatch: pytest.MonkeyPatch) -> None:
+    from jobboard_mcp import urlguard
+
+    async def private(_host: str, _port: int) -> list[str]:
+        return ["169.254.169.254"]
+
+    monkeypatch.setattr(urlguard, "resolve_host", private)
+    c = HttpClient(Settings())
+    try:
+        with pytest.raises(Blocked, match="non-public address"):
+            await c.post_site_json("https://metadata.test/latest", {})
+    finally:
+        await c.aclose()
+    assert respx.calls.call_count == 0

@@ -22,7 +22,9 @@ worth a look:
 - **Outbound requests.** `resolve_board` and `find_company_posting` fetch a careers URL from the
   watchlist or the MCP client, plus up to two same-site links from that page. These must stay on
   public addresses (SSRF). With `ALLOW_CUSTOM_URLS=false`, no client-supplied URL should be
-  fetched at all.
+  fetched at all. Adapters for careers-site JSON (`get_site_json`, `post_site_json`) take their
+  host from a watchlist entry, which `add_company` accepts from the client, so they're held to
+  the same checks.
 - **Watchlist writes.** `add_company` and `update_company` edit the watchlist file from client
   input. Anything that writes outside that file, or leaves it invalid, is a bug.
 - **Parsing untrusted data.** Board responses, careers-page HTML, and the watchlist YAML all come

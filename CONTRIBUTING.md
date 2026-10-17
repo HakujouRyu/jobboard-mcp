@@ -83,8 +83,10 @@ These are what make the server trustworthy, and review checks for them.
    content from a page's layout or visible text; read a site whose terms forbid it (LinkedIn,
    Indeed, Glassdoor); or read anything behind a login. Apart from tier 3, the only HTML the
    server reads is careers pages, in `resolve_board`, and only to find board links. Every
-   request goes through `HttpClient`, and careers pages through `get_text`, which keeps them on
-   public addresses (`urlguard.py`). Don't fetch URLs any other way.
+   request goes through `HttpClient`. Careers pages go through `get_text`, and tier 2 JSON
+   through `get_site_json` / `post_site_json`, which keep them on public addresses
+   (`urlguard.py`), check robots.txt, and pace them. Tier 1 APIs use `get_json`. Don't fetch
+   URLs any other way.
 2. **Read-only, except the watchlist.** The server writes nothing except the watchlist file,
    and only through `add_company` / `update_company`. Any new write tool must be removed when
    `WATCHLIST_READONLY=true` (add it to `WRITE_TOOLS` in `server.py`).
@@ -173,6 +175,10 @@ Patterns to follow:
 ## Recipe: supporting another ATS
 
 Workable, SmartRecruiters, and Recruitee are the candidates in SPEC.md §3.
+
+Use the highest tier in ground rule 1 that the ATS offers. A tier 1 adapter fetches with
+`get_json`; a tier 2 adapter, whose host comes from the watchlist, with `get_site_json` or
+`post_site_json`.
 
 1. **Check the live API first.** Fetch two or three real boards, including an empty one and an
    unknown token. Record the differences from the vendor docs in `docs/api-notes.md`.

@@ -175,14 +175,14 @@ Every outbound request goes through `HttpClient`, including the careers-page fet
 
 ```mermaid
 flowchart TD
-    start(["get_json(url) / get_text(url)"]) --> fresh{"cached and younger than<br/>CACHE_TTL_SECONDS,<br/>and refresh not set?"}
+    start(["get_json / get_text /<br/>get_site_json / post_site_json"]) --> fresh{"cached and younger than<br/>CACHE_TTL_SECONDS,<br/>and refresh not set?"}
     fresh -- yes --> hit(["return cached data<br/>cache_hit = true"])
     fresh -- no --> inflight{"same URL already<br/>being fetched?"}
     inflight -- yes --> join(["await that request"])
-    inflight -- no --> slots["acquire per-host slot (PER_HOST_CONCURRENCY),<br/>wait for the host's next start (pages only,<br/>PER_HOST_INTERVAL_SECONDS),<br/>then global slot (MAX_CONCURRENCY)"]
-    slots --> send["GET, sending ETag / Last-Modified<br/>from any stale entry"]
+    inflight -- no --> slots["acquire per-host slot (PER_HOST_CONCURRENCY),<br/>wait for the host's next start (pages and<br/>site JSON, PER_HOST_INTERVAL_SECONDS),<br/>then global slot (MAX_CONCURRENCY)"]
+    slots --> send["GET, sending ETag / Last-Modified<br/>from any stale entry<br/>(POST for a site search: no validators)"]
     send --> exc{"timeout or<br/>transport error?"}
-    exc -- "blocked address or<br/>robots.txt (text only)" --> fb(["raise Blocked"])
+    exc -- "blocked address or<br/>robots.txt (pages, site JSON)" --> fb(["raise Blocked"])
     exc -- timeout --> ft(["raise FetchTimeout"])
     exc -- other --> fe(["raise FetchError"])
     exc -- no --> retry{"429 or 5xx, with<br/>retries left (max 2)?"}
@@ -219,8 +219,10 @@ Careers URLs come from the watchlist or the MCP client. `ALLOW_CUSTOM_URLS=false
 client's: the service rejects a `careers_url` passed to `resolve_board`, `add_company`, or
 `update_company`, so pages are fetched only from URLs the operator put in the watchlist. Either
 way, `get_text` sends them through `GuardedTransport` (in `urlguard.py`) to stop the server
-being pointed at internal addresses (SSRF). JSON requests skip it, because their hosts are fixed
-in the adapters. For every request, redirects included:
+being pointed at internal addresses (SSRF). So do `get_site_json` and `post_site_json`, for the
+JSON an employer's careers site loads for itself (tier 2 in ground rule 1), because those hosts
+come from the watchlist too. `get_json` skips it, because the documented APIs' hosts are fixed
+in the adapters. For every guarded request, redirects included:
 
 1. The URL must be `http` or `https` on the default port, with no username or password.
 2. The host is resolved, and every address it resolves to must be public. Loopback, private,

@@ -39,8 +39,9 @@ The full list is under "Ground rules" in CONTRIBUTING.md. The ones agents break 
 - **Structured data only, best tier first.** Ground rule 1 has three tiers: documented public
   APIs, then the JSON a careers site loads for itself, then schema.org JSON-LD. Never use a
   lower tier for a system a higher one covers, and never read job content from page layout.
-  Every request goes through `HttpClient`, and careers pages only through `get_text`, which
-  keeps them on public addresses. Don't add another way to fetch a URL.
+  Every request goes through `HttpClient`: careers pages only through `get_text`, and a
+  careers site's JSON only through `get_site_json` / `post_site_json`, which keep them on
+  public addresses, check robots.txt, and pace them. Don't add another way to fetch a URL.
 - **Keep `normalize.py`, `filters.py`, `matching.py`, `robots.py`, and `models.py` pure.** No
   I/O, no clock.
 - **Don't edit the user's watchlist** (`%APPDATA%\jobboard-mcp\watchlist.yaml` or

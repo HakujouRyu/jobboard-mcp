@@ -1,8 +1,9 @@
 """Shared async HTTP client: cache, conditional requests, retries, concurrency caps, and pacing.
 
-Careers pages (``get_text``) are fetched through ``urlguard.GuardedTransport``, which keeps them
-on the public internet, and only where the site's robots.txt allows. JSON requests only ever go
-to the job board APIs.
+Careers pages (``get_text``) and careers-site JSON (``get_site_json``, ``post_site_json``) come
+from hosts named in data, so they go through ``urlguard.GuardedTransport``, which keeps them on
+the public internet, and only where the site's robots.txt allows. They're also paced per host.
+``get_json`` is for the documented job board APIs, whose hosts are fixed in the adapters.
 """
 
 from __future__ import annotations
@@ -10,6 +11,7 @@ from __future__ import annotations
 import asyncio
 import contextvars
 import email.utils
+import json
 import logging
 import math
 import time
@@ -163,8 +165,20 @@ class HttpClient:
         site's robots.txt disallows."""
         return await self._get(url, "text", refresh)
 
-    async def _get(self, url: str, kind: str, refresh: bool) -> Fetched:
+    async def get_site_json(self, url: str, *, refresh: bool = False) -> Fetched:
+        """GET JSON that an employer's careers site loads for itself (ground rule 1, tier 2).
+        Guarded, robots-checked, and paced like ``get_text``; errors as in ``get_json``."""
+        return await self._get(url, "site", refresh)
+
+    async def post_site_json(self, url: str, body: Any, *, refresh: bool = False) -> Fetched:
+        """POST a JSON search the way the careers site itself does, as ``get_site_json``. Only
+        for read-only searches. Cached by URL and body, with no conditional requests."""
+        return await self._get(url, "site", refresh, body=body)
+
+    async def _get(self, url: str, kind: str, refresh: bool, *, body: Any = None) -> Fetched:
         key = f"{kind} {url}"
+        if body is not None:
+            key += " POST " + json.dumps(body, sort_keys=True, separators=(",", ":"))
         entry = self._cache.get(key)
         if (
             entry is not None
@@ -175,13 +189,13 @@ class HttpClient:
         # Share one request between concurrent callers of the same URL.
         task = self._inflight.get(key)
         if task is None:
-            task = asyncio.ensure_future(self._fetch(url, key, kind, entry))
+            task = asyncio.ensure_future(self._fetch(url, key, kind, entry, body))
             self._inflight[key] = task
             task.add_done_callback(lambda _t: self._inflight.pop(key, None))
         return await asyncio.shield(task)
 
     async def _robots_hook(self, request: httpx.Request) -> None:
-        """Runs before every careers-page request, redirects included."""
+        """Runs before every careers-page and careers-site JSON request, redirects included."""
         url = request.url
         if not self.check_robots or _FETCHING_ROBOTS.get() or url.path == "/robots.txt":
             return
@@ -239,18 +253,22 @@ class HttpClient:
         if start > now:
             await self._sleep(start - now)
 
-    async def _fetch(self, url: str, key: str, kind: str, entry: _Entry | None) -> Fetched:
+    async def _fetch(
+        self, url: str, key: str, kind: str, entry: _Entry | None, body: Any
+    ) -> Fetched:
         headers: dict[str, str] = {}
         if kind == "text":
             headers["Accept"] = "text/html,application/xhtml+xml;q=0.9,*/*;q=0.5"
-        if entry is not None:
+        method = "GET" if body is None else "POST"
+        if entry is not None and method == "GET":
             if entry.etag:
                 headers["If-None-Match"] = entry.etag
             if entry.last_modified:
                 headers["If-Modified-Since"] = entry.last_modified
 
-        client = self._pages if kind == "text" else self._client
-        paced = kind == "text"
+        # Hosts that come from data (pages and careers-site JSON) are guarded and paced.
+        guarded = kind != "json"
+        client = self._pages if guarded else self._client
         attempt = 0
         while True:
             started = self._clock()
@@ -258,10 +276,10 @@ class HttpClient:
                 # Host slot and pacing first, so waiting on a busy host doesn't hold a
                 # global slot.
                 async with self._host_sem(url):
-                    if paced:
+                    if guarded:
                         await self._pace(url)
                     async with self._global:
-                        response = await client.get(url, headers=headers)
+                        response = await client.request(method, url, headers=headers, json=body)
             except BlockedURL as exc:
                 raise Blocked(url, f"blocked: {exc}") from exc
             except httpx.TimeoutException as exc:
@@ -274,7 +292,14 @@ class HttpClient:
             status = response.status_code
             log.debug(
                 "http",
-                extra={"fields": {"url": url, "status": status, "latency_ms": latency_ms}},
+                extra={
+                    "fields": {
+                        "method": method,
+                        "url": url,
+                        "status": status,
+                        "latency_ms": latency_ms,
+                    }
+                },
             )
 
             if status in RETRY_STATUSES and attempt < self._settings.max_retries:
