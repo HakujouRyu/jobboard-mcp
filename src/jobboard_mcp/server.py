@@ -6,7 +6,7 @@ import argparse
 import logging
 import os
 import sys
-from collections.abc import AsyncIterator
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Annotated
 
@@ -70,7 +70,7 @@ def set_service(service: JobBoardService | None) -> None:
 
 
 @asynccontextmanager
-async def lifespan(_server: MCPServer) -> AsyncIterator[None]:
+async def lifespan(_server: MCPServer) -> AsyncGenerator[None]:
     try:
         yield
     finally:

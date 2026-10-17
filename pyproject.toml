@@ -47,6 +47,8 @@ ignore = ["RUF001", "RUF002", "RUF003"]
 include = ["src", "tests"]
 pythonVersion = "3.12"
 typeCheckingMode = "standard"
+# Pylance strikes deprecated calls through in the editor; make CI fail on them too.
+reportDeprecated = "error"
 
 [dependency-groups]
 dev = [
