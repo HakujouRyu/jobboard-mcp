@@ -60,9 +60,6 @@ Monday, since boards change without any commit here. A failure opens an issue la
 turns off scheduled workflows after 60 days without a commit, so on a quiet repo, re-enable it
 from the Actions tab or run it by hand.
 
-When a PR closes, merged or not, [pr-closed.yml](.github/workflows/pr-closed.yml) deletes its
-Actions caches.
-
 ## Ground rules
 
 These are what make the server trustworthy, and review checks for them.
