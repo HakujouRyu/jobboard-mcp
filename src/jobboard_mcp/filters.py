@@ -2,6 +2,8 @@
 
 Filtering runs in two stages so the sweep can fetch Greenhouse pay details only for jobs that
 survive the cheap checks: ``prefilter`` (ids, title, remote, date) and then ``passes_pay``.
+
+Every filter is off unless the caller sets it. There are no built-in preferences.
 """
 
 from __future__ import annotations
@@ -13,10 +15,6 @@ from datetime import date, timedelta
 from urllib.parse import urlsplit
 
 from jobboard_mcp.models import Job, Remote
-
-# "internship" is listed separately because "intern" matches whole words only.
-DEFAULT_TITLE_EXCLUDE = ("intern", "internship", "new grad", "principal")
-DEFAULT_REMOTE = (Remote.REMOTE_US, Remote.REMOTE_GLOBAL)
 
 
 def compile_terms(terms: Iterable[str]) -> list[re.Pattern[str]]:
@@ -45,8 +43,8 @@ def normalize_url(url: str) -> str:
 class SweepFilters:
     today: date
     title_include: Sequence[str] = ()
-    title_exclude: Sequence[str] = DEFAULT_TITLE_EXCLUDE
-    remote: Sequence[Remote] = DEFAULT_REMOTE
+    title_exclude: Sequence[str] = ()
+    remote: Sequence[Remote] = ()  # empty keeps every status
     include_unknown_remote: bool = True
     min_pay: int | None = None
     posted_within_days: int | None = None
@@ -89,7 +87,7 @@ def prefilter(job: Job, f: SweepFilters) -> bool:
     if job.remote is Remote.UNKNOWN:
         if not f.include_unknown_remote:
             return False
-    elif job.remote not in f.remote:
+    elif f.remote and job.remote not in f.remote:
         return False
     cutoff = f.cutoff
     return cutoff is None or job.posted_at is None or job.posted_at >= cutoff

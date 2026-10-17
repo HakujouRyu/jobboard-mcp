@@ -23,6 +23,9 @@ All notable changes are recorded here. The format follows
 
 ### Changed
 
+- `sweep_boards` has no built-in filters. `title_exclude` used to default to intern, internship,
+  new grad, and principal, and `remote` to `remote_us` and `remote_global`. Both now default to
+  no filtering, so pass your preferences on each call.
 - `pay_interval` is now `pay_posted_interval`, so it isn't read as the unit of `pay_min` and
   `pay_max`. Those are always annual.
 - Locations that name only non-US countries or regions ("Portugal", "ANZ Region", "EMEA") are

@@ -28,12 +28,15 @@ Every tool that fetches takes `refresh: true` to skip the 3-hour cache.
 Fetches every watched board (or the ones named) in parallel and returns matching jobs, newest
 first, with a status for each company. One company failing never fails the sweep.
 
+Every filter is off unless you pass it. The server has no built-in preferences, so the client
+should pass the user's title, remote, pay, and date filters on each call.
+
 | Parameter | Type | Default | |
 |-----------|------|---------|---|
 | `companies` | string[] | every company that isn't archived | Watchlist names, case-insensitive. Archived companies can be named. A name that isn't on the watchlist gets status `error`. |
 | `title_include` | string[] | none | Keep titles matching **any** term. See [title terms](normalization.md#title-terms). |
-| `title_exclude` | string[] | `intern`, `internship`, `new grad`, `principal` | Drop titles matching any term. `[]` excludes nothing. |
-| `remote` | enum[] | `remote_us`, `remote_global` | Remote statuses to keep. |
+| `title_exclude` | string[] | none | Drop titles matching any term. |
+| `remote` | enum[] | every status | Remote statuses to keep. |
 | `include_unknown_remote` | bool | `true` | Keep `unknown` remote jobs (flagged `remote_unknown`). |
 | `min_pay` | int ≥ 0 | none | Annual USD. Drops jobs whose posted **maximum** is below it. Unknown and non-USD pay are kept (flagged `pay_unknown` / `pay_not_usd`). |
 | `posted_within_days` | int ≥ 0 | none | Unknown dates are kept and flagged. |

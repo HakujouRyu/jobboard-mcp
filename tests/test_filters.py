@@ -57,20 +57,26 @@ def test_compile_terms(term: str, title: str, hit: bool) -> None:
     assert bool(pattern.search(title)) is hit
 
 
-def test_title_include_and_default_exclude() -> None:
+def test_title_include_and_exclude() -> None:
     jobs = [
         make_job(1, title="Backend Engineer"),
         make_job(2, title="Principal Engineer"),
         make_job(3, title="Account Executive"),
         make_job(4, title="Internal Tools Engineer"),
     ]
-    got = apply_filters(jobs, SweepFilters(today=TODAY, title_include=["engineer"]))
+    got = apply_filters(
+        jobs, SweepFilters(today=TODAY, title_include=["engineer"], title_exclude=["principal"])
+    )
     assert [j.native_id for j in got] == ["1", "4"]
 
 
-def test_exclude_override_to_empty() -> None:
-    jobs = [make_job(1, title="Principal Engineer")]
-    assert apply_filters(jobs, SweepFilters(today=TODAY, title_exclude=[]))
+def test_no_filters_keep_everything() -> None:
+    jobs = [
+        make_job(1, title="Principal Engineer", remote=Remote.ONSITE),
+        make_job(2, title="Software Engineering Intern", remote=Remote.REMOTE_OTHER),
+        make_job(3, title="Account Executive", remote=Remote.UNKNOWN),
+    ]
+    assert len(apply_filters(jobs, SweepFilters(today=TODAY))) == 3
 
 
 def test_remote_filter_and_unknown_handling() -> None:
@@ -81,13 +87,19 @@ def test_remote_filter_and_unknown_handling() -> None:
         make_job(4, remote=Remote.UNKNOWN),
         make_job(5, remote=Remote.REMOTE_GLOBAL),
     ]
-    got = apply_filters(jobs, SweepFilters(today=TODAY))
+    remote = [Remote.REMOTE_US, Remote.REMOTE_GLOBAL]
+    got = apply_filters(jobs, SweepFilters(today=TODAY, remote=remote))
     assert sorted(j.native_id for j in got) == ["1", "4", "5"]
     unknown = next(j for j in got if j.native_id == "4")
     assert FLAG_REMOTE_UNKNOWN in unknown.flags
 
-    strict = apply_filters(jobs, SweepFilters(today=TODAY, include_unknown_remote=False))
+    strict = apply_filters(
+        jobs, SweepFilters(today=TODAY, remote=remote, include_unknown_remote=False)
+    )
     assert sorted(j.native_id for j in strict) == ["1", "5"]
+
+    no_unknown = apply_filters(jobs, SweepFilters(today=TODAY, include_unknown_remote=False))
+    assert sorted(j.native_id for j in no_unknown) == ["1", "2", "3", "5"]
 
     us_only = apply_filters(jobs, SweepFilters(today=TODAY, remote=[Remote.REMOTE_US]))
     assert sorted(j.native_id for j in us_only) == ["1", "4"]

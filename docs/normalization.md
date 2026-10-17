@@ -209,8 +209,7 @@ flowchart LR
   Multi-word terms allow any whitespace between the words.
 - Terms are matched as plain text, never as regular expressions. A client-supplied regex can
   backtrack for seconds on a short title and stall the whole server.
-- The default `title_exclude` is `intern`, `internship`, `new grad`, `principal`. Pass `[]` to
-  exclude nothing.
+- Neither list has a default. With no terms, no title is filtered out.
 
 ### Flags
 

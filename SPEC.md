@@ -90,9 +90,9 @@ Fetch every watched board (or a named subset) in parallel and return matching jo
 
 Input:
 - `companies`: list[str], optional (default: entire watchlist)
-- `title_include`: list[str], optional. Case-insensitive keywords or regexes, any of which must match.
-- `title_exclude`: list[str], optional. Defaults to ["intern", "new grad", "principal"]; override allowed.
-- `remote`: list of enum, default [`remote_us`, `remote_global`]
+- `title_include`: list[str], optional. Case-insensitive whole-word terms (never regexes), any of which must match.
+- `title_exclude`: list[str], optional. No default.
+- `remote`: list of enum, optional (default: every status)
 - `min_pay`: int, optional. Drops jobs whose posted **max** is below this; jobs with no pay are kept and flagged.
 - `posted_within_days`: int, optional. Jobs with an unknown date are kept and flagged.
 - `exclude_ids`, `exclude_fingerprints`, `exclude_urls`: lists, optional (leads the client has already seen)

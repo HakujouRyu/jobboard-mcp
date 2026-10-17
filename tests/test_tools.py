@@ -116,7 +116,8 @@ async def test_sweep_all_boards_offline_under_one_second(
 
     jobs = out["jobs"]
     assert jobs
-    assert {j["remote"] for j in jobs} <= {"remote_us", "remote_global", "unknown"}
+    # No filters were passed, so nothing is dropped for its remote status.
+    assert {"onsite", "hybrid", "remote_other", "remote_us"} <= {j["remote"] for j in jobs}
     assert all("description_text" not in j or j["description_text"] is None for j in jobs)
     # Newest first, unknown dates last.
     dates = [j["posted_at"] for j in jobs if j["posted_at"]]

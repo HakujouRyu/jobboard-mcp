@@ -22,7 +22,7 @@ from jobboard_mcp.config import (
     Settings,
     configure_logging,
 )
-from jobboard_mcp.filters import DEFAULT_REMOTE, DEFAULT_TITLE_EXCLUDE, SweepFilters
+from jobboard_mcp.filters import SweepFilters
 from jobboard_mcp.http import FetchError
 from jobboard_mcp.models import (
     Ats,
@@ -41,7 +41,9 @@ from jobboard_mcp.watchlist import WatchlistError, seed_watchlist
 
 INSTRUCTIONS = """\
 Searches public Greenhouse, Ashby, and Lever job boards for a watchlist of companies and returns
-normalized jobs. sweep_boards: filtered sweep of every watched board. get_posting: one full
+normalized jobs. sweep_boards: filtered sweep of every watched board. Its filters are off
+unless passed, so pass the user's title, remote, pay, and date preferences on every call.
+get_posting: one full
 posting. find_company_posting: find a role seen elsewhere on the company's own board.
 resolve_board: work out a company's board. is_posting_live: check a posting is still open.
 list_watchlist / add_company / update_company: manage the watchlist (the only writes). To
@@ -112,15 +114,14 @@ async def sweep_boards(
         list[str] | None,
         Field(
             description=(
-                "Drop titles matching any term (same syntax). Default: "
-                + ", ".join(DEFAULT_TITLE_EXCLUDE)
-                + ". Pass [] to exclude nothing."
+                "Drop titles matching any term (same syntax), such as ['intern', 'internship',"
+                " 'new grad']. Default: none."
             )
         ),
     ] = None,
     remote: Annotated[
         list[Remote] | None,
-        Field(description="Remote statuses to keep. Default: remote_us, remote_global."),
+        Field(description="Remote statuses to keep. Default: every status."),
     ] = None,
     include_unknown_remote: Annotated[
         bool,
@@ -163,8 +164,8 @@ async def sweep_boards(
     filters = SweepFilters(
         today=service.today(),
         title_include=title_include or (),
-        title_exclude=DEFAULT_TITLE_EXCLUDE if title_exclude is None else title_exclude,
-        remote=DEFAULT_REMOTE if remote is None else remote,
+        title_exclude=title_exclude or (),
+        remote=remote or (),
         include_unknown_remote=include_unknown_remote,
         min_pay=min_pay,
         posted_within_days=posted_within_days,
