@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from typing import Any, Protocol
 
 from jobboard_mcp.http import HttpClient
-from jobboard_mcp.models import Ats, Job
+from jobboard_mcp.models import Ats, Job, Source
 from jobboard_mcp.normalize import fingerprint, https_url
 
 
@@ -33,6 +33,7 @@ class PostingRef:
 
 class Adapter(Protocol):
     ats: Ats
+    source: Source  # every job it builds carries this; pass it to build_job when not tier 1
 
     def list_url(self, token: str) -> str:
         """The board's public list endpoint."""

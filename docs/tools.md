@@ -83,6 +83,7 @@ Example result, abridged. The job is real (from the recorded GitLab fixture). Th
       "fingerprint": "e829bd5219f30812",
       "company": "GitLab",
       "ats": "greenhouse",
+      "source": "documented_api",
       "board_token": "gitlab",
       "native_id": "8710061002",
       "title": "Migration Engineer - GitLab Dedicated",

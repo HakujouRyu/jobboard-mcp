@@ -39,6 +39,14 @@ class PaySource(StrEnum):
     NONE = "none"
 
 
+class Source(StrEnum):
+    """Where a job's data came from: the tier in ground rule 1 (CONTRIBUTING.md)."""
+
+    DOCUMENTED_API = "documented_api"  # tier 1: the ATS's documented public API
+    CAREERS_SITE = "careers_site"  # tier 2: JSON the careers site loads; can change unannounced
+    JSON_LD = "json_ld"  # tier 3: schema.org JobPosting data in a careers page
+
+
 class CompanyStatus(StrEnum):
     OK = "ok"
     NOT_FOUND = "not_found"  # board token returned 404
@@ -82,6 +90,13 @@ class Job(BaseModel):
     fingerprint: str = Field(description="Hash of normalized company + title + locations")
     company: str
     ats: Ats
+    source: Source = Field(
+        default=Source.DOCUMENTED_API,
+        description=(
+            "documented_api: the ATS's documented API. careers_site: JSON the careers site loads"
+            " for itself, undocumented and liable to change. json_ld: schema.org data in a page."
+        ),
+    )
     board_token: str
     native_id: str
     title: str

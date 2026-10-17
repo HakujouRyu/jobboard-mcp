@@ -15,7 +15,7 @@ from jobboard_mcp.adapters.base import (
     dedupe,
 )
 from jobboard_mcp.http import HttpClient, NotFound
-from jobboard_mcp.models import Ats, Job, Pay, PaySource, raw_json
+from jobboard_mcp.models import Ats, Job, Pay, PaySource, Source, raw_json
 from jobboard_mcp.normalize import (
     PayRange,
     classify_remote,
@@ -66,6 +66,7 @@ def _pay(raw: dict[str, Any]) -> Pay:
 
 class AshbyAdapter:
     ats = Ats.ASHBY
+    source = Source.DOCUMENTED_API
 
     def __init__(self) -> None:
         self._memo = ListingMemo()

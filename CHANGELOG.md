@@ -8,6 +8,9 @@ All notable changes are recorded here. The format follows
 
 ### Added
 
+- Every job has a `source`: `documented_api` for the Greenhouse, Ashby, and Lever APIs. Later
+  sources read from a careers site's own JSON or its schema.org data will say `careers_site` or
+  `json_ld`.
 - `sweep_boards` and `get_posting` for Greenhouse, Ashby, and Lever boards, with pay, posted
   date, and remote status normalized in code.
 - `find_company_posting`, `resolve_board`, and `is_posting_live`.

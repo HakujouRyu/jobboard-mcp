@@ -288,6 +288,7 @@ classDiagram
         fingerprint: str
         company, title, team
         ats: Ats
+        source: Source
         board_token, native_id
         locations: list~str~
         remote: Remote
@@ -376,6 +377,7 @@ classDiagram
 
 Enums: `Ats` (greenhouse, ashby, lever), `Remote` (remote_us, remote_global, remote_other,
 hybrid, onsite, unknown), `EmploymentType`, `PaySource` (structured, parsed_from_text, none),
+`Source` (documented_api, careers_site, json_ld: the tiers in ground rule 1),
 `CompanyStatus` (ok, not_found, no_board, error, timeout), `Confidence` (high, medium, low),
 `WatchlistMatch` (name, loose_name, board).
 

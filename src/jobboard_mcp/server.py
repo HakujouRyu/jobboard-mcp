@@ -50,6 +50,8 @@ list_watchlist / add_company / update_company: manage the watchlist (the only wr
 drop a company, archive it with update_company(archived=true); there is no delete.
 list_watchlist's path is the watchlist file, if the user wants to edit it by hand.
 Public data only. Remote status is never guessed: 'unknown' jobs are kept and flagged.
+Each job's source says where it came from: documented_api, or careers_site / json_ld, which are
+undocumented and can change without notice.
 pay_min / pay_max are annual amounts in pay_currency (USD when the posting offers it), never
 converted; pay_other_currencies lists any other currencies posted, and pay_posted_interval says
 how the pay was posted. Each job's flags list missing data: pay_unknown, date_unknown,

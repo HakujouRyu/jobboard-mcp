@@ -13,6 +13,7 @@ from mcp.server.mcpserver.exceptions import ToolError
 from mcp.types import CallToolResult
 
 from jobboard_mcp import server
+from jobboard_mcp.adapters import ADAPTERS
 from jobboard_mcp.adapters.ashby import AshbyAdapter
 from jobboard_mcp.adapters.greenhouse import GreenhouseAdapter
 from jobboard_mcp.adapters.lever import LeverAdapter
@@ -123,6 +124,9 @@ async def test_sweep_all_boards_offline_under_one_second(
     dates = [j["posted_at"] for j in jobs if j["posted_at"]]
     assert dates == sorted(dates, reverse=True)
     assert len({j["id"] for j in jobs}) == len(jobs)
+    # Each job carries its adapter's source tier (ground rule 1).
+    assert {j["ats"] for j in jobs} == {a.value for a in ADAPTERS}
+    assert all(j["source"] == ADAPTERS[Ats(j["ats"])].source.value for j in jobs)
     unknown = [j for j in jobs if j["remote"] == "unknown"]
     assert unknown and all("remote_unknown" in j["flags"] for j in unknown)
     assert out["flag_counts"]["remote_unknown"] == len(unknown)
