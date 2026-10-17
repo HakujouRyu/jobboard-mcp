@@ -4,14 +4,9 @@
 [![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-A small [MCP](https://modelcontextprotocol.io) server that sweeps public applicant-tracking-system
-job boards (**Greenhouse, Ashby, Lever**) for a watchlist of companies and returns clean,
-normalized, filtered jobs.
-
-One `sweep_boards` call fetches every watched board in parallel and returns only the matching
-jobs. Pay, posting date, and remote status are parsed by code, with the raw values kept for
-checking. It replaces asking an assistant to fetch each careers page one at a time, which
-truncates big boards and parses those fields differently every run.
+A small [MCP](https://modelcontextprotocol.io) server that reads the public job boards of the
+companies on your watchlist and returns their jobs normalized and filtered. It supports boards
+hosted on three applicant tracking systems (ATSes): **Greenhouse, Ashby, and Lever**.
 
 ```mermaid
 flowchart LR
@@ -23,15 +18,52 @@ flowchart LR
     server <--> yaml[("watchlist.yaml<br/>(per-user config folder)")]
 ```
 
-**What it doesn't do:** it never scrapes LinkedIn, Indeed, or job content from web pages. The
-one exception to "JSON APIs only" is `resolve_board`, which reads a company's careers page (and
-at most two same-site careers links from it) only to find which board it links to. It needs no
-accounts or credentials, and the only file it writes is its own watchlist.
+## Goals
 
-**Scope:** it's built for job seekers in the US. `remote_us` is the only remote status tied to
-one country; a remote role elsewhere is `remote_global` or `remote_other`, which don't say
-which countries qualify. Pay works in any currency and is never converted, but hourly pay is
-annualized at the US figure of 2080 hours a year. Wider location support may come later.
+- **Data from the source.** Jobs come from each company's own board, through the public JSON
+  API its ATS publishes for job listings.
+- **The same answer every time.** Pay, posting date, and remote status are parsed by code with
+  fixed rules, so a posting gives the same result on every call. The raw values are returned
+  too, for checking.
+- **No guessing.** When a posting doesn't settle a question, the answer is `unknown` and the job
+  is flagged. Missing data never drops a job without saying so.
+- **Safe to run.** It sends only GET requests, needs no accounts or credentials, and the only
+  file it writes is its own watchlist.
+
+## What it does
+
+- **Sweeps the watchlist.** One `sweep_boards` call fetches every watched board in parallel and
+  returns the jobs that pass the title, remote, pay, and date filters the call sets.
+- **Reads one posting** in full, with its plain-text description and the most detailed pay data
+  the ATS provides.
+- **Checks whether a posting is still open.**
+- **Finds a role seen elsewhere**, such as on LinkedIn or Indeed, on the company's own board.
+- **Works out which board a company uses**, from its name and careers page.
+- **Manages the watchlist.** It adds, updates, and archives companies. A new board is checked
+  with a live fetch before it's saved, and the file's comments and formatting are kept.
+
+Only sweeps are limited to the watchlist. The other tools work for any company whose board is on
+a supported ATS.
+
+## Limitations
+
+- **It finds new jobs only at watched companies.** It doesn't search sites that list jobs from
+  many employers, and it can't suggest companies to watch.
+- **Three ATSes.** Only boards on Greenhouse, Ashby, and Lever can be swept. A company that uses
+  another system, or lists jobs only on its own site, can stay on the watchlist with its careers
+  URL, but sweeps skip it with the status `no_board`.
+- **No scraping.** It doesn't read job content from web pages. The only pages it reads are a
+  company's careers page and at most two same-site careers links from it, in `resolve_board`,
+  and only to find which board they link to.
+- **US-focused.** `remote_us` is the only remote status tied to one country. A remote role
+  elsewhere is `remote_global` or `remote_other`, which don't say which countries qualify. Pay
+  works in any currency and is never converted, but hourly pay is annualized at the US figure of
+  2080 hours a year.
+- **No history.** Boards are cached in memory for 3 hours, and nothing is kept across restarts.
+  To leave out jobs already seen, the client passes their ids, URLs, or fingerprints to
+  `sweep_boards`.
+- **It doesn't apply for jobs** or track applications.
+- **Local only.** It runs over stdio. An HTTP transport for hosted use is planned (M3).
 
 ## Tools
 
@@ -184,7 +216,10 @@ Environment variables, all optional:
 | [CHANGELOG.md](CHANGELOG.md) | What changed in each release |
 | [SECURITY.md](SECURITY.md) | How to report a vulnerability, and what's in scope |
 
-## Status
+## Status and compatibility
+
+Pre-release. It's developed with the Claude desktop app. Other MCP clients that support stdio
+should work, but haven't been tested.
 
 | Milestone | |
 |-----------|---|
