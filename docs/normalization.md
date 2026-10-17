@@ -220,6 +220,14 @@ flowchart LR
   no separator ("Fullstack") is a different word, so pass it too.
 - Terms are matched as plain text, never as regular expressions. A client-supplied regex can
   backtrack for seconds on a short title and stall the whole server.
+- A term written as a regex is refused, not matched literally, because it would silently match
+  nothing. That's any term starting with `re:` or using `| * ? ( ) [ ] { } ^ $ \`. The call
+  fails before any board is fetched, with a message naming the term. Write each alternative as
+  its own phrase: `product owner`, `product manager` instead of `re:product (owner|manager)`.
+  `+ # . / &` are allowed, so `c++`, `c#`, `.net`, and `ui/ux` work.
+- `sweep_boards` returns `term_hits`: for each term, how many titles on the swept boards it
+  matches, counted before any filter. A 0 means the term matches nothing there, which is
+  usually a misspelling or a phrase the boards don't use.
 - Neither list has a default. With no terms, no title is filtered out.
 
 #### Useful terms

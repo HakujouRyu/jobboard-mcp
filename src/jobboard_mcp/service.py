@@ -26,6 +26,7 @@ from jobboard_mcp.filters import (
     passes_pay,
     prefilter,
     sort_jobs,
+    term_hits,
 )
 from jobboard_mcp.http import FetchError, HttpClient, NotFound
 from jobboard_mcp.matching import rank_postings
@@ -140,6 +141,7 @@ class JobBoardService:
         fetches = await asyncio.gather(*(self._fetch_board(e, refresh) for e in entries))
         cache_hits = 0
         candidates: list[tuple[str, Job]] = []
+        titles: list[str] = []
         for f in fetches:
             e = f.entry
             if e.ats is None or e.token is None:
@@ -155,6 +157,7 @@ class JobBoardService:
             results[e.company] = CompanyResult(
                 company=e.company, ats=e.ats, total=len(f.listing.jobs), status=CompanyStatus.OK
             )
+            titles.extend(j.title for j in f.listing.jobs)
             candidates.extend((e.company, j) for j in f.listing.jobs if prefilter(j, filters))
 
         enriched = await asyncio.gather(*(self._enrich_pay(j, refresh) for _, j in candidates))
@@ -183,6 +186,7 @@ class JobBoardService:
             cache_hits=cache_hits,
             flag_counts=dict(sorted(flag_counts.items())),
             unverified_counts=dict(sorted(unverified_counts.items())),
+            term_hits=term_hits(titles, filters),
         )
 
     async def _fetch_board(self, entry: WatchlistEntry, refresh: bool) -> _Fetch:

@@ -213,6 +213,40 @@ async def test_sweep_enriches_greenhouse_pay_from_detail(
     assert "parsed_from_text" in sources
 
 
+@pytest.mark.parametrize("arg", ["title_include", "title_exclude"])
+@respx.mock(assert_all_called=False)
+async def test_sweep_refuses_regex_terms_before_fetching(
+    arg: str, respx_mock: respx.MockRouter, service: JobBoardService
+) -> None:
+    mock_boards(respx_mock)
+    with pytest.raises(ToolError, match="product \\(owner\\|manager\\)"):
+        await server.mcp.call_tool(
+            "sweep_boards", {arg: ["engineer", "re:product (owner|manager)"]}
+        )
+    assert not respx_mock.calls
+
+
+@respx.mock(assert_all_called=False)
+async def test_sweep_reports_term_hits(
+    respx_mock: respx.MockRouter, service: JobBoardService
+) -> None:
+    mock_boards(respx_mock)
+    out = await call(
+        "sweep_boards",
+        {
+            "companies": ["Temporal Technologies"],
+            "title_include": ["manager", "no such role"],
+            "title_exclude": ["senior"],
+        },
+    )
+    hits = out["term_hits"]
+    assert list(hits) == ["manager", "no such role", "senior"]
+    # Counted over every title on the board, so jobs that "senior" dropped still count.
+    assert hits == {"manager": 4, "no such role": 0, "senior": 6}
+    assert len(out["jobs"]) == 2
+    assert all("Senior" not in j["title"] for j in out["jobs"])
+
+
 @respx.mock(assert_all_called=False)
 async def test_sweep_subset_unknown_name_and_cache(
     respx_mock: respx.MockRouter, service: JobBoardService

@@ -34,7 +34,7 @@ should pass the user's title, remote, pay, and date filters on each call.
 | Parameter | Type | Default | |
 |-----------|------|---------|---|
 | `companies` | string[] | every company that isn't archived | Watchlist names, case-insensitive. Archived companies can be named. A name that isn't on the watchlist gets status `error`. |
-| `title_include` | string[] | none | Keep titles matching **any** term. See [title terms](normalization.md#title-terms). |
+| `title_include` | string[] | none | Keep titles matching **any** term. Plain phrases only: a term starting with `re:` or using regex characters is refused. See [title terms](normalization.md#title-terms). |
 | `title_exclude` | string[] | none | Drop titles matching any term. |
 | `remote` | enum[] | every status | Remote statuses to keep. |
 | `include_unknown_remote` | bool | `true` | Keep `unknown` remote jobs (flagged `remote_unknown`). |
@@ -56,6 +56,10 @@ Filters keep jobs they can't check (an unknown date, no pay in `min_pay_currency
 `unknown` remote status). Each such job names those filters in `unverified_filters`, and
 `unverified_counts` totals them. A job with an empty list verifiably meets every filter that
 was set. See [unverified filters](normalization.md#unverified-filters).
+
+`term_hits` counts, for each `title_include` and `title_exclude` term, the titles on the swept
+boards that it matches, before any filter. Check it for zeros: a term with no hits is probably
+misspelled or not a phrase the boards use.
 
 Example call:
 
@@ -113,7 +117,8 @@ Example result, abridged. The job is real (from the recorded GitLab fixture). Th
   "fetched_at": "2026-10-15T18:00:00Z",
   "cache_hits": 0,
   "flag_counts": { "pay_unknown": 3, "remote_unknown": 2 },
-  "unverified_counts": { "min_pay": 3, "remote": 2 }
+  "unverified_counts": { "min_pay": 3, "remote": 2 },
+  "term_hits": { "engineer": 41, "sre": 2, "product": 9 }
 }
 ```
 

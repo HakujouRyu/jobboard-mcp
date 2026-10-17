@@ -150,7 +150,7 @@ sequenceDiagram
 
     Svc->>Svc: passes_pay(), dedupe by id, sort_jobs(), keep the first limit jobs
     Svc-->>S: SweepResult
-    S-->>C: jobs[], matched, truncated, per_company[], cache_hits, flag_counts, unverified_counts
+    S-->>C: jobs[], matched, truncated, per_company[], cache_hits, flag_counts, unverified_counts, term_hits
 ```
 
 Notes:
@@ -302,6 +302,7 @@ classDiagram
         cache_hits: int
         flag_counts: dict
         unverified_counts: dict
+        term_hits: dict
     }
     class CompanyResult {
         company: str

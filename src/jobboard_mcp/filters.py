@@ -16,24 +16,50 @@ from urllib.parse import urlsplit
 
 from jobboard_mcp.models import Job, Remote
 
+# Characters that only mean something in a regex. "+", "#", ".", "/" and "&" stay allowed for
+# terms like "c++", "c#", ".net", "ui/ux", and "r&d".
+_REGEX_CHARS = frozenset("|*?()[]{}^$\\")
 
-def compile_terms(terms: Iterable[str]) -> list[re.Pattern[str]]:
-    """Plain terms match whole words, case-insensitively, plus a plain plural.
+
+def check_term(term: str) -> str:
+    """Refuse a title term that's written as a regex, since it would silently match nothing.
+
+    Raises ``ValueError`` naming the term, so the caller can rewrite it as plain phrases.
+    """
+    t = term.strip()
+    used = sorted({c for c in t if c in _REGEX_CHARS})
+    if t[:3].casefold() == "re:" or used:
+        why = "starts with 're:'" if t[:3].casefold() == "re:" else f"uses {' '.join(used)}"
+        raise ValueError(
+            f"title term {term!r} {why}, but terms are plain phrases, not regular expressions."
+            " Pass each alternative as its own term, e.g. ['product owner', 'product manager']"
+            " instead of 're:product (owner|manager)'."
+        )
+    return term
+
+
+def compile_term(term: str) -> re.Pattern[str] | None:
+    """A plain term as a whole-word, case-insensitive pattern that allows a plain plural.
 
     "intern" matches "Interns" but not "Internal"; "engineer" does not match "Engineering".
     Words in a term may be separated by spaces or hyphens, in the term or the title, so
-    "full stack" and "full-stack" both match "Full-Stack" and "Full Stack".
+    "full stack" and "full-stack" both match "Full-Stack" and "Full Stack". Returns None for a
+    blank term.
 
     Terms are always escaped. Raw regexes from the client aren't accepted, because a pattern
     like ``(a+)+$`` can backtrack for seconds and block the event loop.
     """
-    patterns: list[re.Pattern[str]] = []
-    for term in terms:
-        words = [w for w in re.split(r"[\s-]+", term) if w]
-        if words:
-            body = r"[\s-]+".join(re.escape(w) for w in words)
-            patterns.append(re.compile(rf"(?<!\w){body}(?:e?s)?(?!\w)", re.I))
-    return patterns
+    check_term(term)
+    words = [w for w in re.split(r"[\s-]+", term) if w]
+    if not words:
+        return None
+    body = r"[\s-]+".join(re.escape(w) for w in words)
+    return re.compile(rf"(?<!\w){body}(?:e?s)?(?!\w)", re.I)
+
+
+def compile_terms(terms: Iterable[str]) -> list[re.Pattern[str]]:
+    """``compile_term`` for each term, skipping blank ones."""
+    return [p for t in terms if (p := compile_term(t)) is not None]
 
 
 def normalize_url(url: str) -> str:
@@ -57,10 +83,14 @@ class SweepFilters:
     _include: list[re.Pattern[str]] = field(init=False, repr=False)
     _exclude: list[re.Pattern[str]] = field(init=False, repr=False)
     _urls: set[str] = field(init=False, repr=False)
+    _terms: dict[str, re.Pattern[str]] = field(init=False, repr=False)
 
     def __post_init__(self) -> None:
         self._include = compile_terms(self.title_include)
         self._exclude = compile_terms(self.title_exclude)
+        self._terms = {
+            t: p for t in (*self.title_include, *self.title_exclude) if (p := compile_term(t))
+        }
         self._urls = {normalize_url(u) for u in self.exclude_urls}
 
     @property
@@ -123,6 +153,17 @@ def mark_unverified(job: Job, f: SweepFilters) -> Job:
     """A copy of ``job`` with ``unverified_filters`` set for this search. Never changes
     ``job`` itself: listed jobs are shared through the adapters' memo."""
     return job.model_copy(update={"unverified_filters": unverified(job, f)})
+
+
+def term_hits(titles: Iterable[str], f: SweepFilters) -> dict[str, int]:
+    """For each title term, include or exclude, how many of ``titles`` it matches. Blank terms
+    are left out. A 0 means the term matches nothing, which is usually a typo or a spelling
+    the boards don't use."""
+    hits = dict.fromkeys(f._terms, 0)
+    for title in titles:
+        for term, pattern in f._terms.items():
+            hits[term] += bool(pattern.search(title))
+    return hits
 
 
 def sort_jobs(jobs: Iterable[Job]) -> list[Job]:

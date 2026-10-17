@@ -4,7 +4,14 @@ from pathlib import Path
 
 import pytest
 
-from jobboard_mcp.filters import SweepFilters, apply_filters, compile_terms, sort_jobs
+from jobboard_mcp.filters import (
+    SweepFilters,
+    apply_filters,
+    check_term,
+    compile_terms,
+    sort_jobs,
+    term_hits,
+)
 from jobboard_mcp.models import (
     FLAG_DATE_UNKNOWN,
     FLAG_PAY_UNKNOWN,
@@ -56,7 +63,6 @@ def make_job(n: int = 1, **kw: object) -> Job:
         ("engineer", "Engineer", True),
         ("engineer", "Forward Deployed Engineers", True),
         ("engineer", "Engineering Manager", False),
-        ("re:engineer(ing)?", "Engineering Manager", False),  # literal text, not a regex
         ("c++", "C++ Developer", True),
     ],
 )
@@ -67,6 +73,57 @@ def test_compile_terms(term: str, title: str, hit: bool) -> None:
 
 def test_blank_and_separator_only_terms_are_ignored() -> None:
     assert compile_terms(["", "  ", "-", " - "]) == []
+
+
+@pytest.mark.parametrize(
+    "term",
+    [
+        "re:product (owner|manager)",
+        "RE:senior",
+        " re:observability",
+        "product (owner|manager)",
+        "owner|manager",
+        "senior.*engineer",
+        "engineer?",
+        "[sS]enior",
+        r"\bsr\b",
+        "^staff",
+        "lead$",
+        "a{2}",
+    ],
+)
+def test_regex_looking_terms_are_refused(term: str) -> None:
+    with pytest.raises(ValueError, match="plain phrases") as err:
+        compile_terms([term])
+    assert repr(term) in str(err.value)
+    with pytest.raises(ValueError):
+        SweepFilters(today=TODAY, title_exclude=[term])
+
+
+@pytest.mark.parametrize("term", ["c++", "c#", ".net", "node.js", "ui/ux", "r&d", "co-op", "sr."])
+def test_plain_terms_with_punctuation_are_accepted(term: str) -> None:
+    assert check_term(term) == term
+    assert compile_terms([term])
+
+
+def test_term_hits_counts_titles_per_term_before_filtering() -> None:
+    f = SweepFilters(
+        today=TODAY,
+        title_include=["product manager", "product owner", "", "observability"],
+        title_exclude=["senior"],
+    )
+    titles = [
+        "Senior Product Manager",
+        "Product Managers, Growth",
+        "Staff Engineer, Observability",
+        "Designer",
+    ]
+    assert term_hits(titles, f) == {
+        "product manager": 2,
+        "product owner": 0,
+        "observability": 1,
+        "senior": 1,
+    }
 
 
 # Keep in step with "Useful terms" in docs/normalization.md. Each term, then titles it must

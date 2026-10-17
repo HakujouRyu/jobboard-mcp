@@ -13,7 +13,7 @@ from typing import Annotated
 from mcp.server.mcpserver import MCPServer
 from mcp.server.mcpserver.exceptions import ToolError
 from mcp.types import ToolAnnotations
-from pydantic import Field
+from pydantic import AfterValidator, Field
 
 from jobboard_mcp import __version__
 from jobboard_mcp.config import (
@@ -22,7 +22,7 @@ from jobboard_mcp.config import (
     Settings,
     configure_logging,
 )
-from jobboard_mcp.filters import SweepFilters
+from jobboard_mcp.filters import SweepFilters, check_term
 from jobboard_mcp.http import FetchError
 from jobboard_mcp.models import (
     Ats,
@@ -55,6 +55,7 @@ converted; pay_other_currencies lists any other currencies posted, and pay_poste
 how the pay was posted. Each job's flags list missing data: pay_unknown, date_unknown,
 remote_unknown. Filters keep jobs they can't check, so check a job's unverified_filters
 before treating it as meeting the user's criteria (unverified_counts totals them).
+Title terms are plain phrases, never regexes; term_hits shows how many titles each matched.
 US-focused: remote_us is the only country-level remote status.
 Hosted servers may refuse careers_url arguments; resolve_board then uses the watchlist's.
 """
@@ -63,6 +64,9 @@ Hosted servers may refuse careers_url arguments; resolve_board then uses the wat
 # max keeps one sweep's output near 55k tokens.
 SWEEP_LIMIT_DEFAULT = 100
 SWEEP_LIMIT_MAX = 250
+
+# Checked when the call comes in, so a regex-looking term fails before any board is fetched.
+TitleTerm = Annotated[str, AfterValidator(check_term)]
 
 _service: JobBoardService | None = None
 
@@ -111,18 +115,20 @@ async def sweep_boards(
         ),
     ] = None,
     title_include: Annotated[
-        list[str] | None,
+        list[TitleTerm] | None,
         Field(
             description=(
                 "Keep titles matching any term. Plain terms match whole words, case-insensitively,"
                 " plus a plural ('engineer' matches 'Engineers', not 'Engineering'). Spaces and"
                 " hyphens are interchangeable. Pass each spelling titles use: 'senior' and 'sr',"
-                " 'full stack' and 'fullstack', 'engineer' and 'engineering' if wanted."
+                " 'full stack' and 'fullstack', 'engineer' and 'engineering' if wanted. Not"
+                " regexes: a term starting with 're:' or using | * ? ( ) [ ] { } ^ $ \\ is"
+                " refused. term_hits in the result says how many titles each term matched."
             )
         ),
     ] = None,
     title_exclude: Annotated[
-        list[str] | None,
+        list[TitleTerm] | None,
         Field(
             description=(
                 "Drop titles matching any term (same syntax), such as ['intern', 'internship',"

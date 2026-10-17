@@ -102,7 +102,9 @@ returns this (abridged):
 - **Employment type:** from the ATS field, or `contract` when the title says so ("(Contract)",
   "Contract Software Engineer").
 - **Titles:** filter terms match whole words plus a plural, so excluding `intern` keeps
-  "Internal Tools Engineer".
+  "Internal Tools Engineer". Terms are plain phrases: a regex-looking term (`re:...`, `a|b`) is
+  refused rather than silently matching nothing, and `term_hits` says how many titles each
+  term matched.
 - **No hidden filters:** every `sweep_boards` filter is off unless the call sets it.
 - **Missing data** never silently drops a job. Every job's `flags` say what's missing
   (`pay_unknown`, `date_unknown`, `remote_unknown`), whatever filters you use. When that keeps a

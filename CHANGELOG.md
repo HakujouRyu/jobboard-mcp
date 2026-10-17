@@ -25,6 +25,8 @@ All notable changes are recorded here. The format follows
 - `unverified_filters` on each swept job names the filters it was kept under without being
   checked (`remote`, `min_pay`, `posted_within_days`) because the data was missing or the pay
   was in another currency. `unverified_counts` totals them.
+- `sweep_boards` returns `term_hits`: how many titles on the swept boards each title term
+  matched, before filtering. A 0 flags a term that matches nothing.
 
 ### Changed
 
@@ -49,6 +51,9 @@ All notable changes are recorded here. The format follows
 - `min_pay` takes a `min_pay_currency` (default `USD`) and compares against the job's range in
   that currency. Jobs with no range in that currency are kept.
 - Posting links are upgraded from `http://` to `https://`.
+- Title terms are plain phrases only. A term starting with `re:` or using regex characters
+  (`| * ? ( ) [ ] { } ^ $ \`) is refused with an error before any board is fetched. Regex
+  terms were dropped earlier and had been matching nothing without saying so.
 
 ### Fixed
 

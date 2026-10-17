@@ -202,6 +202,13 @@ class SweepResult(BaseModel):
         default_factory=dict,
         description="How many returned jobs list each filter in unverified_filters",
     )
+    term_hits: dict[str, int] = Field(
+        default_factory=dict,
+        description=(
+            "For each title_include and title_exclude term, how many jobs on the swept boards"
+            " have a title it matches, before any filter. 0 means the term matches nothing."
+        ),
+    )
 
 
 def raw_json(value: Any) -> str:
