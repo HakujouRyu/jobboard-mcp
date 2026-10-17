@@ -9,6 +9,7 @@ from __future__ import annotations
 import asyncio
 import email.utils
 import logging
+import math
 import time
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
@@ -74,12 +75,16 @@ class Fetched:
 def _retry_after(response: httpx.Response, attempt: int) -> float:
     value = response.headers.get("Retry-After")
     if value:
+        seconds: float | None
         try:
-            return min(float(value), MAX_BACKOFF_SECONDS)
+            seconds = float(value)
         except ValueError:
-            parsed = email.utils.parsedate_to_datetime(value)
-            if parsed is not None:
-                return min(max(parsed.timestamp() - time.time(), 0.0), MAX_BACKOFF_SECONDS)
+            try:
+                seconds = email.utils.parsedate_to_datetime(value).timestamp() - time.time()
+            except (TypeError, ValueError):  # neither seconds nor a date: back off as usual
+                seconds = None
+        if seconds is not None and math.isfinite(seconds):
+            return min(max(seconds, 0.0), MAX_BACKOFF_SECONDS)
     return min(0.5 * 2**attempt, MAX_BACKOFF_SECONDS)
 
 

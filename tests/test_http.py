@@ -97,6 +97,22 @@ async def test_retries_429_honoring_retry_after(client: HttpClient, sleeps: list
     assert sleeps == [3.0, 1.0]
 
 
+# Garbage falls back to the usual backoff (0.5 s first); a negative wait means "now".
+@pytest.mark.parametrize(("value", "expected"), [("soon", 0.5), ("nan", 0.5), ("-5", 0.0)])
+@respx.mock
+async def test_odd_retry_after_values(
+    client: HttpClient, sleeps: list[float], value: str, expected: float
+) -> None:
+    respx.get(URL).mock(
+        side_effect=[
+            httpx.Response(503, headers={"Retry-After": value}),
+            httpx.Response(200, json={"ok": True}),
+        ]
+    )
+    assert (await client.get_json(URL)).data == {"ok": True}
+    assert sleeps == [expected]
+
+
 @respx.mock
 async def test_gives_up_after_max_retries(client: HttpClient) -> None:
     route = respx.get(URL).mock(return_value=httpx.Response(502))
