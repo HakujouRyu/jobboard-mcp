@@ -4,6 +4,10 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    # Wait a week before proposing a new release. A compromised version is usually caught and
+    # yanked within days.
+    cooldown:
+      default-days: 7
     groups:
       # One PR for test and lint tools, one for everything else.
       dev:
@@ -11,10 +15,13 @@ updates:
       runtime:
         dependency-type: production
 
+  # Workflows pin actions to commit SHAs. Dependabot updates the SHA and its version comment.
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7
     groups:
       actions:
         patterns: ["*"]
