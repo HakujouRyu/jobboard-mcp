@@ -63,14 +63,19 @@ _OTHER_ATS = re.compile(
     re.I,
 )
 # A Workday careers site: {tenant}.wdN.myworkdayjobs.com/{site}, with an optional locale.
+# The lookbehind (not \b, which also matches after each hyphen) starts a match only at the
+# beginning of a label run, so a long run like "a-a-a-..." is scanned once, not from every
+# letter in it (ground rule 9). Likewise for _ORACLE.
 _WORKDAY = re.compile(
-    r"\b([a-z0-9][a-z0-9-]*)\.(wd\d{1,3})\.myworkdayjobs\.com/(?:[a-z]{2}-[A-Z]{2}/)?([\w-]+)",
+    r"(?<![a-z0-9_-])([a-z0-9][a-z0-9-]*)\.(wd\d{1,3})\.myworkdayjobs\.com/"
+    r"(?:[a-z]{2}-[A-Z]{2}/)?([\w-]+)",
     re.I,
 )
 # An Oracle Recruiting Cloud site: {pod}.fa.{region}.oraclecloud.com/hcmUI/CandidateExperience/
 # {lang}/sites/{site}.
 _ORACLE = re.compile(
-    r"\b([a-z0-9][a-z0-9-]*)\.fa\.([a-z0-9]+)\.oraclecloud\.com/hcmUI/CandidateExperience/"
+    r"(?<![a-z0-9_-])([a-z0-9][a-z0-9-]*)\.fa\.([a-z0-9]+)\.oraclecloud\.com/"
+    r"hcmUI/CandidateExperience/"
     r"(?:[a-z]{2}(?:-[a-z]{2})?/)?sites/([\w-]+)",
     re.I,
 )

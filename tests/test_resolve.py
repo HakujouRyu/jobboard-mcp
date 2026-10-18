@@ -1,5 +1,6 @@
 """resolve_board against mocked APIs and careers-page snippets copied from real sites."""
 
+import time
 from collections.abc import AsyncIterator
 
 import httpx
@@ -221,6 +222,33 @@ def test_workday_links_found_on_pages() -> None:
     assert (Ats.WORKDAY, "homedepot.wd5/careerdepot") in refs
     assert (Ats.WORKDAY, "cox.wd1/cox_external_career_site_1") in refs
     assert not any(t.endswith("/wday") for _, t in refs)
+
+
+def test_hyphenated_tenants_are_found_whole() -> None:
+    html = (
+        '<a href="https://my-co.wd5.myworkdayjobs.com/External">Jobs</a>'
+        '<a href="https://ab-cd.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX">'
+    )
+    refs = find_board_refs(html)
+    assert (Ats.WORKDAY, "my-co.wd5/external") in refs
+    assert (Ats.ORACLE, "ab-cd.fa.us2/cx") in refs
+
+
+@pytest.mark.parametrize(
+    "html",
+    [
+        "a" * 200_000,
+        "a-" * 100_000,  #  matches after every hyphen, so this was quadratic for Workday
+        ("a" * 70 + ".wd5.") * 3000,
+        ("a-" * 40 + ".fa.us2.oraclecloud.com/") * 1000,
+    ],
+    ids=["letters", "hyphens", "workday-near-miss", "oracle-near-miss"],
+)
+def test_find_board_refs_is_linear_on_hostile_input(html: str) -> None:
+    # Ground rule 9: page text can be any size and shape.
+    started = time.perf_counter()
+    find_board_refs(html)
+    assert time.perf_counter() - started < 1.0
 
 
 @respx.mock
