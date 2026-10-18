@@ -118,7 +118,7 @@ class WorkdayAdapter:
         return build_job(
             ats=self.ats,
             source=self.source,
-            token=token,
+            token=token.strip().lower(),  # one id however the token is cased
             native_id=native_id,
             company=company,
             title=title,
@@ -142,7 +142,7 @@ class WorkdayAdapter:
         job = build_job(
             ats=self.ats,
             source=self.source,
-            token=token,
+            token=token.strip().lower(),  # one id however the token is cased
             native_id=native_id,
             company=company,
             title=title,

@@ -18,6 +18,9 @@ trimmed copies of these responses (whole job objects, fewer of them).
 | `workday_homedepot_detail.json` | `GET homedepot.wd5.myworkdayjobs.com/.../CareerDepot/job/...` (`remoteType: "Remote/Virtual"`; `similarJobs` dropped) |
 | `workday_empty.json` | the Cox search for a word that matches nothing: 200, `total: 0` |
 | `workday_422.json` | a tenant that doesn't exist |
+| `oracle_atlanta_search.json` | `GET ehxr.fa.us2.oraclecloud.com/hcmRestApi/resources/latest/recruitingCEJobRequisitions`, `findReqs;siteNumber=CX_1`, `keyword="engineer"` (4 of 25 rows; facets dropped) |
+| `oracle_atlanta_detail.json` | `GET .../recruitingCEJobRequisitionDetails`, `ById;Id="34378"` (pay in the description) |
+| `oracle_not_found.json` | the same for an id that isn't posted: 200 with `items: []` |
 | `*_404.*` | unknown-token responses (for Workday, an unknown site) |
 
 ## Differences from SPEC.md §3
@@ -91,3 +94,30 @@ catch it. Checked against Ecolab, Home Depot, Equifax, Fiserv, Cox, and QBE.
   Job_Posting_Site_ID=..."}`; unknown tenant → **422**; unknown job → 404.
 - Some company careers pages (Ecolab's) answer 403 to non-browser clients, so `resolve_board`
   can't always find a Workday board from the page. A job link works through `get_posting`.
+
+### Oracle Recruiting Cloud (verified 2026-10-17; tier 2, undocumented)
+
+Oracle's Candidate Experience careers sites (`{pod}.fa.{region}.oraclecloud.com/hcmUI/
+CandidateExperience/...`) load jobs from HCM REST resources, with no sign-in. Oracle documents
+the HCM REST API for its customers, not this public use, so it's tier 2. Checked against City of
+Atlanta (`ehxr.fa.us2`, `CX_1`) and Oracle (`eeho.fa.us2`, `CX_45001`).
+
+- **robots.txt** is 404 on these hosts, which means no rules.
+- **Search:** `GET /hcmRestApi/resources/latest/recruitingCEJobRequisitions?onlyData=true&
+  expand=requisitionList.secondaryLocations&finder=findReqs;siteNumber=CX_1,limit=200,offset=0,
+  sortBy=POSTING_DATES_DESC[,keyword="..."]`. The answer is `items[0]` with `TotalJobsCount` and
+  `requisitionList`. `limit` is capped at 200 (asking for 500 returns 200).
+- **An empty `keyword=""` finds nothing.** Leave the keyword out to list the whole site.
+- **An unknown site number isn't an error:** `siteNumber=CX_999` returns the tenant's default
+  site. A missing pod times out (no DNS answer).
+- **Rows** have `Id` (numeric), `Title`, `PostedDate` (`YYYY-MM-DD`), `PrimaryLocation`,
+  `PrimaryLocationCountry` (ISO alpha-2), `secondaryLocations`, `WorkplaceType` /
+  `WorkplaceTypeCode` (blank on both sites checked), and no description.
+- **Detail:** `GET .../recruitingCEJobRequisitionDetails?expand=all&onlyData=true&
+  finder=ById;Id="34378",siteNumber=CX_1`. The posting text is `ExternalDescriptionStr`,
+  `ExternalResponsibilitiesStr`, and `ExternalQualificationsStr` (HTML; Atlanta puts the salary
+  range there). `Internal*` twins exist and aren't read. `ExternalPostedStartDate` is an ISO
+  timestamp. An id that isn't posted returns 200 with `items: []`.
+- **Tokens** are `{pod}.fa.{region}/{site number}`, lowercased in job ids; site numbers are sent
+  uppercase (`CX_1`). Regions seen in the openings-mcp roster: `ocs`, `us2`, `us6`, `us8`, `em2`,
+  `em3`, `em5`, `em8`, `ap1`, `ca2`.

@@ -17,6 +17,7 @@ from jobboard_mcp.adapters import ADAPTERS
 from jobboard_mcp.adapters.ashby import AshbyAdapter
 from jobboard_mcp.adapters.greenhouse import GreenhouseAdapter
 from jobboard_mcp.adapters.lever import LeverAdapter
+from jobboard_mcp.adapters.oracle import OracleAdapter
 from jobboard_mcp.adapters.workday import WorkdayAdapter
 from jobboard_mcp.config import Settings
 from jobboard_mcp.http import HttpClient
@@ -28,6 +29,10 @@ from .conftest import fixture_json, fixture_text
 NOW = datetime(2026, 10, 15, 18, 0, tzinfo=UTC)
 GH, ASHBY, LEVER = GreenhouseAdapter(), AshbyAdapter(), LeverAdapter()
 WORKDAY = WorkdayAdapter()
+ORACLE = OracleAdapter()
+ORACLE_HOST = "https://ehxr.fa.us2.oraclecloud.com/hcmRestApi/resources/latest"
+ORACLE_SEARCH = f"{ORACLE_HOST}/recruitingCEJobRequisitions"
+ORACLE_DETAIL = f"{ORACLE_HOST}/recruitingCEJobRequisitionDetails"
 
 # 15 watched companies: real fixtures reused under several tokens, plus failure cases.
 BOARDS: list[tuple[str, Ats | None, str | None, str]] = [
@@ -47,14 +52,19 @@ BOARDS: list[tuple[str, Ats | None, str | None, str]] = [
     ("Broken Co", Ats.LEVER, "broken", "500"),
     ("Cox", Ats.WORKDAY, "cox.wd1/cox_external_career_site_1", "workday_cox_search.json"),
     ("Gone Workday Co", Ats.WORKDAY, "gonewd.wd5/external", "workday_404.json"),
+    ("City of Atlanta", Ats.ORACLE, "ehxr.fa.us2/cx_1", "oracle_atlanta_search.json"),
     ("Careers Page Co", None, None, ""),
 ]
 
 
 def _url(ats: Ats, token: str) -> str:
-    return {Ats.GREENHOUSE: GH, Ats.ASHBY: ASHBY, Ats.LEVER: LEVER, Ats.WORKDAY: WORKDAY}[
-        ats
-    ].list_url(token)
+    return {
+        Ats.GREENHOUSE: GH,
+        Ats.ASHBY: ASHBY,
+        Ats.LEVER: LEVER,
+        Ats.WORKDAY: WORKDAY,
+        Ats.ORACLE: ORACLE,
+    }[ats].list_url(token)
 
 
 def mock_boards(router: respx.MockRouter) -> None:
@@ -65,6 +75,11 @@ def mock_boards(router: respx.MockRouter) -> None:
             status = 404 if fixture == "workday_404.json" else 200
             router.post(_url(ats, token)).mock(
                 return_value=httpx.Response(status, json=fixture_json(fixture))
+            )
+            continue
+        if ats is Ats.ORACLE:
+            router.get(url__startswith=ORACLE_SEARCH).mock(
+                return_value=httpx.Response(200, json=fixture_json(fixture))
             )
             continue
         route = router.get(_url(ats, token))
@@ -83,6 +98,17 @@ def mock_boards(router: respx.MockRouter) -> None:
     ).mock(return_value=httpx.Response(200, json=fixture_json("workday_cox_detail.json")))
     router.get(url__regex=r"https://cox\.wd1\.myworkdayjobs\.com/.*/job/").mock(
         return_value=httpx.Response(404, json=fixture_json("workday_404.json"))
+    )
+    # One Oracle job has a recorded detail; Oracle answers the others with no items.
+    router.get(url__startswith=ORACLE_DETAIL).mock(
+        side_effect=lambda request: httpx.Response(
+            200,
+            json=fixture_json(
+                "oracle_atlanta_detail.json"
+                if "34378" in str(request.url)
+                else "oracle_not_found.json"
+            ),
+        )
     )
     # Greenhouse pay-transparency details for jobs whose body has no salary range.
     router.get(url__regex=r"https://boards-api\.greenhouse\.io/v1/boards/[^/]+/jobs/\d+").mock(
@@ -133,7 +159,7 @@ async def test_sweep_all_boards_offline_under_one_second(
     assert status["Careers Page Co"] == "no_board"
     assert status["Empty Co"] == "ok"
     assert status["Gone Workday Co"] == "not_found"
-    assert sum(s == "ok" for s in status.values()) == 12
+    assert sum(s == "ok" for s in status.values()) == 13
     assert [c["company"] for c in out["per_company"]] == [b[0] for b in BOARDS]
 
     jobs = out["jobs"]
@@ -156,6 +182,10 @@ async def test_sweep_all_boards_offline_under_one_second(
     assert detailed["pay_min"] == 101500 and detailed["pay_currency"] == "USD"
     listed = cox["Sr-Lead-Solution-Architect_R202681547"]
     assert (listed["date_source"], listed["pay_source"]) == ("postedOn", "none")
+    atlanta = {j["native_id"]: j for j in jobs if j["company"] == "City of Atlanta"}
+    assert atlanta["34378"]["pay_min"] == 117999
+    assert atlanta["34368"]["title"] == "Architectural Engineer"
+    assert atlanta["34368"]["date_source"] == "PostedDate"
     unknown = [j for j in jobs if j["remote"] == "unknown"]
     assert unknown and all("remote_unknown" in j["flags"] for j in unknown)
     assert out["flag_counts"]["remote_unknown"] == len(unknown)

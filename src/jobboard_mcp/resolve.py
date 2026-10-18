@@ -5,7 +5,7 @@ Three sources of evidence, combined:
 2. Probe the Greenhouse boards listed for the name in the bundled directory (``directory.py``),
    which covers tokens that don't follow from the name.
 3. Fetch the careers page, plus up to two same-site careers/jobs links from it, and look for
-   links or embeds pointing at a Greenhouse, Ashby, Lever, or Workday board.
+   links or embeds pointing at a Greenhouse, Ashby, Lever, Workday, or Oracle board.
 
 Nothing else is scraped: pages are only scanned for board URLs.
 """
@@ -59,6 +59,13 @@ _WORKDAY = re.compile(
     r"\b([a-z0-9][a-z0-9-]*)\.(wd\d{1,3})\.myworkdayjobs\.com/(?:[a-z]{2}-[A-Z]{2}/)?([\w-]+)",
     re.I,
 )
+# An Oracle Recruiting Cloud site: {pod}.fa.{region}.oraclecloud.com/hcmUI/CandidateExperience/
+# {lang}/sites/{site}.
+_ORACLE = re.compile(
+    r"\b([a-z0-9][a-z0-9-]*)\.fa\.([a-z0-9]+)\.oraclecloud\.com/hcmUI/CandidateExperience/"
+    r"(?:[a-z]{2}(?:-[a-z]{2})?/)?sites/([\w-]+)",
+    re.I,
+)
 _HREF = re.compile(r"""href\s*=\s*["']([^"'#]+)["']""", re.I)
 _CAREER_PATH = re.compile(r"career|jobs?\b|join|work-with-us|hiring|openings|positions", re.I)
 
@@ -94,6 +101,9 @@ def find_board_refs(html: str) -> list[tuple[Ats, str]]:
             continue
         token = f"{m.group(1)}.{m.group(2)}/{m.group(3)}".lower()
         counts[(Ats.WORKDAY, token)] = counts.get((Ats.WORKDAY, token), 0) + 1
+    for m in _ORACLE.finditer(text):
+        token = f"{m.group(1)}.fa.{m.group(2)}/{m.group(3)}".lower()
+        counts[(Ats.ORACLE, token)] = counts.get((Ats.ORACLE, token), 0) + 1
     return sorted(counts, key=lambda k: -counts[k])
 
 

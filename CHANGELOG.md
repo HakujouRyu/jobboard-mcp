@@ -8,6 +8,10 @@ All notable changes are recorded here. The format follows
 
 ### Added
 
+- Oracle Recruiting Cloud boards (`ats: oracle`, tokens like `ehxr.fa.us2/cx_1` for City of
+  Atlanta), read like Workday from the careers site's own JSON (`source: "careers_site"`).
+  Search rows already carry locations, workplace type, and posting date; a detail call adds the
+  description and pay.
 - Workday boards (`ats: workday`, tokens like `homedepot.wd5/careerdepot`). Workday has no
   documented API, so jobs come from the JSON its careers sites load for themselves, with
   `source: "careers_site"`. Sweeps search for the `title_include` terms, read up to 200 jobs per

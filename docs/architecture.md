@@ -23,7 +23,7 @@ flowchart LR
         direction LR
         server["server.py<br/>tool schemas, ToolError mapping"]
         service["service.py<br/>JobBoardService"]
-        adapters["adapters/<br/>greenhouse · ashby · lever · workday"]
+        adapters["adapters/<br/>greenhouse · ashby · lever<br/>workday · oracle"]
         resolve["resolve.py<br/>board detection"]
         directory["directory.py<br/>known Greenhouse boards"]
         matching["matching.py<br/>fuzzy titles"]
@@ -37,7 +37,7 @@ flowchart LR
     gh["boards-api.greenhouse.io"]
     ash["api.ashbyhq.com"]
     lev["api.lever.co"]
-    wd["*.myworkdayjobs.com<br/>(careers-site JSON, tier 2)"]
+    wd["*.myworkdayjobs.com, *.oraclecloud.com<br/>(careers-site JSON, tier 2)"]
     careers["company careers pages<br/>(resolve_board only)"]
 
     client <-->|"stdio · JSON-RPC"| server
@@ -271,11 +271,11 @@ flowchart TD
     in --> page{"careers_url given?<br/>(otherwise the watchlist's)"}
     in --> listed["directory lookup: Greenhouse boards<br/>listed for the name (exact, or one<br/>loose match; max 3)"]
 
-    tokens --> probe["probe every token on Greenhouse, Ashby,<br/>and Lever (up to 18 requests), and each<br/>listed board on Greenhouse. Workday tokens<br/>need a tenant, instance, and site, so<br/>Workday boards come only from pages"]
+    tokens --> probe["probe every token on Greenhouse, Ashby,<br/>and Lever (up to 18 requests), and each<br/>listed board on Greenhouse. Workday and<br/>Oracle tokens have several parts, so<br/>those boards come only from pages"]
     listed --> probe
     probe --> answered["boards that answered,<br/>with job counts; Greenhouse boards<br/>also report company_name"]
 
-    page -- yes --> scan["fetch the careers page; scan it<br/>for Greenhouse / Ashby / Lever / Workday board URLs"]
+    page -- yes --> scan["fetch the careers page; scan it<br/>for Greenhouse / Ashby / Lever /<br/>Workday / Oracle board URLs"]
     scan --> refs{"board links found?"}
     refs -- no --> follow["follow up to 2 same-site<br/>careers/jobs links from the first page"] --> scan
     refs -- yes --> verify["probe each linked board<br/>(a link to a deleted board doesn't count)"]
@@ -397,7 +397,7 @@ classDiagram
 `Job.id` is `{ats}:{token}:{native_id}`, and `pay_min` / `pay_max` are annual amounts in
 `pay_currency`, never converted.
 
-Enums: `Ats` (greenhouse, ashby, lever, workday), `Remote` (remote_us, remote_global, remote_other,
+Enums: `Ats` (greenhouse, ashby, lever, workday, oracle), `Remote` (remote_us, remote_global, remote_other,
 hybrid, onsite, unknown), `EmploymentType`, `PaySource` (structured, parsed_from_text, none),
 `Source` (documented_api, careers_site, json_ld: the tiers in ground rule 1),
 `CompanyStatus` (ok, not_found, no_board, error, timeout), `Confidence` (high, medium, low),

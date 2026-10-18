@@ -25,6 +25,7 @@ pytestmark = pytest.mark.live
 ROOT = Path(__file__).resolve().parents[1]
 SERVER_ENV = {**os.environ, "WATCHLIST_PATH": str(EXAMPLE_WATCHLIST), "LOG_LEVEL": "WARNING"}
 WORKDAY_TOKEN = "cox.wd1/cox_external_career_site_1"
+ORACLE_TOKEN = "ehxr.fa.us2/cx_1"
 ACCEPTANCE = {
     "title_include": ["engineer", "sre", "product"],
     "remote": [Remote.REMOTE_US, Remote.REMOTE_GLOBAL],
@@ -82,22 +83,29 @@ async def test_live_acceptance_cold_and_warm(service: JobBoardService) -> None:
     assert [j.id for j in warm.jobs] == [j.id for j in cold.jobs]
 
 
-async def test_live_workday_sweep(service: JobBoardService) -> None:
-    """A cold Workday sweep: searches, then up to max_details detail calls, a second apart."""
+@pytest.mark.parametrize(
+    ("ats", "token", "term"),
+    [(Ats.WORKDAY, WORKDAY_TOKEN, "engineer"), (Ats.ORACLE, ORACLE_TOKEN, "")],
+)
+async def test_live_careers_site_sweep(
+    service: JobBoardService, ats: Ats, token: str, term: str
+) -> None:
+    """A cold tier 2 sweep: searches, then up to max_details detail calls, a second apart."""
     from jobboard_mcp.adapters import ADAPTERS
 
-    (company,) = [e.company for e in service.store.load() if e.token == WORKDAY_TOKEN]
-    filters = SweepFilters(today=service.today(), title_include=["engineer"])
+    (company,) = [e.company for e in service.store.load() if e.token == token]
+    filters = SweepFilters(today=service.today(), title_include=[term] if term else [])
     started = time.perf_counter()
     result = await service.sweep(filters, companies=[company])
     elapsed = time.perf_counter() - started
     (board,) = result.per_company
     assert board.status is CompanyStatus.OK, board
-    assert result.jobs, "Cox has no engineer jobs today"
-    max_details = ADAPTERS[Ats.WORKDAY].max_details or 0
-    assert elapsed < max_details + 15, f"cold Workday sweep took {elapsed:.0f}s"
-    detailed = [j for j in result.jobs if j.date_source == "startDate"]
-    assert detailed and all(j.source.value == "careers_site" for j in result.jobs)
+    assert result.jobs, f"{company} has no matching jobs today"
+    max_details = ADAPTERS[ats].max_details or 0
+    assert elapsed < max_details + 15, f"cold {ats} sweep took {elapsed:.0f}s"
+    assert all(j.source.value == "careers_site" for j in result.jobs)
+    from_detail = {"startDate", "ExternalPostedStartDate"}
+    assert any(j.date_source in from_detail for j in result.jobs), "no detail call landed"
 
 
 async def test_live_greenhouse_board_not_truncated(service: JobBoardService) -> None:
@@ -116,6 +124,7 @@ async def test_live_greenhouse_board_not_truncated(service: JobBoardService) -> 
         (Ats.ASHBY, "linear"),
         (Ats.LEVER, "outreach"),
         (Ats.WORKDAY, WORKDAY_TOKEN),
+        (Ats.ORACLE, ORACLE_TOKEN),
     ],
 )
 async def test_live_get_posting_each_ats(service: JobBoardService, ats: Ats, token: str) -> None:
@@ -174,9 +183,12 @@ async def test_live_is_posting_live(service: JobBoardService) -> None:
         (Ats.ASHBY, "linear"),
         (Ats.LEVER, "outreach"),
         (Ats.WORKDAY, WORKDAY_TOKEN),
+        (Ats.ORACLE, ORACLE_TOKEN),
     ]
     for ats, token in boards:
-        job = (await ADAPTERS[ats].list_jobs(service.http, token, token, search=["e"])).jobs[0]
+        # Workday boards are searched; "engineer" keeps this to a page or two.
+        search = ["engineer"] if ats is Ats.WORKDAY else []
+        job = (await ADAPTERS[ats].list_jobs(service.http, token, token, search=search)).jobs[0]
         assert (await service.is_posting_live(url=job.url)).live, job.url
     gone = await service.is_posting_live(ats=Ats.GREENHOUSE, token="gitlab", job_id="1")
     assert gone.live is False

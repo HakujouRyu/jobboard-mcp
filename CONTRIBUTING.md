@@ -175,8 +175,9 @@ Patterns to follow:
 
 ## Recipe: supporting another ATS
 
-Workable, SmartRecruiters, and Recruitee are the candidates in SPEC.md §3. The Workday adapter
-is the example of a tier 2 adapter: it searches, pages, and caps its detail calls.
+Workable, SmartRecruiters, and Recruitee are the candidates in SPEC.md §3. The Workday and
+Oracle adapters are the examples of tier 2 adapters: they search, page, and cap their detail
+calls.
 
 Use the highest tier in ground rule 1 that the ATS offers. A tier 1 adapter fetches with
 `get_json`; a tier 2 adapter, whose host comes from the watchlist, with `get_site_json` or

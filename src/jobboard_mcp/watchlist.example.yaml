@@ -130,6 +130,17 @@
     A Workday board, included as an example of that ATS. Workday is read from the careers
     site's own JSON (source careers_site), so it's slower and can change without notice.
 
+- company: City of Atlanta
+  ats: oracle
+  token: ehxr.fa.us2/cx_1
+  careers_url: https://www.atlantaga.gov/government/departments/human-resources
+  domains: [government]
+  tags: []
+  interview_note: null
+  notes: >-
+    An Oracle Recruiting Cloud board, included as an example of that ATS. Like Workday, it's
+    read from the careers site's own JSON (source careers_site).
+
 - company: GitHub
   careers_url: https://github.com/about/careers
   domains: [dev tools]

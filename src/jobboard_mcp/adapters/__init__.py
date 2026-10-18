@@ -4,6 +4,7 @@ from jobboard_mcp.adapters.ashby import AshbyAdapter
 from jobboard_mcp.adapters.base import Adapter, BoardListing, PostingRef
 from jobboard_mcp.adapters.greenhouse import GreenhouseAdapter
 from jobboard_mcp.adapters.lever import LeverAdapter
+from jobboard_mcp.adapters.oracle import OracleAdapter
 from jobboard_mcp.adapters.workday import WorkdayAdapter
 from jobboard_mcp.models import Ats
 
@@ -12,6 +13,7 @@ ADAPTERS: dict[Ats, Adapter] = {
     Ats.ASHBY: AshbyAdapter(),
     Ats.LEVER: LeverAdapter(),
     Ats.WORKDAY: WorkdayAdapter(),
+    Ats.ORACLE: OracleAdapter(),
 }
 
 

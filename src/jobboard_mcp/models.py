@@ -15,6 +15,7 @@ class Ats(StrEnum):
     ASHBY = "ashby"
     LEVER = "lever"
     WORKDAY = "workday"
+    ORACLE = "oracle"
 
 
 class Remote(StrEnum):

@@ -68,7 +68,8 @@ the file by hand.
 ## Finding a board token
 
 For Greenhouse, Ashby, and Lever, the token is the path segment after the ATS host. A Workday
-token is `{tenant}.{wdN}/{site}`, from the careers site's address (lowercased):
+token is `{tenant}.{wdN}/{site}`, and an Oracle Recruiting Cloud token `{pod}.fa.{region}/{site}`,
+both from the careers site's address. Case doesn't matter:
 
 | ATS | Board URL | Token |
 |-----|-----------|-------|
@@ -76,6 +77,7 @@ token is `{tenant}.{wdN}/{site}`, from the careers site's address (lowercased):
 | Ashby | `jobs.ashbyhq.com/linear` | `linear` |
 | Lever | `jobs.lever.co/outreach` | `outreach` |
 | Workday | `homedepot.wd5.myworkdayjobs.com/CareerDepot` | `homedepot.wd5/careerdepot` |
+| Oracle | `ehxr.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1` | `ehxr.fa.us2/cx_1` |
 
 Or ask the server to find it, then save the result:
 
@@ -85,9 +87,9 @@ resolve_board(company="Posit", careers_url="https://posit.co/careers/")
 update_company(company="Posit", ats="greenhouse", token="rstudio")
 ```
 
-`resolve_board` doesn't guess Workday tokens (a guess needs the tenant, instance, and site), and
-some employers' careers pages refuse non-browser requests. If it can't find a Workday board,
-open any of the company's job links and take the token from its address.
+`resolve_board` doesn't guess Workday or Oracle tokens (each has several parts), and some
+employers' careers pages refuse non-browser requests. If it can't find the board, open any of
+the company's job links and take the token from its address.
 
 ## How edits work
 

@@ -17,7 +17,7 @@ body:
     id: ats
     attributes:
       label: ATS
-      options: [Greenhouse, Ashby, Lever, Workday, Not sure]
+      options: [Greenhouse, Ashby, Lever, Workday, Oracle Recruiting Cloud, Not sure]
     validations:
       required: true
   - type: input

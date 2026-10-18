@@ -165,6 +165,7 @@ Recognized URLs:
 | Ashby | `jobs.ashbyhq.com/{token}/{uuid}` |
 | Lever | `jobs.lever.co/{token}/{uuid}` |
 | Workday | `{tenant}.wdN.myworkdayjobs.com/{site}/job/{location}/{id}` (with or without a locale such as `en-US/`, and with or without `/apply`), `.../wday/cxs/{tenant}/{site}/job/{id}`, `wdN.myworkdaysite.com/recruiting/{tenant}/{site}/job/...` |
+| Oracle | `{pod}.fa.{region}.oraclecloud.com/hcmUI/CandidateExperience/{lang}/sites/{site}/job/{id}` (the language segment is optional) |
 
 Returns a `Job` (the same shape as above, with `description_text` filled in). `company` is the
 watchlist display name when the board is on the watchlist, and the token otherwise.
@@ -237,7 +238,7 @@ Result shape (abridged):
 
 ## `resolve_board`
 
-Works out which Greenhouse, Ashby, Lever, or Workday board a company uses. It never writes; use
+Works out which Greenhouse, Ashby, Lever, Workday, or Oracle board a company uses. It never writes; use
 `update_company` to save the result. The method is described in
 [architecture.md § Board resolution](architecture.md#board-resolution).
 
