@@ -30,6 +30,7 @@ SIGNOZ_HOME = (
 GH = "https://boards-api.greenhouse.io/v1/boards/"
 ASHBY = "https://api.ashbyhq.com/posting-api/job-board/"
 LEVER = "https://api.lever.co/v0/postings/"
+WORKABLE = "https://www.workable.com/api/accounts/"
 
 
 def gh_url(token: str) -> str:
@@ -46,7 +47,7 @@ def lever_url(token: str) -> str:
 
 def not_found_everywhere_else(router: respx.MockRouter) -> None:
     """Registered last: every other probe is an unknown token."""
-    for host in (GH, ASHBY, LEVER):
+    for host in (GH, ASHBY, LEVER, WORKABLE):
         router.get(url__startswith=host).mock(return_value=httpx.Response(404, text="Not Found"))
 
 

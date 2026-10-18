@@ -141,6 +141,15 @@
     An Oracle Recruiting Cloud board, included as an example of that ATS. Like Workday, it's
     read from the careers site's own JSON (source careers_site).
 
+- company: Hugging Face
+  ats: workable
+  token: huggingface
+  careers_url: https://apply.workable.com/huggingface/
+  domains: [ai, open source]
+  tags: []
+  interview_note: null
+  notes: A Workable board, included as an example of that ATS. Most roles are remote.
+
 - company: GitHub
   careers_url: https://github.com/about/careers
   domains: [dev tools]

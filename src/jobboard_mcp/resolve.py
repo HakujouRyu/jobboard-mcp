@@ -5,7 +5,7 @@ Three sources of evidence, combined:
 2. Probe the Greenhouse boards listed for the name in the bundled directory (``directory.py``),
    which covers tokens that don't follow from the name.
 3. Fetch the careers page, plus up to two same-site careers/jobs links from it, and look for
-   links or embeds pointing at a Greenhouse, Ashby, Lever, Workday, or Oracle board.
+   links or embeds pointing at a Greenhouse, Ashby, Lever, Workable, Workday, or Oracle board.
 
 Nothing else is scraped: pages are only scanned for board URLs.
 """
@@ -46,10 +46,12 @@ _BOARD_PATTERNS: list[tuple[Ats, re.Pattern[str]]] = [
     (Ats.ASHBY, re.compile(rf"jobs\.ashbyhq\.com/({_TOKEN})", re.I)),
     (Ats.LEVER, re.compile(rf"api\.(?:eu\.)?lever\.co/v0/postings/({_TOKEN})", re.I)),
     (Ats.LEVER, re.compile(rf"jobs\.(?:eu\.)?lever\.co/({_TOKEN})", re.I)),
+    (Ats.WORKABLE, re.compile(rf"(?:www\.)?workable\.com/api/(?:v\d/)?(?:widget/)?accounts/({_TOKEN})", re.I)),  # noqa: E501
+    (Ats.WORKABLE, re.compile(rf"apply\.workable\.com/(?!api/|j/)({_TOKEN})", re.I)),
 ]  # fmt: skip
 # Unsupported systems worth naming in the evidence.
 _OTHER_ATS = re.compile(
-    r"\b(workable\.com|smartrecruiters\.com|recruitee\.com|bamboohr\.com|"
+    r"\b(smartrecruiters\.com|recruitee\.com|bamboohr\.com|"
     r"rippling\.com|jobvite\.com|breezy\.hr|teamtailor\.com|personio\.\w+|pinpointhq\.com|"
     r"icims\.com|phenompeople\.com|successfactors\.\w+|taleo\.net|wellfound\.com)",
     re.I,
@@ -93,7 +95,7 @@ def find_board_refs(html: str) -> list[tuple[Ats, str]]:
     for ats, pattern in _BOARD_PATTERNS:
         for m in pattern.finditer(text):
             token = m.group(1).rstrip(".-_").lower()
-            if token in ("embed", "api", "v1", "jobs", "posting-api"):
+            if token in ("embed", "api", "v1", "jobs", "posting-api", "j"):
                 continue
             counts[(ats, token)] = counts.get((ats, token), 0) + 1
     for m in _WORKDAY.finditer(text):

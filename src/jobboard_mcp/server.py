@@ -39,17 +39,19 @@ from jobboard_mcp.models import (
 from jobboard_mcp.service import JobBoardService
 from jobboard_mcp.watchlist import WatchlistError, seed_watchlist
 
-_ATS_HELP = "greenhouse, ashby, lever, workday, or oracle."
+_ATS_HELP = "greenhouse, ashby, lever, workable, workday, or oracle."
 _URL_HELP = (
-    "A Greenhouse, Ashby, Lever, Workday, or Oracle posting URL. Or pass ats, token, job_id."
+    "A Greenhouse, Ashby, Lever, Workable, Workday, or Oracle posting URL. Or pass ats, token,"
+    " job_id."
 )
 
 INSTRUCTIONS = """\
-Searches public Greenhouse, Ashby, Lever, Workday, and Oracle job boards for a watchlist of
-companies and returns normalized jobs. sweep_boards: filtered sweep of every watched board. Its
-filters are off unless passed, so pass the user's title, remote, pay, and date preferences on
-every call. get_posting: one full posting. find_company_posting: find a role seen elsewhere on
-the company's own board. resolve_board: work out a company's board. is_posting_live: check a
+Searches public job boards for a watchlist of companies and returns normalized jobs.
+Supported: Greenhouse, Ashby, Lever, Workable, Workday, and Oracle Recruiting Cloud.
+sweep_boards: filtered sweep of every watched board. Its filters are off unless passed, so
+pass the user's title, remote, pay, and date preferences on every call.
+get_posting: one full posting. find_company_posting: find a role seen elsewhere on the
+company's own board. resolve_board: work out a company's board. is_posting_live: check a
 posting is still open.
 list_watchlist / add_company / update_company: manage the watchlist (the only writes). To
 drop a company, archive it with update_company(archived=true); there is no delete.
@@ -288,9 +290,9 @@ async def resolve_board(
     ] = None,
     refresh: Annotated[bool, Field(description="Bypass the cache.")] = False,
 ) -> Resolution:
-    """Work out which Greenhouse, Ashby, Lever, Workday, or Oracle board a company uses: probes
-    likely tokens and scans the careers page (plus up to two same-site careers links) for board
-    links. Read-only: record a result with update_company."""
+    """Work out which board a company uses (Greenhouse, Ashby, Lever, Workable, Workday, or
+    Oracle): probes likely tokens and scans the careers page (plus up to two same-site careers
+    links) for board links. Read-only: record a result with update_company."""
     try:
         return await get_service().resolve_board(company, careers_url, refresh=refresh)
     except (ValueError, WatchlistError) as exc:

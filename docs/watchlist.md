@@ -67,7 +67,7 @@ the file by hand.
 
 ## Finding a board token
 
-For Greenhouse, Ashby, and Lever, the token is the path segment after the ATS host. A Workday
+For Greenhouse, Ashby, Lever, and Workable, the token is the path segment after the ATS host. A Workday
 token is `{tenant}.{wdN}/{site}`, and an Oracle Recruiting Cloud token `{pod}.fa.{region}/{site}`,
 both from the careers site's address. Case doesn't matter:
 
@@ -76,6 +76,7 @@ both from the careers site's address. Case doesn't matter:
 | Greenhouse | `job-boards.greenhouse.io/gitlab` | `gitlab` |
 | Ashby | `jobs.ashbyhq.com/linear` | `linear` |
 | Lever | `jobs.lever.co/outreach` | `outreach` |
+| Workable | `apply.workable.com/huggingface` | `huggingface` |
 | Workday | `homedepot.wd5.myworkdayjobs.com/CareerDepot` | `homedepot.wd5/careerdepot` |
 | Oracle | `ehxr.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1` | `ehxr.fa.us2/cx_1` |
 

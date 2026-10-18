@@ -18,6 +18,7 @@ from jobboard_mcp.adapters.ashby import AshbyAdapter
 from jobboard_mcp.adapters.greenhouse import GreenhouseAdapter
 from jobboard_mcp.adapters.lever import LeverAdapter
 from jobboard_mcp.adapters.oracle import OracleAdapter
+from jobboard_mcp.adapters.workable import WorkableAdapter
 from jobboard_mcp.adapters.workday import WorkdayAdapter
 from jobboard_mcp.config import Settings
 from jobboard_mcp.http import HttpClient
@@ -30,6 +31,7 @@ NOW = datetime(2026, 10, 15, 18, 0, tzinfo=UTC)
 GH, ASHBY, LEVER = GreenhouseAdapter(), AshbyAdapter(), LeverAdapter()
 WORKDAY = WorkdayAdapter()
 ORACLE = OracleAdapter()
+WORKABLE = WorkableAdapter()
 ORACLE_HOST = "https://ehxr.fa.us2.oraclecloud.com/hcmRestApi/resources/latest"
 ORACLE_SEARCH = f"{ORACLE_HOST}/recruitingCEJobRequisitions"
 ORACLE_DETAIL = f"{ORACLE_HOST}/recruitingCEJobRequisitionDetails"
@@ -53,6 +55,7 @@ BOARDS: list[tuple[str, Ats | None, str | None, str]] = [
     ("Cox", Ats.WORKDAY, "cox.wd1/cox_external_career_site_1", "workday_cox_search.json"),
     ("Gone Workday Co", Ats.WORKDAY, "gonewd.wd5/external", "workday_404.json"),
     ("City of Atlanta", Ats.ORACLE, "ehxr.fa.us2/cx_1", "oracle_atlanta_search.json"),
+    ("Hugging Face", Ats.WORKABLE, "huggingface", "workable_huggingface.json"),
     ("Careers Page Co", None, None, ""),
 ]
 
@@ -64,6 +67,7 @@ def _url(ats: Ats, token: str) -> str:
         Ats.LEVER: LEVER,
         Ats.WORKDAY: WORKDAY,
         Ats.ORACLE: ORACLE,
+        Ats.WORKABLE: WORKABLE,
     }[ats].list_url(token)
 
 
@@ -159,7 +163,7 @@ async def test_sweep_all_boards_offline_under_one_second(
     assert status["Careers Page Co"] == "no_board"
     assert status["Empty Co"] == "ok"
     assert status["Gone Workday Co"] == "not_found"
-    assert sum(s == "ok" for s in status.values()) == 13
+    assert sum(s == "ok" for s in status.values()) == 14
     assert [c["company"] for c in out["per_company"]] == [b[0] for b in BOARDS]
 
     jobs = out["jobs"]

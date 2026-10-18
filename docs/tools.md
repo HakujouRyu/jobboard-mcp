@@ -164,6 +164,7 @@ Recognized URLs:
 | Greenhouse | `boards.greenhouse.io/{token}/jobs/{id}`, `job-boards.greenhouse.io/...`, `job-boards.eu.greenhouse.io/...`, `.../embed/job_app?for={token}&token={id}`, `boards-api.greenhouse.io/v1/boards/{token}/jobs/{id}` |
 | Ashby | `jobs.ashbyhq.com/{token}/{uuid}` |
 | Lever | `jobs.lever.co/{token}/{uuid}` |
+| Workable | `apply.workable.com/{account}/j/{shortcode}` (the short `apply.workable.com/j/{shortcode}` form doesn't name the account, so it isn't recognized) |
 | Workday | `{tenant}.wdN.myworkdayjobs.com/{site}/job/{location}/{id}` (with or without a locale such as `en-US/`, and with or without `/apply`), `.../wday/cxs/{tenant}/{site}/job/{id}`, `wdN.myworkdaysite.com/recruiting/{tenant}/{site}/job/...` |
 | Oracle | `{pod}.fa.{region}.oraclecloud.com/hcmUI/CandidateExperience/{lang}/sites/{site}/job/{id}` (the language segment is optional) |
 
@@ -238,7 +239,7 @@ Result shape (abridged):
 
 ## `resolve_board`
 
-Works out which Greenhouse, Ashby, Lever, Workday, or Oracle board a company uses. It never writes; use
+Works out which Greenhouse, Ashby, Lever, Workable, Workday, or Oracle board a company uses. It never writes; use
 `update_company` to save the result. The method is described in
 [architecture.md § Board resolution](architecture.md#board-resolution).
 

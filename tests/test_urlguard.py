@@ -179,7 +179,7 @@ async def test_resolve_board_reports_blocked_page_and_still_probes() -> None:
         return_value=httpx.Response(200, json={"jobs": [{}]})
     )
     respx.get(
-        url__regex=r"https://(boards-api\.greenhouse\.io|api\.ashbyhq\.com|api\.lever\.co)/.*"
+        url__regex=r"https://(boards-api\.greenhouse\.io|api\.ashbyhq\.com|api\.lever\.co|www\.workable\.com)/.*"
     ).mock(return_value=httpx.Response(404))
     client = HttpClient(Settings())
     try:

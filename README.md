@@ -6,8 +6,8 @@
 
 A small [MCP](https://modelcontextprotocol.io) server that reads the public job boards of the
 companies on your watchlist and returns their jobs normalized and filtered. It supports boards
-hosted on five applicant tracking systems (ATSes): **Greenhouse, Ashby, Lever, Workday, and
-Oracle Recruiting Cloud**.
+hosted on six applicant tracking systems (ATSes): **Greenhouse, Ashby, Lever, Workable, Workday,
+and Oracle Recruiting Cloud**.
 
 ```mermaid
 flowchart LR
@@ -52,8 +52,8 @@ a supported ATS.
 
 - **It finds new jobs only at watched companies.** It doesn't search sites that list jobs from
   many employers, and it can't suggest companies to watch.
-- **Five ATSes.** Only boards on Greenhouse, Ashby, Lever, Workday, and Oracle Recruiting Cloud
-  can be swept. Workday and Oracle have no documented public jobs API, so they're read from the
+- **Six ATSes.** Only boards on Greenhouse, Ashby, Lever, Workable, Workday, and Oracle
+  Recruiting Cloud can be swept. Workday and Oracle have no documented public jobs API, so they're read from the
   JSON their careers sites load for themselves (`source: "careers_site"`). That data can change
   without notice, and their sweeps are slower: searches for your title terms, then up to 20
   detail calls per board, a second apart. A company that uses
@@ -79,7 +79,7 @@ a supported ATS.
 | `sweep_boards` | Fetches every watched board in parallel, applies title / remote / pay / date / seen-before filters, and returns matching jobs newest first (up to `limit`, 100 by default), with a status per company (`ok`, `not_found`, `no_board`, `error`, `timeout`). |
 | `get_posting` | One posting by URL or `{ats, token, job_id}`, with its full plain-text description and the best pay data (Greenhouse pay-transparency ranges included). |
 | `find_company_posting` | Finds a role seen on LinkedIn, Indeed, etc. on the company's own board (the watchlist board, or one resolved on the fly). Matches the company name loosely and reports the watchlist's name. Returns up to 5 fuzzy-matched candidates scored 0-100. |
-| `resolve_board` | Works out which Greenhouse, Ashby, Lever, Workday, or Oracle board a company uses, by probing likely tokens and scanning the careers page for board links. Read-only. |
+| `resolve_board` | Works out which Greenhouse, Ashby, Lever, Workable, Workday, or Oracle board a company uses, by probing likely tokens and scanning the careers page for board links. Read-only. |
 | `is_posting_live` | Whether a posting is still open, checked through the ATS API. |
 | `list_watchlist` | Watched companies, filterable by board / tag / domain. Archived companies are hidden unless asked for. |
 | `add_company`, `update_company` | The only writes, and only to the watchlist file. Boards are validated with a live fetch before saving, and comments and formatting are kept. To drop a company, archive it with `update_company`; sweeps then skip it. Not registered when `WATCHLIST_READONLY=true`. |
@@ -218,7 +218,7 @@ Environment variables, all optional:
 | [docs/tools.md](docs/tools.md) | Every tool's parameters and output, with examples |
 | [docs/normalization.md](docs/normalization.md) | Remote, pay, date, and filter rules |
 | [docs/watchlist.md](docs/watchlist.md) | Watchlist format, finding tokens, how edits are made safely |
-| [docs/api-notes.md](docs/api-notes.md) | How the live Greenhouse / Ashby / Lever APIs differ from their docs, and what Workday and Oracle careers sites return |
+| [docs/api-notes.md](docs/api-notes.md) | How the live Greenhouse / Ashby / Lever / Workable APIs differ from their docs, and what Workday and Oracle careers sites return |
 | [SPEC.md](SPEC.md) | Original design spec and milestones |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Setup, ground rules, tests, and how to add an ATS or a tool |
 | [CHANGELOG.md](CHANGELOG.md) | What changed in each release |

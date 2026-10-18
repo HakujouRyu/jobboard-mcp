@@ -18,6 +18,8 @@ trimmed copies of these responses (whole job objects, fewer of them).
 | `workday_homedepot_detail.json` | `GET homedepot.wd5.myworkdayjobs.com/.../CareerDepot/job/...` (`remoteType: "Remote/Virtual"`; `similarJobs` dropped) |
 | `workday_empty.json` | the Cox search for a word that matches nothing: 200, `total: 0` |
 | `workday_422.json` | a tenant that doesn't exist |
+| `workable_huggingface.json` | `www.workable.com/api/accounts/huggingface?details=true` (all 6 jobs; US and EMEA remote roles, hidden locations) |
+| `workable_404.txt` | an account that doesn't exist |
 | `oracle_atlanta_search.json` | `GET ehxr.fa.us2.oraclecloud.com/hcmRestApi/resources/latest/recruitingCEJobRequisitions`, `findReqs;siteNumber=CX_1`, `keyword="engineer"` (4 of 25 rows; facets dropped) |
 | `oracle_atlanta_detail.json` | `GET .../recruitingCEJobRequisitionDetails`, `ById;Id="34378"` (pay in the description) |
 | `oracle_not_found.json` | the same for an id that isn't posted: 200 with `items: []` |
@@ -61,6 +63,24 @@ trimmed copies of these responses (whole job objects, fewer of them).
 - `categories.commitment` is free text ("Full-Time", "Permanent", "Regular Full Time (Salary)", even "Remote").
 - `createdAt` is epoch milliseconds (creation, which may precede publishing).
 - Empty board → 200 `[]`. Unknown token → 404 `{"ok":false,"error":"Document not found"}`.
+
+### Workable (verified 2026-10-17)
+
+- Workable's help center documents `https://www.workable.com/api/accounts/{subdomain}?details=true`
+  (also `/locations` and `/departments`). It redirects to
+  `apply.workable.com/api/v1/widget/accounts/{subdomain}`, the feed Workable's own job widget
+  uses, with no key. robots.txt on both hosts allows it.
+- The answer is `{name, description, jobs}`. Each job has `title`, `shortcode` (the id),
+  `employment_type`, `telecommuting` (a boolean), `department`, `url` (the short
+  `apply.workable.com/j/{shortcode}` form), `application_url`, `published_on` and `created_at`
+  (`YYYY-MM-DD`), `country`, `city`, `state`, `locations[]` (`country`, `countryCode`, `city`,
+  `region`, `hidden`), and with `details=true`, `description` (HTML).
+- No structured pay; it's parsed from the description when posted there.
+- `hidden: true` on a location means the employer hid it on the posting. The adapter keeps only
+  the country for those.
+- The short job URL doesn't name the account, so job URLs are built in the long form,
+  `apply.workable.com/{account}/j/{shortcode}/`, which Workable also serves.
+- Unknown account: the redirect ends in **404** with body `Not Found`.
 
 ### Workday (verified 2026-10-17; tier 2, undocumented)
 

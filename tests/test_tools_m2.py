@@ -80,6 +80,7 @@ def mock_apis(router: respx.MockRouter) -> None:
         "https://boards-api.greenhouse.io/",
         "https://api.ashbyhq.com/",
         "https://api.lever.co/",
+        "https://www.workable.com/api/",
     ):
         router.get(url__startswith=prefix).mock(return_value=httpx.Response(404, text="Not Found"))
 

@@ -27,7 +27,7 @@ class BoardListing:
 @dataclass(frozen=True)
 class BoardProbe:
     jobs: int
-    names: set[str]  # company names the board reports about itself (Greenhouse only)
+    names: set[str]  # company names the board reports about itself, if it does
 
 
 @dataclass(frozen=True)

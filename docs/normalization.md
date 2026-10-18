@@ -83,6 +83,8 @@ Details:
   allow the "city means on-site" rule, which only applies when the ATS has no such field.
 - Ashby's `isRemote` is used only when `workplaceType` is missing. Ashby marks some hybrid roles
   `isRemote: true`.
+- Workable's `telecommuting` is a yes/no. Yes is `remote`; no is `unspecified`, because a
+  non-telecommuting role can still be hybrid, so it never makes a job on-site by itself.
 - Workday's `remoteType` and Oracle's `WorkplaceType` are free text set by each employer. A label mentioning remote, virtual,
   telecommuting, or work from home counts as `remote`; one mentioning hybrid as `hybrid`; on-site
   or in-office as `onsite`. Anything else ("Multi-site", "Location Independent-Commutable"), and
@@ -166,6 +168,7 @@ the text, and the job is flagged `pay_unknown`. Structured pay isn't bounded thi
   (`date_source: "postedOn"`); "Posted 30+ Days Ago" stays unknown. The detail call then gives
   the exact `startDate` (`date_source: "startDate"`), which replaces it.
 - Oracle rows give `PostedDate`, and its detail `ExternalPostedStartDate`.
+- Workable gives `published_on`, falling back to `created_at`.
 
 ## Employment type
 

@@ -125,6 +125,7 @@ async def test_live_greenhouse_board_not_truncated(service: JobBoardService) -> 
         (Ats.LEVER, "outreach"),
         (Ats.WORKDAY, WORKDAY_TOKEN),
         (Ats.ORACLE, ORACLE_TOKEN),
+        (Ats.WORKABLE, "huggingface"),
     ],
 )
 async def test_live_get_posting_each_ats(service: JobBoardService, ats: Ats, token: str) -> None:
@@ -184,6 +185,7 @@ async def test_live_is_posting_live(service: JobBoardService) -> None:
         (Ats.LEVER, "outreach"),
         (Ats.WORKDAY, WORKDAY_TOKEN),
         (Ats.ORACLE, ORACLE_TOKEN),
+        (Ats.WORKABLE, "huggingface"),
     ]
     for ats, token in boards:
         # Workday boards are searched; "engineer" keeps this to a page or two.

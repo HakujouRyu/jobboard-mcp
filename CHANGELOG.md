@@ -8,6 +8,8 @@ All notable changes are recorded here. The format follows
 
 ### Added
 
+- Workable boards (`ats: workable`, token = the account subdomain), from Workable's documented
+  accounts API. Descriptions come with the list, so there's no detail call.
 - Oracle Recruiting Cloud boards (`ats: oracle`, tokens like `ehxr.fa.us2/cx_1` for City of
   Atlanta), read like Workday from the careers site's own JSON (`source: "careers_site"`).
   Search rows already carry locations, workplace type, and posting date; a detail call adds the
