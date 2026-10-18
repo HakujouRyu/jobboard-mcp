@@ -14,6 +14,7 @@ class Ats(StrEnum):
     GREENHOUSE = "greenhouse"
     ASHBY = "ashby"
     LEVER = "lever"
+    WORKDAY = "workday"
 
 
 class Remote(StrEnum):

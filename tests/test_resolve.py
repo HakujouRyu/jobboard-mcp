@@ -175,7 +175,7 @@ async def test_greenhouse_name_mismatch_is_not_high(http: HttpClient) -> None:
 
 
 @respx.mock
-async def test_stale_link_and_unsupported_system(http: HttpClient) -> None:
+async def test_stale_link_and_workday_board(http: HttpClient) -> None:
     respx.get("https://oldco.test/careers").mock(
         return_value=httpx.Response(
             200,
@@ -183,10 +183,39 @@ async def test_stale_link_and_unsupported_system(http: HttpClient) -> None:
             '<a href="https://oldco.wd5.myworkdayjobs.com/en-US/External">new</a>',
         )
     )
+    workday = respx.post("https://oldco.wd5.myworkdayjobs.com/wday/cxs/oldco/external/jobs").mock(
+        return_value=httpx.Response(200, json={"total": 42, "jobPostings": []})
+    )
     not_found_everywhere_else(respx.mock)  # the old Greenhouse board is gone
     r = await resolve_board(http, "OldCo", "https://oldco.test/careers")
-    assert r.ats is None and r.token is None and r.confidence is None
-    assert any("myworkdayjobs.com" in e for e in r.evidence)
+    assert (r.ats, r.token, r.confidence, r.jobs) == (
+        Ats.WORKDAY,
+        "oldco.wd5/external",
+        Confidence.HIGH,
+        42,
+    )
+    assert workday.call_count == 1
+
+
+@respx.mock
+async def test_unsupported_system_is_named(http: HttpClient) -> None:
+    respx.get("https://oldco.test/careers").mock(return_value=httpx.Response(200, text=GITHUB))
+    not_found_everywhere_else(respx.mock)
+    r = await resolve_board(http, "OldCo", "https://oldco.test/careers")
+    assert r.ats is None
+    assert any("icims.com" in e for e in r.evidence)
+
+
+def test_workday_links_found_on_pages() -> None:
+    html = (
+        '<a href="https://homedepot.wd5.myworkdayjobs.com/CareerDepot">Jobs</a>'
+        '<iframe src="https://cox.wd1.myworkdayjobs.com/en-US/Cox_External_Career_Site_1/job/x">'
+        '<script src="https://acme.wd3.myworkdayjobs.com/wday/cxs/acme/External/jobs">'
+    )
+    refs = find_board_refs(html)
+    assert (Ats.WORKDAY, "homedepot.wd5/careerdepot") in refs
+    assert (Ats.WORKDAY, "cox.wd1/cox_external_career_site_1") in refs
+    assert not any(t.endswith("/wday") for _, t in refs)
 
 
 @respx.mock

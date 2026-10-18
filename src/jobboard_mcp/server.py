@@ -40,8 +40,8 @@ from jobboard_mcp.service import JobBoardService
 from jobboard_mcp.watchlist import WatchlistError, seed_watchlist
 
 INSTRUCTIONS = """\
-Searches public Greenhouse, Ashby, and Lever job boards for a watchlist of companies and returns
-normalized jobs. sweep_boards: filtered sweep of every watched board. Its filters are off
+Searches public Greenhouse, Ashby, Lever, and Workday job boards for a watchlist of companies and
+returns normalized jobs. sweep_boards: filtered sweep of every watched board. Its filters are off
 unless passed, so pass the user's title, remote, pay, and date preferences on every call.
 get_posting: one full
 posting. find_company_posting: find a role seen elsewhere on the company's own board.
@@ -52,6 +52,8 @@ list_watchlist's path is the watchlist file, if the user wants to edit it by han
 Public data only. Remote status is never guessed: 'unknown' jobs are kept and flagged.
 Each job's source says where it came from: documented_api, or careers_site / json_ld, which are
 undocumented and can change without notice.
+Workday boards (tokens like homedepot.wd5/careerdepot) are searched for the sweep's title_include
+terms, so pass them; a Workday sweep is slower, and per_company notes say when it hit a cap.
 pay_min / pay_max are annual amounts in pay_currency (USD when the posting offers it), never
 converted; pay_other_currencies lists any other currencies posted, and pay_posted_interval says
 how the pay was posted. Each job's flags list missing data: pay_unknown, date_unknown,
@@ -228,9 +230,13 @@ async def sweep_boards(
 async def get_posting(
     url: Annotated[
         str | None,
-        Field(description="A Greenhouse, Ashby, or Lever posting URL. Or pass ats, token, job_id."),
+        Field(
+            description=(
+                "A Greenhouse, Ashby, Lever, or Workday posting URL. Or pass ats, token, job_id."
+            )
+        ),
     ] = None,
-    ats: Annotated[Ats | None, Field(description="greenhouse, ashby, or lever.")] = None,
+    ats: Annotated[Ats | None, Field(description="greenhouse, ashby, lever, or workday.")] = None,
     token: Annotated[str | None, Field(description="Board token, e.g. 'gitlab'.")] = None,
     job_id: Annotated[str | None, Field(description="The ATS's own job id.")] = None,
     refresh: Annotated[bool, Field(description="Bypass the cache.")] = False,
@@ -280,9 +286,9 @@ async def resolve_board(
     ] = None,
     refresh: Annotated[bool, Field(description="Bypass the cache.")] = False,
 ) -> Resolution:
-    """Work out which Greenhouse, Ashby, or Lever board a company uses: probes likely tokens and
-    scans the careers page (plus up to two same-site careers links) for board links. Read-only:
-    record a result with update_company."""
+    """Work out which Greenhouse, Ashby, Lever, or Workday board a company uses: probes likely
+    tokens and scans the careers page (plus up to two same-site careers links) for board links.
+    Read-only: record a result with update_company."""
     try:
         return await get_service().resolve_board(company, careers_url, refresh=refresh)
     except (ValueError, WatchlistError) as exc:
@@ -293,9 +299,13 @@ async def resolve_board(
 async def is_posting_live(
     url: Annotated[
         str | None,
-        Field(description="A Greenhouse, Ashby, or Lever posting URL. Or pass ats, token, job_id."),
+        Field(
+            description=(
+                "A Greenhouse, Ashby, Lever, or Workday posting URL. Or pass ats, token, job_id."
+            )
+        ),
     ] = None,
-    ats: Annotated[Ats | None, Field(description="greenhouse, ashby, or lever.")] = None,
+    ats: Annotated[Ats | None, Field(description="greenhouse, ashby, lever, or workday.")] = None,
     token: Annotated[str | None, Field(description="Board token.")] = None,
     job_id: Annotated[str | None, Field(description="The ATS's own job id.")] = None,
     refresh: Annotated[
@@ -346,7 +356,7 @@ _WRITES = ToolAnnotations(
 async def add_company(
     company: Annotated[str, Field(description="Display name.")],
     ats: Annotated[
-        Ats | None, Field(description="greenhouse, ashby, or lever; omit if unknown.")
+        Ats | None, Field(description="greenhouse, ashby, lever, or workday; omit if unknown.")
     ] = None,
     token: Annotated[str | None, Field(description="Board token; required with ats.")] = None,
     careers_url: Annotated[str | None, Field(description="Careers page URL.")] = None,

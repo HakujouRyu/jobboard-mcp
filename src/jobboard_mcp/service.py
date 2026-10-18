@@ -70,6 +70,9 @@ def _status(exc: Exception) -> CompanyStatus:
     return CompanyStatus.ERROR
 
 
+_SUPPORTED = "Greenhouse, Ashby, Lever, or Workday"
+
+
 async def _same(job: Job) -> Job:
     return job
 
@@ -268,7 +271,7 @@ class JobBoardService:
         if url:
             ref = parse_posting_url(url)
             if ref is None:
-                raise ValueError(f"not a recognized Greenhouse, Ashby, or Lever posting URL: {url}")
+                raise ValueError(f"not a recognized {_SUPPORTED} posting URL: {url}")
             ats, token, job_id = ref.ats, ref.token, ref.job_id
         if ats is None or not token or not job_id:
             raise ValueError("pass either url, or all of ats, token, and job_id")
@@ -364,7 +367,7 @@ class JobBoardService:
         if url:
             ref = parse_posting_url(url)
             if ref is None:
-                raise ValueError(f"not a recognized Greenhouse, Ashby, or Lever posting URL: {url}")
+                raise ValueError(f"not a recognized {_SUPPORTED} posting URL: {url}")
             ats, token, job_id = ref.ats, ref.token, ref.job_id
         if ats is None or not token or not job_id:
             raise ValueError("pass either url, or all of ats, token, and job_id")

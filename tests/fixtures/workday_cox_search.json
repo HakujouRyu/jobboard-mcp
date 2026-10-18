@@ -1,0 +1,45 @@
+{
+ "total": 12,
+ "jobPostings": [
+  {
+   "title": "Senior Software Engineer",
+   "externalPath": "/job/Atlanta-GA/Senior-Software-Engineer_R202683513",
+   "timeType": "Full time",
+   "locationsText": "Atlanta GA",
+   "postedOn": "Posted 10 Days Ago",
+   "bulletFields": [
+    "R202683513"
+   ]
+  },
+  {
+   "title": "Sr. Lead Solution Architect",
+   "externalPath": "/job/Atlanta-GA/Sr-Lead-Solution-Architect_R202681547",
+   "timeType": "Full time",
+   "locationsText": "Atlanta GA",
+   "postedOn": "Posted 11 Days Ago",
+   "bulletFields": [
+    "R202681547"
+   ]
+  },
+  {
+   "title": "Lead Software Engineer - IBM iSeries",
+   "externalPath": "/job/Atlanta-GA/Lead-Software-Engineer---IBM-iSeries_R202683077",
+   "timeType": "Full time",
+   "locationsText": "Atlanta GA",
+   "postedOn": "Posted 18 Days Ago",
+   "bulletFields": [
+    "R202683077"
+   ]
+  },
+  {
+   "title": "Sr. Lead Data Engineer",
+   "externalPath": "/job/Atlanta-GA/Sr-Lead-Data-Engineer_R202683017",
+   "timeType": "Full time",
+   "locationsText": "Atlanta GA",
+   "postedOn": "Posted 22 Days Ago",
+   "bulletFields": [
+    "R202683017"
+   ]
+  }
+ ]
+}

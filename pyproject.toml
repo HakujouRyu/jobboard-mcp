@@ -1,7 +1,7 @@
 [project]
 name = "jobboard-mcp"
 version = "0.1.0"
-description = "Read-only MCP server that sweeps public ATS job boards (Greenhouse, Ashby, Lever) and returns normalized, filtered job data."
+description = "Read-only MCP server that sweeps public ATS job boards (Greenhouse, Ashby, Lever, Workday) and returns normalized, filtered job data."
 readme = "README.md"
 license = "MIT"
 authors = [{ name = "Clay Roberts", email = "hakujouryu@gmail.com" }]

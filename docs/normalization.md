@@ -83,6 +83,12 @@ Details:
   allow the "city means on-site" rule, which only applies when the ATS has no such field.
 - Ashby's `isRemote` is used only when `workplaceType` is missing. Ashby marks some hybrid roles
   `isRemote: true`.
+- Workday's `remoteType` is free text set by each employer. A label mentioning remote, virtual,
+  telecommuting, or work from home counts as `remote`; one mentioning hybrid as `hybrid`; on-site
+  or in-office as `onsite`. Anything else ("Multi-site", "Location Independent-Commutable"), and
+  a missing field, counts as `unspecified`, so a city alone never makes a Workday job on-site:
+  employers that don't use the field can't be told apart from jobs that left it blank. Workday
+  list rows carry no `remoteType`, so a swept Workday job's status comes from its detail call.
 
 ## Pay
 
@@ -155,6 +161,9 @@ the text, and the job is flagged `pay_unknown`. Structured pay isn't bounded thi
   calendar date.
 - Lever's `createdAt` can come before the job was published, so Lever jobs can look a little
   older than they are.
+- Workday list rows say only "Posted 3 Days Ago". With the sweep's date, that becomes a date
+  (`date_source: "postedOn"`); "Posted 30+ Days Ago" stays unknown. The detail call then gives
+  the exact `startDate` (`date_source: "startDate"`), which replaces it.
 
 ## Employment type
 

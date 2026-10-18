@@ -5,7 +5,8 @@ Instructions for AI coding agents working in this repo. People should start with
 agent tends to get wrong.
 
 jobboard-mcp is a read-only MCP server (Python 3.12, FastMCP, httpx, pydantic) that sweeps public
-Greenhouse, Ashby, and Lever job board APIs and returns normalized, filtered jobs.
+Greenhouse, Ashby, and Lever job board APIs, plus Workday careers sites' own JSON, and returns
+normalized, filtered jobs.
 
 ## Commands
 

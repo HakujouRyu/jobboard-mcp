@@ -11,7 +11,7 @@ import html
 import re
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta
 
 from jobboard_mcp.models import EmploymentType, Pay, PayAmount, PaySource, Remote
 
@@ -67,6 +67,23 @@ def parse_date(value: str | int | float | None) -> date | None:
     if dt.tzinfo is not None:
         dt = dt.astimezone(UTC)
     return dt.date()
+
+
+_RELATIVE_POSTED = re.compile(
+    r"^\s*posted\s+(?:(?P<word>today|yesterday)|(?P<days>\d{1,3})\s+days?\s+ago)\s*$", re.I
+)
+
+
+def parse_relative_posted(text: str | None, today: date) -> date | None:
+    """A "Posted 3 Days Ago" label (Workday's list view) as a date, counted back from
+    ``today``. "Posted 30+ Days Ago" and anything else is None: it says only that the job is
+    older, not when it was posted."""
+    m = _RELATIVE_POSTED.match(text or "")
+    if m is None:
+        return None
+    if m["word"]:
+        return today - timedelta(days=0 if m["word"].lower() == "today" else 1)
+    return today - timedelta(days=int(m["days"]))
 
 
 # --------------------------------------------------------------------------- remote

@@ -119,6 +119,17 @@
   interview_note: null
   notes: A Lever board, included as an example of that ATS.
 
+- company: Cox Enterprises
+  ats: workday
+  token: cox.wd1/cox_external_career_site_1
+  careers_url: https://jobs.coxenterprises.com/
+  domains: [media, communications]
+  tags: []
+  interview_note: null
+  notes: >-
+    A Workday board, included as an example of that ATS. Workday is read from the careers
+    site's own JSON (source careers_site), so it's slower and can change without notice.
+
 - company: GitHub
   careers_url: https://github.com/about/careers
   domains: [dev tools]

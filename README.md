@@ -6,7 +6,7 @@
 
 A small [MCP](https://modelcontextprotocol.io) server that reads the public job boards of the
 companies on your watchlist and returns their jobs normalized and filtered. It supports boards
-hosted on three applicant tracking systems (ATSes): **Greenhouse, Ashby, and Lever**.
+hosted on four applicant tracking systems (ATSes): **Greenhouse, Ashby, Lever, and Workday**.
 
 ```mermaid
 flowchart LR
@@ -27,7 +27,8 @@ flowchart LR
   too, for checking.
 - **No guessing.** When a posting doesn't settle a question, the answer is `unknown` and the job
   is flagged. Missing data never drops a job without saying so.
-- **Safe to run.** It sends only GET requests, needs no accounts or credentials, and the only
+- **Safe to run.** It only reads: its requests are GETs, plus the read-only job searches
+  Workday's careers sites make themselves. It needs no accounts or credentials, and the only
   file it writes is its own watchlist.
 
 ## What it does
@@ -50,7 +51,11 @@ a supported ATS.
 
 - **It finds new jobs only at watched companies.** It doesn't search sites that list jobs from
   many employers, and it can't suggest companies to watch.
-- **Three ATSes.** Only boards on Greenhouse, Ashby, and Lever can be swept. A company that uses
+- **Four ATSes.** Only boards on Greenhouse, Ashby, Lever, and Workday can be swept. Workday has
+  no documented API, so it's read from the JSON its careers sites load for themselves
+  (`source: "careers_site"`). That data can change without notice, and Workday sweeps are slower:
+  searches for your title terms, then up to 20 detail calls per board, a second apart. A
+  company that uses
   another system, or lists jobs only on its own site, can stay on the watchlist with its careers
   URL, but sweeps skip it with the status `no_board`.
 - **No scraping.** It doesn't read job content from web pages. The only pages it reads are a
@@ -73,7 +78,7 @@ a supported ATS.
 | `sweep_boards` | Fetches every watched board in parallel, applies title / remote / pay / date / seen-before filters, and returns matching jobs newest first (up to `limit`, 100 by default), with a status per company (`ok`, `not_found`, `no_board`, `error`, `timeout`). |
 | `get_posting` | One posting by URL or `{ats, token, job_id}`, with its full plain-text description and the best pay data (Greenhouse pay-transparency ranges included). |
 | `find_company_posting` | Finds a role seen on LinkedIn, Indeed, etc. on the company's own board (the watchlist board, or one resolved on the fly). Matches the company name loosely and reports the watchlist's name. Returns up to 5 fuzzy-matched candidates scored 0-100. |
-| `resolve_board` | Works out which Greenhouse, Ashby, or Lever board a company uses, by probing likely tokens and scanning the careers page for board links. Read-only. |
+| `resolve_board` | Works out which Greenhouse, Ashby, Lever, or Workday board a company uses, by probing likely tokens and scanning the careers page for board links. Read-only. |
 | `is_posting_live` | Whether a posting is still open, checked through the ATS API. |
 | `list_watchlist` | Watched companies, filterable by board / tag / domain. Archived companies are hidden unless asked for. |
 | `add_company`, `update_company` | The only writes, and only to the watchlist file. Boards are validated with a live fetch before saving, and comments and formatting are kept. To drop a company, archive it with `update_company`; sweeps then skip it. Not registered when `WATCHLIST_READONLY=true`. |
@@ -212,7 +217,7 @@ Environment variables, all optional:
 | [docs/tools.md](docs/tools.md) | Every tool's parameters and output, with examples |
 | [docs/normalization.md](docs/normalization.md) | Remote, pay, date, and filter rules |
 | [docs/watchlist.md](docs/watchlist.md) | Watchlist format, finding tokens, how edits are made safely |
-| [docs/api-notes.md](docs/api-notes.md) | How the live Greenhouse / Ashby / Lever APIs differ from their docs |
+| [docs/api-notes.md](docs/api-notes.md) | How the live Greenhouse / Ashby / Lever APIs differ from their docs, and what Workday's careers sites return |
 | [SPEC.md](SPEC.md) | Original design spec and milestones |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | Setup, ground rules, tests, and how to add an ATS or a tool |
 | [CHANGELOG.md](CHANGELOG.md) | What changed in each release |

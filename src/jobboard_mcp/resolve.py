@@ -5,7 +5,7 @@ Three sources of evidence, combined:
 2. Probe the Greenhouse boards listed for the name in the bundled directory (``directory.py``),
    which covers tokens that don't follow from the name.
 3. Fetch the careers page, plus up to two same-site careers/jobs links from it, and look for
-   links or embeds pointing at a Greenhouse, Ashby, or Lever board.
+   links or embeds pointing at a Greenhouse, Ashby, Lever, or Workday board.
 
 Nothing else is scraped: pages are only scanned for board URLs.
 """
@@ -49,9 +49,14 @@ _BOARD_PATTERNS: list[tuple[Ats, re.Pattern[str]]] = [
 ]  # fmt: skip
 # Unsupported systems worth naming in the evidence.
 _OTHER_ATS = re.compile(
-    r"\b(myworkdayjobs\.com|workable\.com|smartrecruiters\.com|recruitee\.com|bamboohr\.com|"
+    r"\b(workable\.com|smartrecruiters\.com|recruitee\.com|bamboohr\.com|"
     r"rippling\.com|jobvite\.com|breezy\.hr|teamtailor\.com|personio\.\w+|pinpointhq\.com|"
     r"icims\.com|phenompeople\.com|successfactors\.\w+|taleo\.net|wellfound\.com)",
+    re.I,
+)
+# A Workday careers site: {tenant}.wdN.myworkdayjobs.com/{site}, with an optional locale.
+_WORKDAY = re.compile(
+    r"\b([a-z0-9][a-z0-9-]*)\.(wd\d{1,3})\.myworkdayjobs\.com/(?:[a-z]{2}-[A-Z]{2}/)?([\w-]+)",
     re.I,
 )
 _HREF = re.compile(r"""href\s*=\s*["']([^"'#]+)["']""", re.I)
@@ -75,7 +80,7 @@ def token_candidates(company: str | None, careers_url: str | None = None) -> lis
 
 def find_board_refs(html: str) -> list[tuple[Ats, str]]:
     """(ats, token) pairs referenced in a page, most-referenced first. Tokens are lowercased
-    (all three ATS APIs treat them case-insensitively)."""
+    (every supported ATS treats them case-insensitively)."""
     text = html.replace("\\/", "/").replace("%2F", "/")
     counts: dict[tuple[Ats, str], int] = {}
     for ats, pattern in _BOARD_PATTERNS:
@@ -84,6 +89,11 @@ def find_board_refs(html: str) -> list[tuple[Ats, str]]:
             if token in ("embed", "api", "v1", "jobs", "posting-api"):
                 continue
             counts[(ats, token)] = counts.get((ats, token), 0) + 1
+    for m in _WORKDAY.finditer(text):
+        if m.group(3).lower() in ("wday", "job", "jobs"):
+            continue
+        token = f"{m.group(1)}.{m.group(2)}/{m.group(3)}".lower()
+        counts[(Ats.WORKDAY, token)] = counts.get((Ats.WORKDAY, token), 0) + 1
     return sorted(counts, key=lambda k: -counts[k])
 
 

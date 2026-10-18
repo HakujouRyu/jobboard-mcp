@@ -17,7 +17,7 @@ body:
     id: ats
     attributes:
       label: ATS
-      options: [Greenhouse, Ashby, Lever, Not sure]
+      options: [Greenhouse, Ashby, Lever, Workday, Not sure]
     validations:
       required: true
   - type: input

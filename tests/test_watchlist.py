@@ -90,7 +90,7 @@ def test_parse_errors() -> None:
     with pytest.raises(WatchlistError, match="expected a list"):
         parse_watchlist("company: A\n")
     with pytest.raises(WatchlistError):
-        parse_watchlist("- company: A\n  ats: workday\n  token: x\n")
+        parse_watchlist("- company: A\n  ats: taleo\n  token: x\n")
     assert parse_watchlist("") == []
 
 

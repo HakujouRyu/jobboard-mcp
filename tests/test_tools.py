@@ -17,6 +17,7 @@ from jobboard_mcp.adapters import ADAPTERS
 from jobboard_mcp.adapters.ashby import AshbyAdapter
 from jobboard_mcp.adapters.greenhouse import GreenhouseAdapter
 from jobboard_mcp.adapters.lever import LeverAdapter
+from jobboard_mcp.adapters.workday import WorkdayAdapter
 from jobboard_mcp.config import Settings
 from jobboard_mcp.http import HttpClient
 from jobboard_mcp.models import Ats, WatchlistEntry
@@ -26,6 +27,7 @@ from .conftest import fixture_json, fixture_text
 
 NOW = datetime(2026, 10, 15, 18, 0, tzinfo=UTC)
 GH, ASHBY, LEVER = GreenhouseAdapter(), AshbyAdapter(), LeverAdapter()
+WORKDAY = WorkdayAdapter()
 
 # 15 watched companies: real fixtures reused under several tokens, plus failure cases.
 BOARDS: list[tuple[str, Ats | None, str | None, str]] = [
@@ -43,17 +45,27 @@ BOARDS: list[tuple[str, Ats | None, str | None, str]] = [
     ("Gone Co", Ats.GREENHOUSE, "gone", "404"),
     ("Slow Co", Ats.ASHBY, "slow", "timeout"),
     ("Broken Co", Ats.LEVER, "broken", "500"),
+    ("Cox", Ats.WORKDAY, "cox.wd1/cox_external_career_site_1", "workday_cox_search.json"),
+    ("Gone Workday Co", Ats.WORKDAY, "gonewd.wd5/external", "workday_404.json"),
     ("Careers Page Co", None, None, ""),
 ]
 
 
 def _url(ats: Ats, token: str) -> str:
-    return {Ats.GREENHOUSE: GH, Ats.ASHBY: ASHBY, Ats.LEVER: LEVER}[ats].list_url(token)
+    return {Ats.GREENHOUSE: GH, Ats.ASHBY: ASHBY, Ats.LEVER: LEVER, Ats.WORKDAY: WORKDAY}[
+        ats
+    ].list_url(token)
 
 
 def mock_boards(router: respx.MockRouter) -> None:
     for _company, ats, token, fixture in BOARDS:
         if ats is None or token is None:
+            continue
+        if ats is Ats.WORKDAY:
+            status = 404 if fixture == "workday_404.json" else 200
+            router.post(_url(ats, token)).mock(
+                return_value=httpx.Response(status, json=fixture_json(fixture))
+            )
             continue
         route = router.get(_url(ats, token))
         if fixture == "404":
@@ -64,6 +76,14 @@ def mock_boards(router: respx.MockRouter) -> None:
             route.mock(return_value=httpx.Response(500, text="oops"))
         else:
             route.mock(return_value=httpx.Response(200, json=fixture_json(fixture)))
+    # One Workday job has a recorded detail; the others' details are gone, so they keep
+    # what the list gave.
+    router.get(
+        url__regex=r"https://cox\.wd1\.myworkdayjobs\.com/wday/cxs/cox/cox_external_career_site_1/job/Senior-Software-Engineer_R202683513$"
+    ).mock(return_value=httpx.Response(200, json=fixture_json("workday_cox_detail.json")))
+    router.get(url__regex=r"https://cox\.wd1\.myworkdayjobs\.com/.*/job/").mock(
+        return_value=httpx.Response(404, json=fixture_json("workday_404.json"))
+    )
     # Greenhouse pay-transparency details for jobs whose body has no salary range.
     router.get(url__regex=r"https://boards-api\.greenhouse\.io/v1/boards/[^/]+/jobs/\d+").mock(
         return_value=httpx.Response(200, json=fixture_json("greenhouse_gitlab_detail.json"))
@@ -112,7 +132,8 @@ async def test_sweep_all_boards_offline_under_one_second(
     assert status["Broken Co"] == "error"
     assert status["Careers Page Co"] == "no_board"
     assert status["Empty Co"] == "ok"
-    assert sum(s == "ok" for s in status.values()) == 11
+    assert status["Gone Workday Co"] == "not_found"
+    assert sum(s == "ok" for s in status.values()) == 12
     assert [c["company"] for c in out["per_company"]] == [b[0] for b in BOARDS]
 
     jobs = out["jobs"]
@@ -127,6 +148,14 @@ async def test_sweep_all_boards_offline_under_one_second(
     # Each job carries its adapter's source tier (ground rule 1).
     assert {j["ats"] for j in jobs} == {a.value for a in ADAPTERS}
     assert all(j["source"] == ADAPTERS[Ats(j["ats"])].source.value for j in jobs)
+    # A Workday job takes its detail's fields; one whose detail is gone keeps its list data.
+    cox = {j["native_id"]: j for j in jobs if j["company"] == "Cox"}
+    detailed = cox["Senior-Software-Engineer_R202683513"]
+    assert detailed["source"] == "careers_site"
+    assert (detailed["posted_at"], detailed["date_source"]) == ("2026-10-07", "startDate")
+    assert detailed["pay_min"] == 101500 and detailed["pay_currency"] == "USD"
+    listed = cox["Sr-Lead-Solution-Architect_R202681547"]
+    assert (listed["date_source"], listed["pay_source"]) == ("postedOn", "none")
     unknown = [j for j in jobs if j["remote"] == "unknown"]
     assert unknown and all("remote_unknown" in j["flags"] for j in unknown)
     assert out["flag_counts"]["remote_unknown"] == len(unknown)

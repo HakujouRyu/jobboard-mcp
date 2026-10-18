@@ -8,6 +8,12 @@ All notable changes are recorded here. The format follows
 
 ### Added
 
+- Workday boards (`ats: workday`, tokens like `homedepot.wd5/careerdepot`). Workday has no
+  documented API, so jobs come from the JSON its careers sites load for themselves, with
+  `source: "careers_site"`. Sweeps search for the `title_include` terms, read up to 200 jobs per
+  term, and fetch details for up to 20 matching jobs per board, a second apart. `get_posting`,
+  `is_posting_live`, `find_company_posting`, and `resolve_board` (from careers-page links)
+  support it too.
 - `per_company` rows have a `note` for anything about a board's results worth knowing, such as
   a search that stopped at a cap.
 - `resolve_board` checks a bundled list of 4,168 Greenhouse boards by company name (from

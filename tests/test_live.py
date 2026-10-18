@@ -24,6 +24,7 @@ pytestmark = pytest.mark.live
 
 ROOT = Path(__file__).resolve().parents[1]
 SERVER_ENV = {**os.environ, "WATCHLIST_PATH": str(EXAMPLE_WATCHLIST), "LOG_LEVEL": "WARNING"}
+WORKDAY_TOKEN = "cox.wd1/cox_external_career_site_1"
 ACCEPTANCE = {
     "title_include": ["engineer", "sre", "product"],
     "remote": [Remote.REMOTE_US, Remote.REMOTE_GLOBAL],
@@ -45,6 +46,19 @@ def acceptance_filters(svc: JobBoardService) -> SweepFilters:
     return SweepFilters(today=svc.today(), **ACCEPTANCE)  # type: ignore[arg-type]
 
 
+def fast_boards(svc: JobBoardService) -> list[str]:
+    """Watchlist companies on documented APIs. Workday boards are paced a request a second,
+    so they get their own timing test."""
+    from jobboard_mcp.adapters import ADAPTERS
+    from jobboard_mcp.models import Source
+
+    return [
+        e.company
+        for e in svc.store.load()
+        if e.ats and not e.archived and ADAPTERS[e.ats].source is Source.DOCUMENTED_API
+    ]
+
+
 async def test_live_watchlist_mostly_ok(service: JobBoardService) -> None:
     result = await service.sweep(SweepFilters(today=service.today()))
     with_board = [c for c in result.per_company if c.status is not CompanyStatus.NO_BOARD]
@@ -54,17 +68,36 @@ async def test_live_watchlist_mostly_ok(service: JobBoardService) -> None:
 
 
 async def test_live_acceptance_cold_and_warm(service: JobBoardService) -> None:
+    boards = fast_boards(service)
     started = time.perf_counter()
-    cold = await service.sweep(acceptance_filters(service))
+    cold = await service.sweep(acceptance_filters(service), companies=boards)
     cold_s = time.perf_counter() - started
     started = time.perf_counter()
-    warm = await service.sweep(acceptance_filters(service))
+    warm = await service.sweep(acceptance_filters(service), companies=boards)
     warm_s = time.perf_counter() - started
     print(f"\ncold {cold_s:.2f}s, warm {warm_s:.2f}s, {len(cold.jobs)} jobs")
     assert cold_s < 20
     assert warm_s < 2
     assert warm.cache_hits == sum(c.status is CompanyStatus.OK for c in warm.per_company)
     assert [j.id for j in warm.jobs] == [j.id for j in cold.jobs]
+
+
+async def test_live_workday_sweep(service: JobBoardService) -> None:
+    """A cold Workday sweep: searches, then up to max_details detail calls, a second apart."""
+    from jobboard_mcp.adapters import ADAPTERS
+
+    (company,) = [e.company for e in service.store.load() if e.token == WORKDAY_TOKEN]
+    filters = SweepFilters(today=service.today(), title_include=["engineer"])
+    started = time.perf_counter()
+    result = await service.sweep(filters, companies=[company])
+    elapsed = time.perf_counter() - started
+    (board,) = result.per_company
+    assert board.status is CompanyStatus.OK, board
+    assert result.jobs, "Cox has no engineer jobs today"
+    max_details = ADAPTERS[Ats.WORKDAY].max_details or 0
+    assert elapsed < max_details + 15, f"cold Workday sweep took {elapsed:.0f}s"
+    detailed = [j for j in result.jobs if j.date_source == "startDate"]
+    assert detailed and all(j.source.value == "careers_site" for j in result.jobs)
 
 
 async def test_live_greenhouse_board_not_truncated(service: JobBoardService) -> None:
@@ -78,12 +111,17 @@ async def test_live_greenhouse_board_not_truncated(service: JobBoardService) -> 
 
 @pytest.mark.parametrize(
     ("ats", "token"),
-    [(Ats.GREENHOUSE, "gitlab"), (Ats.ASHBY, "linear"), (Ats.LEVER, "outreach")],
+    [
+        (Ats.GREENHOUSE, "gitlab"),
+        (Ats.ASHBY, "linear"),
+        (Ats.LEVER, "outreach"),
+        (Ats.WORKDAY, WORKDAY_TOKEN),
+    ],
 )
 async def test_live_get_posting_each_ats(service: JobBoardService, ats: Ats, token: str) -> None:
     from jobboard_mcp.adapters import ADAPTERS
 
-    listing = await ADAPTERS[ats].list_jobs(service.http, token, token)
+    listing = await ADAPTERS[ats].list_jobs(service.http, token, token, search=["engineer"])
     assert listing.jobs, f"{ats}/{token} has no jobs today"
     first = listing.jobs[0]
     by_url = await service.get_posting(url=first.url)
@@ -131,8 +169,14 @@ async def test_live_find_company_posting_round_trip(service: JobBoardService) ->
 async def test_live_is_posting_live(service: JobBoardService) -> None:
     from jobboard_mcp.adapters import ADAPTERS
 
-    for ats, token in [(Ats.GREENHOUSE, "gitlab"), (Ats.ASHBY, "linear"), (Ats.LEVER, "outreach")]:
-        job = (await ADAPTERS[ats].list_jobs(service.http, token, token)).jobs[0]
+    boards = [
+        (Ats.GREENHOUSE, "gitlab"),
+        (Ats.ASHBY, "linear"),
+        (Ats.LEVER, "outreach"),
+        (Ats.WORKDAY, WORKDAY_TOKEN),
+    ]
+    for ats, token in boards:
+        job = (await ADAPTERS[ats].list_jobs(service.http, token, token, search=["e"])).jobs[0]
         assert (await service.is_posting_live(url=job.url)).live, job.url
     gone = await service.is_posting_live(ats=Ats.GREENHOUSE, token="gitlab", job_id="1")
     assert gone.live is False
