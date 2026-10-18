@@ -223,6 +223,8 @@ async def test_robots_disallowed_page_is_blocked(client: HttpClient, robots_on: 
         await client.get_text("https://co.test/internal/jobs")
     assert (careers.call_count, internal.call_count, robots.call_count) == (1, 0, 1)
     assert robots.calls.last.request.headers["User-Agent"].startswith("jobboard-mcp/")
+    # A bare text/plain gets a 406 from some sites, which would read as "no rules".
+    assert robots.calls.last.request.headers["Accept"] == "text/plain,*/*;q=0.5"
 
 
 @respx.mock

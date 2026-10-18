@@ -31,6 +31,8 @@ log = logging.getLogger(__name__)
 RETRY_STATUSES = {429, 500, 502, 503, 504}
 MAX_BACKOFF_SECONDS = 10.0
 ROBOTS_MAX_AGE_SECONDS = 24 * 3600  # RFC 9309: don't use a cached robots.txt longer than a day
+# Some sites (Workday) answer 406 to a bare text/plain, which would read as "no rules".
+ROBOTS_ACCEPT = "text/plain,*/*;q=0.5"
 
 # Set while robots.txt itself is being fetched, so that request (and its redirects) isn't checked.
 _FETCHING_ROBOTS = contextvars.ContextVar("fetching_robots", default=False)
@@ -224,7 +226,7 @@ class HttpClient:
         (refused address, DNS failure, timeout) propagates as is: the page would hit it too."""
         robots_url = url.copy_with(path="/robots.txt", query=None, fragment=None)
         _FETCHING_ROBOTS.set(True)  # this runs in its own task, so it doesn't leak
-        response = await self._pages.get(robots_url, headers={"Accept": "text/plain"})
+        response = await self._pages.get(robots_url, headers={"Accept": ROBOTS_ACCEPT})
         status = response.status_code
         log.debug("robots", extra={"fields": {"url": str(robots_url), "status": status}})
         if 200 <= status < 300:
