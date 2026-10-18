@@ -8,6 +8,10 @@ All notable changes are recorded here. The format follows
 
 ### Added
 
+- Rippling boards (`ats: rippling`, token = the board slug in `ats.rippling.com/{slug}/jobs`),
+  from Rippling's documented job board API. The list gives titles, departments, and a
+  workplace type for each location, but no pay, posting date, or description, so Rippling
+  jobs are flagged `pay_unknown` and `date_unknown`. There's no detail call.
 - Workable boards (`ats: workable`, token = the account subdomain), from Workable's documented
   accounts API. Descriptions come with the list, so there's no detail call.
 - Oracle Recruiting Cloud boards (`ats: oracle`, tokens like `ehxr.fa.us2/cx_1` for City of

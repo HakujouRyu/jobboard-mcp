@@ -20,6 +20,9 @@ trimmed copies of these responses (whole job objects, fewer of them).
 | `workday_422.json` | a tenant that doesn't exist |
 | `workable_huggingface.json` | `www.workable.com/api/accounts/huggingface?details=true` (all 6 jobs; US and EMEA remote roles, hidden locations) |
 | `workable_404.txt` | an account that doesn't exist |
+| `rippling_rippling.json` | `api.rippling.com/platform/api/ats/v2/board/rippling/jobs?pageSize=1000&groupJobsByLocation=true` (12 of 364 jobs; mixed workplace types per job, US-state and city-level remote, non-US remote, hybrid) |
+| `rippling_empty.json` | the `demo` board: 200 with `items: []` |
+| `rippling_404.json` | a board that doesn't exist |
 | `oracle_atlanta_search.json` | `GET ehxr.fa.us2.oraclecloud.com/hcmRestApi/resources/latest/recruitingCEJobRequisitions`, `findReqs;siteNumber=CX_1`, `keyword="engineer"` (4 of 25 rows; facets dropped) |
 | `oracle_atlanta_detail.json` | `GET .../recruitingCEJobRequisitionDetails`, `ById;Id="34378"` (pay in the description) |
 | `oracle_not_found.json` | the same for an id that isn't posted: 200 with `items: []` |
@@ -81,6 +84,41 @@ trimmed copies of these responses (whole job objects, fewer of them).
 - The short job URL doesn't name the account, so job URLs are built in the long form,
   `apply.workable.com/{account}/j/{shortcode}/`, which Workable also serves.
 - Unknown account: the redirect ends in **404** with body `Not Found`.
+
+### Rippling (verified 2026-10-17)
+
+- Rippling documents the v2 job board API in its developer docs
+  (`developer.rippling.com/documentation/job-board-api-v2/reference/job-boards`; the OpenAPI
+  file is `developer.rippling.com/docs/job-board-api-v2.yaml`):
+  `GET https://api.rippling.com/platform/api/ats/v2/board/{board_slug}/jobs`, plus `/branding`,
+  `/locations`, and `/departments`. No key. The docs say the endpoints need a Recruiting Pro
+  subscription, which is the employer's plan, not the caller's. v1 is marked deprecated.
+- robots.txt on `ats.rippling.com` disallows only `/internal/`; `api.rippling.com` has none
+  (404).
+- Query parameters: `page` (from 0), `pageSize` (1 to 1000; 20 if left out), `searchQuery`,
+  `workplaceType`, `country`, `state`, `city`, `departments`, and `groupJobsByLocation`.
+  Without `groupJobsByLocation=true` there's one row per job and location (Rippling's own
+  board: 640 rows for 364 jobs). The adapter asks for 1000 grouped rows, so one request
+  covers a board, and reads up to 5 pages if there are more.
+- The docs say results come in no particular order, so pages can overlap; the adapter
+  drops repeats. They also give a rate limit of 100 requests every 10 minutes.
+- The answer is `{items, page, pageSize, totalItems, totalPages}`. Each item has `id` (a
+  UUID), `name` (the title, often with stray spaces; missing from the OpenAPI schema but
+  always there), `url` (`ats.rippling.com/{slug}/jobs/{id}`), `department.name`, `language`
+  (`en-US`, `en-GB`), and `locations[]` with `name`, `country`, `countryCode`, `state`,
+  `stateCode`, `city`, and `workplaceType` (`ON_SITE`, `HYBRID`, or `REMOTE`).
+- The list has no description, pay, posting date, or employment type, and the docs have no
+  per-job endpoint. `.../v2/board/{slug}/jobs/{id}` does answer, with the description,
+  `payRangeDetails`, `createdOn`, and `employmentType`, but it's undocumented, and job pages
+  on `ats.rippling.com` are rendered on the server (the data is in `__NEXT_DATA__`), so the
+  careers site doesn't load it either. It fits no tier of ground rule 1, so it isn't read.
+- Slugs are case-sensitive (`Rippling` is a 404), and every slug seen is lowercase, so tokens
+  are sent as given.
+- Job pages also work with a locale (`ats.rippling.com/en-GB/{slug}/jobs/{id}`) and with
+  `/apply` after the id. `ats.rippling.com/rippling/jobs` redirects to Rippling's own careers
+  site, but the API slug works the same.
+- Empty board (`demo`): 200 with `items: []` and `totalPages: 0`. Unknown board: **404**
+  `{"error_code":"RESOURCE_NOT_FOUND","message":"Job Board not found","resource":null}`.
 
 ### Workday (verified 2026-10-17; tier 2, undocumented)
 

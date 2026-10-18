@@ -126,6 +126,7 @@ async def test_live_greenhouse_board_not_truncated(service: JobBoardService) -> 
         (Ats.WORKDAY, WORKDAY_TOKEN),
         (Ats.ORACLE, ORACLE_TOKEN),
         (Ats.WORKABLE, "huggingface"),
+        (Ats.RIPPLING, "rippling"),
     ],
 )
 async def test_live_get_posting_each_ats(service: JobBoardService, ats: Ats, token: str) -> None:
@@ -136,7 +137,8 @@ async def test_live_get_posting_each_ats(service: JobBoardService, ats: Ats, tok
     first = listing.jobs[0]
     by_url = await service.get_posting(url=first.url)
     assert by_url.id == first.id
-    assert by_url.description_text
+    # Rippling's documented API has no descriptions.
+    assert by_url.description_text or ats is Ats.RIPPLING
 
 
 async def test_live_stdio_roundtrip() -> None:
@@ -186,6 +188,7 @@ async def test_live_is_posting_live(service: JobBoardService) -> None:
         (Ats.WORKDAY, WORKDAY_TOKEN),
         (Ats.ORACLE, ORACLE_TOKEN),
         (Ats.WORKABLE, "huggingface"),
+        (Ats.RIPPLING, "rippling"),
     ]
     for ats, token in boards:
         # Workday boards are searched; "engineer" keeps this to a page or two.

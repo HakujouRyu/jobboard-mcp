@@ -152,7 +152,7 @@ Pass **either** `url` **or** all of `ats`, `token`, and `job_id`.
 | Parameter | Type | |
 |-----------|------|---|
 | `url` | string | A posting URL (see below) |
-| `ats` | `greenhouse` \| `ashby` \| `lever` | |
+| `ats` | `greenhouse` \| `ashby` \| `lever` \| `workable` \| `rippling` \| `workday` \| `oracle` | |
 | `token` | string | Board token, such as `gitlab` |
 | `job_id` | string | The ATS's own id |
 | `refresh` | bool | |
@@ -165,13 +165,16 @@ Recognized URLs:
 | Ashby | `jobs.ashbyhq.com/{token}/{uuid}` |
 | Lever | `jobs.lever.co/{token}/{uuid}` |
 | Workable | `apply.workable.com/{account}/j/{shortcode}` (the short `apply.workable.com/j/{shortcode}` form doesn't name the account, so it isn't recognized) |
+| Rippling | `ats.rippling.com/{slug}/jobs/{uuid}` (with or without a locale such as `en-GB/`, and with or without `/apply`) |
 | Workday | `{tenant}.wdN.myworkdayjobs.com/{site}/job/{location}/{id}` (with or without a locale such as `en-US/`, and with or without `/apply`), `.../wday/cxs/{tenant}/{site}/job/{id}`, `wdN.myworkdaysite.com/recruiting/{tenant}/{site}/job/...` |
 | Oracle | `{pod}.fa.{region}.oraclecloud.com/hcmUI/CandidateExperience/{lang}/sites/{site}/job/{id}` (the language segment is optional) |
 
 Returns a `Job` (the same shape as above, with `description_text` filled in). `company` is the
 watchlist display name when the board is on the watchlist, and the token otherwise.
 
-Ashby has no public per-job endpoint, so the job is looked up in the board listing.
+Ashby, Workable, and Rippling have no public per-job endpoint, so the job is looked up in the
+board listing. Rippling's listing has no description or pay, so for Rippling jobs
+`description_text` is null and pay is unknown.
 
 ---
 
@@ -239,7 +242,7 @@ Result shape (abridged):
 
 ## `resolve_board`
 
-Works out which Greenhouse, Ashby, Lever, Workable, Workday, or Oracle board a company uses. It never writes; use
+Works out which Greenhouse, Ashby, Lever, Workable, Rippling, Workday, or Oracle board a company uses. It never writes; use
 `update_company` to save the result. The method is described in
 [architecture.md § Board resolution](architecture.md#board-resolution).
 
@@ -286,7 +289,7 @@ A board found through the bundled Greenhouse directory has `"listed in the board
 comes from the table above.
 
 When nothing is found, `ats` and `token` are null, and `evidence` lists the tokens tried and any
-unsupported ATS the pages mention (Workday, Workable, and so on).
+unsupported ATS the pages mention (SmartRecruiters, BambooHR, and so on).
 
 Careers pages are only fetched from public addresses over `http`/`https` on the default port,
 and only where the site's robots.txt allows, redirects included (see

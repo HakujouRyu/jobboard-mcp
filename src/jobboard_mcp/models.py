@@ -17,6 +17,7 @@ class Ats(StrEnum):
     WORKDAY = "workday"
     ORACLE = "oracle"
     WORKABLE = "workable"
+    RIPPLING = "rippling"
 
 
 class Remote(StrEnum):

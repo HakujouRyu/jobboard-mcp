@@ -150,6 +150,17 @@
   interview_note: null
   notes: A Workable board, included as an example of that ATS. Most roles are remote.
 
+- company: Rippling
+  ats: rippling
+  token: rippling
+  careers_url: https://www.rippling.com/careers/open-roles
+  domains: [hr tech]
+  tags: []
+  interview_note: null
+  notes: >-
+    A Rippling board, included as an example of that ATS. Its documented API lists no
+    pay, posting dates, or descriptions.
+
 - company: GitHub
   careers_url: https://github.com/about/careers
   domains: [dev tools]

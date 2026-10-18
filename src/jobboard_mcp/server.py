@@ -39,15 +39,16 @@ from jobboard_mcp.models import (
 from jobboard_mcp.service import JobBoardService
 from jobboard_mcp.watchlist import WatchlistError, seed_watchlist
 
-_ATS_HELP = "greenhouse, ashby, lever, workable, workday, or oracle."
+_ATS_HELP = "greenhouse, ashby, lever, workable, rippling, workday, or oracle."
 _URL_HELP = (
-    "A Greenhouse, Ashby, Lever, Workable, Workday, or Oracle posting URL. Or pass ats, token,"
-    " job_id."
+    "A Greenhouse, Ashby, Lever, Workable, Rippling, Workday, or Oracle posting URL. Or pass"
+    " ats, token, job_id."
 )
 
 INSTRUCTIONS = """\
 Searches public job boards for a watchlist of companies and returns normalized jobs.
-Supported: Greenhouse, Ashby, Lever, Workable, Workday, and Oracle Recruiting Cloud.
+Supported: Greenhouse, Ashby, Lever, Workable, Rippling, Workday, and Oracle Recruiting
+Cloud.
 sweep_boards: filtered sweep of every watched board. Its filters are off unless passed, so
 pass the user's title, remote, pay, and date preferences on every call.
 get_posting: one full posting. find_company_posting: find a role seen elsewhere on the
@@ -61,7 +62,8 @@ Each job's source says where it came from: documented_api, or careers_site / jso
 undocumented and can change without notice.
 Workday and Oracle boards (tokens like homedepot.wd5/careerdepot, ehxr.fa.us2/cx_1) are searched
 for the sweep's title_include terms, so pass them; their sweeps are slower, and per_company notes
-say when one hit a cap.
+say when one hit a cap. Rippling boards list no pay, posting date, or description, so
+their jobs are flagged pay_unknown and date_unknown.
 pay_min / pay_max are annual amounts in pay_currency (USD when the posting offers it), never
 converted; pay_other_currencies lists any other currencies posted, and pay_posted_interval says
 how the pay was posted. Each job's flags list missing data: pay_unknown, date_unknown,
@@ -290,9 +292,10 @@ async def resolve_board(
     ] = None,
     refresh: Annotated[bool, Field(description="Bypass the cache.")] = False,
 ) -> Resolution:
-    """Work out which board a company uses (Greenhouse, Ashby, Lever, Workable, Workday, or
-    Oracle): probes likely tokens and scans the careers page (plus up to two same-site careers
-    links) for board links. Read-only: record a result with update_company."""
+    """Work out which board a company uses (Greenhouse, Ashby, Lever, Workable, Rippling,
+    Workday, or Oracle): probes likely tokens and scans the careers page (plus up to two
+    same-site careers links) for board links. Read-only: record a result with
+    update_company."""
     try:
         return await get_service().resolve_board(company, careers_url, refresh=refresh)
     except (ValueError, WatchlistError) as exc:

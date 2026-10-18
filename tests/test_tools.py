@@ -18,6 +18,7 @@ from jobboard_mcp.adapters.ashby import AshbyAdapter
 from jobboard_mcp.adapters.greenhouse import GreenhouseAdapter
 from jobboard_mcp.adapters.lever import LeverAdapter
 from jobboard_mcp.adapters.oracle import OracleAdapter
+from jobboard_mcp.adapters.rippling import RipplingAdapter
 from jobboard_mcp.adapters.workable import WorkableAdapter
 from jobboard_mcp.adapters.workday import WorkdayAdapter
 from jobboard_mcp.config import Settings
@@ -32,6 +33,7 @@ GH, ASHBY, LEVER = GreenhouseAdapter(), AshbyAdapter(), LeverAdapter()
 WORKDAY = WorkdayAdapter()
 ORACLE = OracleAdapter()
 WORKABLE = WorkableAdapter()
+RIPPLING = RipplingAdapter()
 ORACLE_HOST = "https://ehxr.fa.us2.oraclecloud.com/hcmRestApi/resources/latest"
 ORACLE_SEARCH = f"{ORACLE_HOST}/recruitingCEJobRequisitions"
 ORACLE_DETAIL = f"{ORACLE_HOST}/recruitingCEJobRequisitionDetails"
@@ -56,6 +58,7 @@ BOARDS: list[tuple[str, Ats | None, str | None, str]] = [
     ("Gone Workday Co", Ats.WORKDAY, "gonewd.wd5/external", "workday_404.json"),
     ("City of Atlanta", Ats.ORACLE, "ehxr.fa.us2/cx_1", "oracle_atlanta_search.json"),
     ("Hugging Face", Ats.WORKABLE, "huggingface", "workable_huggingface.json"),
+    ("Rippling", Ats.RIPPLING, "rippling", "rippling_rippling.json"),
     ("Careers Page Co", None, None, ""),
 ]
 
@@ -68,6 +71,7 @@ def _url(ats: Ats, token: str) -> str:
         Ats.WORKDAY: WORKDAY,
         Ats.ORACLE: ORACLE,
         Ats.WORKABLE: WORKABLE,
+        Ats.RIPPLING: RIPPLING,
     }[ats].list_url(token)
 
 
@@ -152,7 +156,8 @@ async def test_sweep_all_boards_offline_under_one_second(
 ) -> None:
     mock_boards(respx_mock)
     started = time.perf_counter()
-    out = await call("sweep_boards", {})
+    # The largest limit, so undated jobs (Rippling lists no dates) aren't cut off.
+    out = await call("sweep_boards", {"limit": 250})
     elapsed = time.perf_counter() - started
     assert elapsed < 1.0, f"sweep took {elapsed:.2f}s"
 
@@ -163,7 +168,7 @@ async def test_sweep_all_boards_offline_under_one_second(
     assert status["Careers Page Co"] == "no_board"
     assert status["Empty Co"] == "ok"
     assert status["Gone Workday Co"] == "not_found"
-    assert sum(s == "ok" for s in status.values()) == 14
+    assert sum(s == "ok" for s in status.values()) == 15
     assert [c["company"] for c in out["per_company"]] == [b[0] for b in BOARDS]
 
     jobs = out["jobs"]
