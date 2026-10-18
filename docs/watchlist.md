@@ -68,7 +68,8 @@ the file by hand.
 ## Finding a board token
 
 For Greenhouse, Ashby, Lever, Workable, and Rippling, the token is the path segment after the ATS
-host. A Workday token is `{tenant}.{wdN}/{site}`, and an Oracle Recruiting Cloud token
+host. A Personio token is the subdomain (`vivid` in `vivid.jobs.personio.de`). A Workday
+token is `{tenant}.{wdN}/{site}`, and an Oracle Recruiting Cloud token
 `{pod}.fa.{region}/{site}`, both from the careers site's address. Case doesn't matter, except
 for Rippling, whose slugs are case-sensitive (they're lowercase in practice):
 
@@ -79,6 +80,7 @@ for Rippling, whose slugs are case-sensitive (they're lowercase in practice):
 | Lever | `jobs.lever.co/outreach` | `outreach` |
 | Workable | `apply.workable.com/huggingface` | `huggingface` |
 | Rippling | `ats.rippling.com/rippling/jobs` | `rippling` |
+| Personio | `vivid.jobs.personio.de` | `vivid` |
 | Workday | `homedepot.wd5.myworkdayjobs.com/CareerDepot` | `homedepot.wd5/careerdepot` |
 | Oracle | `ehxr.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1` | `ehxr.fa.us2/cx_1` |
 

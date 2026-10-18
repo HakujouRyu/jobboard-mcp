@@ -8,6 +8,9 @@ All notable changes are recorded here. The format follows
 
 ### Added
 
+- Personio boards (`ats: personio`, token = the subdomain in `{token}.jobs.personio.de`), from
+  Personio's documented XML feed, which includes descriptions and, where the employer
+  posts it, structured pay (yearly, monthly, or hourly). Personio is used mostly in Europe.
 - Rippling boards (`ats: rippling`, token = the board slug in `ats.rippling.com/{slug}/jobs`),
   from Rippling's documented job board API. The list gives titles, departments, and a
   workplace type for each location, but no pay, posting date, or description, so Rippling

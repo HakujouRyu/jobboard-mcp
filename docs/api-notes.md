@@ -23,6 +23,11 @@ trimmed copies of these responses (whole job objects, fewer of them).
 | `rippling_rippling.json` | `api.rippling.com/platform/api/ats/v2/board/rippling/jobs?pageSize=1000&groupJobsByLocation=true` (12 of 364 jobs; mixed workplace types per job, US-state and city-level remote, non-US remote, hybrid) |
 | `rippling_empty.json` | the `demo` board: 200 with `items: []` |
 | `rippling_404.json` | a board that doesn't exist |
+| `personio_vivid.xml` | `vivid.jobs.personio.de/xml?language=en` (7 of 25 positions; yearly pay, a minimum with no maximum, "Remote" offices, `fixed_term`) |
+| `personio_thermondo.xml` | the same for `thermondo` (5 of 190; German titles, monthly and hourly pay, working students, empty `jobDescriptions`) |
+| `personio_ottonova.xml` | the same for `ottonova` (2 of 9; `full-or-part-time`, a Werkstudent role marked `intern`) |
+| `personio_empty.xml` | the `circula` feed: 200 with no positions |
+| `personio_404.html` | a company that doesn't exist: an HTML error page |
 | `oracle_atlanta_search.json` | `GET ehxr.fa.us2.oraclecloud.com/hcmRestApi/resources/latest/recruitingCEJobRequisitions`, `findReqs;siteNumber=CX_1`, `keyword="engineer"` (4 of 25 rows; facets dropped) |
 | `oracle_atlanta_detail.json` | `GET .../recruitingCEJobRequisitionDetails`, `ById;Id="34378"` (pay in the description) |
 | `oracle_not_found.json` | the same for an id that isn't posted: 200 with `items: []` |
@@ -119,6 +124,33 @@ trimmed copies of these responses (whole job objects, fewer of them).
   site, but the API slug works the same.
 - Empty board (`demo`): 200 with `items: []` and `totalPages: 0`. Unknown board: **404**
   `{"error_code":"RESOURCE_NOT_FOUND","message":"Job Board not found","resource":null}`.
+
+### Personio (verified 2026-10-17)
+
+- Personio documents the feed for listing open positions on the employer's own site
+  (`developer.personio.de/docs/integration-of-open-positions`, and the `GET /xml` reference):
+  `https://{company}.jobs.personio.de/xml?language={de,en,fr,es,nl,it,pt}`. The reference
+  lists an `X-Company-ID` header as required, but the public feed answers without it, and
+  the integration guide doesn't send one. The same feed is on `{company}.jobs.personio.com`.
+  robots.txt on both allows everything.
+- With `language=en`, positions the employer wrote only in German come back in German.
+- The answer is `<workzag-jobs>` with one `<position>` per job: `id`, `subcompany` (the
+  hiring legal entity), `office`, `additionalOffices/office` (not in the reference),
+  `department`, `recruitingCategory`, `name` (the title), `jobDescriptions/jobDescription`
+  (`name` and an HTML `value`, escaped or in CDATA, sometimes empty), `employmentType`,
+  `seniority`, `schedule`, `yearsOfExperience`, `keywords`, `occupation`,
+  `occupationCategory`, and `createdAt` (ISO 8601 with an offset).
+- `salaryInformation` isn't in the reference either, but 58 of 241 positions across nine
+  boards had it: `min`, `max` (sometimes missing), `currencySymbol`, `currencyCode`, and
+  `type` (`yearly`, `monthly`, or `hourly`).
+- `employmentType` takes more values than the reference lists (permanent, intern, trainee,
+  freelance): `working_student`, `fixed_term`, and `temporary` too. `schedule` can be
+  `full-or-part-time`.
+- No workplace field. Remote work shows only as an office named "Remote" or in the title.
+- No job URL in the feed. The integration guide builds it as
+  `https://{company}.jobs.personio.de/job/{id}`.
+- The feed sends an `ETag`. Subdomains have wildcard DNS: an unknown company is a **404**
+  HTML page, and a company with no open positions is 200 with an empty `<workzag-jobs>`.
 
 ### Workday (verified 2026-10-17; tier 2, undocumented)
 

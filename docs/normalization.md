@@ -87,6 +87,9 @@ Details:
   with any remote location is `remote`, and only its remote locations and their countries
   decide the region: on-site in San Francisco or remote in the Philippines is `remote_other`.
   Otherwise any hybrid location makes the job `hybrid`, and all on-site locations `onsite`.
+- Personio has no workplace field, and its offices are free text, so they're read like
+  Greenhouse locations: a city with no remote word is `onsite`, and an office named "Remote"
+  among non-US offices is `remote_other`.
 - Workable's `telecommuting` is a yes/no. Yes is `remote`; no is `unspecified`, because a
   non-telecommuting role can still be hybrid, so it never makes a job on-site by itself.
 - Workday's `remoteType` and Oracle's `WorkplaceType` are free text set by each employer. A label mentioning remote, virtual,
@@ -101,7 +104,7 @@ Details:
 
 ```mermaid
 flowchart TD
-    start(["raw posting"]) --> s{"structured pay?<br/>Ashby: Salary components of compensationTiers<br/>Lever: salaryRange<br/>Greenhouse: pay_input_ranges (detail only)"}
+    start(["raw posting"]) --> s{"structured pay?<br/>Ashby: Salary components of compensationTiers<br/>Lever: salaryRange<br/>Greenhouse: pay_input_ranges (detail only)<br/>Personio: salaryInformation"}
     s -- yes --> ranges["one PayRange per tier:<br/>min, max, currency, interval"]
     s -- no --> text{"a range in the text?<br/>Ashby: comp summaries, then description<br/>Lever: salaryDescriptionPlain, then description<br/>Greenhouse: description"}
     text -- yes --> ranges
@@ -174,6 +177,8 @@ the text, and the job is flagged `pay_unknown`. Structured pay isn't bounded thi
 - Oracle rows give `PostedDate`, and its detail `ExternalPostedStartDate`.
 - Workable gives `published_on`, falling back to `created_at`.
 - Rippling's list gives no date, so its jobs are always `date_unknown`.
+- Personio gives `createdAt`, when the position was created, which can be well before it was
+  published.
 
 ## Employment type
 
@@ -181,6 +186,11 @@ The free-text value is matched loosely, in this order: intern, part-time, contra
 temporary, freelance, fixed-term), then full-time (also permanent, regular). It's `null` when
 the ATS gives nothing and `unknown` when it gives something unrecognizable, such as Lever's
 `commitment: "Remote"`.
+
+Personio gives the contract (`employmentType`: permanent, intern, trainee, working_student,
+fixed_term, temporary, or freelance) apart from the hours (`schedule`). Interns, trainees, and
+working students are `intern`; fixed-term, temporary, and freelance roles are `contract`; and
+a permanent role takes its schedule, with `full-or-part-time` counting as `full_time`.
 
 The title can also mark a contract role. When it does, `contract` replaces a missing, `unknown`,
 or `full_time` value (intern and part-time are kept). It counts when the word is in brackets
@@ -194,7 +204,8 @@ doesn't count.
 HTML is unescaped (Greenhouse escapes it twice), `<script>` and `<style>` are removed, block
 tags and `<br>` become line breaks, `<li>` becomes `- `, the remaining tags are stripped, and
 whitespace is collapsed. Lever descriptions combine `descriptionPlain`, each `lists` section,
-and `additionalPlain`.
+and `additionalPlain`. Personio descriptions join each `jobDescription` section's name and
+text.
 
 ## Links
 

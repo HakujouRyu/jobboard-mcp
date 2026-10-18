@@ -28,7 +28,9 @@ worth a look:
 - **Watchlist writes.** `add_company` and `update_company` edit the watchlist file from client
   input. Anything that writes outside that file, or leaves it invalid, is a bug.
 - **Parsing untrusted data.** Board responses, careers-page HTML, and the watchlist YAML all come
-  from outside the server.
+  from outside the server. Personio's feed is XML: `get_xml` refuses any document with a
+  DOCTYPE, so no entity can be declared or expanded. A Personio token becomes the request's
+  hostname (`{token}.jobs.personio.de`), so the adapter accepts only a single hostname label.
 - **Read-only mode.** With `WATCHLIST_READONLY=true`, no tool should be able to change anything.
 
 Careers-page fetches are restricted to public addresses, checked on every redirect and pinned to

@@ -39,16 +39,16 @@ from jobboard_mcp.models import (
 from jobboard_mcp.service import JobBoardService
 from jobboard_mcp.watchlist import WatchlistError, seed_watchlist
 
-_ATS_HELP = "greenhouse, ashby, lever, workable, rippling, workday, or oracle."
+_ATS_HELP = "greenhouse, ashby, lever, workable, rippling, personio, workday, or oracle."
 _URL_HELP = (
-    "A Greenhouse, Ashby, Lever, Workable, Rippling, Workday, or Oracle posting URL. Or pass"
-    " ats, token, job_id."
+    "A Greenhouse, Ashby, Lever, Workable, Rippling, Personio, Workday, or Oracle posting URL."
+    " Or pass ats, token, job_id."
 )
 
 INSTRUCTIONS = """\
 Searches public job boards for a watchlist of companies and returns normalized jobs.
-Supported: Greenhouse, Ashby, Lever, Workable, Rippling, Workday, and Oracle Recruiting
-Cloud.
+Supported: Greenhouse, Ashby, Lever, Workable, Rippling, Personio, Workday, and Oracle
+Recruiting Cloud.
 sweep_boards: filtered sweep of every watched board. Its filters are off unless passed, so
 pass the user's title, remote, pay, and date preferences on every call.
 get_posting: one full posting. find_company_posting: find a role seen elsewhere on the
@@ -293,7 +293,7 @@ async def resolve_board(
     refresh: Annotated[bool, Field(description="Bypass the cache.")] = False,
 ) -> Resolution:
     """Work out which board a company uses (Greenhouse, Ashby, Lever, Workable, Rippling,
-    Workday, or Oracle): probes likely tokens and scans the careers page (plus up to two
+    Personio, Workday, or Oracle): probes likely tokens and scans the careers page (plus up to two
     same-site careers links) for board links. Read-only: record a result with
     update_company."""
     try:

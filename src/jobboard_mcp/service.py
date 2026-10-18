@@ -70,7 +70,7 @@ def _status(exc: Exception) -> CompanyStatus:
     return CompanyStatus.ERROR
 
 
-_SUPPORTED = "Greenhouse, Ashby, Lever, Workable, Rippling, Workday, or Oracle"
+_SUPPORTED = "Greenhouse, Ashby, Lever, Workable, Rippling, Personio, Workday, or Oracle"
 
 
 async def _same(job: Job) -> Job:

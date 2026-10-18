@@ -496,3 +496,56 @@ async def test_site_json_is_kept_to_public_addresses(monkeypatch: pytest.MonkeyP
     finally:
         await c.aclose()
     assert respx.calls.call_count == 0
+
+
+FEED = "https://acme.jobs.personio.de/xml?language=en"
+BOMB = (
+    b'<?xml version="1.0"?><!DOCTYPE lolz [<!ENTITY lol "lol">'
+    b'<!ENTITY lol2 "&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;">]><lolz>&lol2;</lolz>'
+)
+
+
+@respx.mock
+async def test_get_xml_parses_and_caches(client: HttpClient) -> None:
+    route = respx.get(FEED).mock(
+        return_value=httpx.Response(200, content=b"<jobs><job>a</job></jobs>")
+    )
+    first = await client.get_xml(FEED)
+    second = await client.get_xml(FEED)
+    assert first.data.tag == "jobs" and first.data.findtext("job") == "a"
+    assert second.cache_hit and second.data is first.data
+    assert route.calls.last.request.headers["Accept"].startswith("application/xml")
+
+
+@respx.mock
+async def test_get_xml_revalidates_with_etag(client: HttpClient, clock: FakeClock) -> None:
+    route = respx.get(FEED).mock(
+        side_effect=[
+            httpx.Response(200, content=b"<jobs/>", headers={"ETag": '"v1"'}),
+            httpx.Response(304),
+        ]
+    )
+    first = await client.get_xml(FEED)
+    clock.now += 61
+    second = await client.get_xml(FEED)
+    assert second.cache_hit and second.data is first.data
+    assert route.calls.last.request.headers["If-None-Match"] == '"v1"'
+
+
+@respx.mock
+async def test_get_xml_refuses_a_doctype(client: HttpClient) -> None:
+    # Entities can only be declared in a DTD, so refusing it rules out entity expansion.
+    respx.get(FEED).mock(return_value=httpx.Response(200, content=BOMB))
+    with pytest.raises(FetchError, match="DOCTYPE"):
+        await client.get_xml(FEED)
+
+
+@respx.mock
+async def test_get_xml_rejects_malformed_xml_and_404(client: HttpClient) -> None:
+    respx.get(FEED).mock(return_value=httpx.Response(200, content=b"<jobs><job></jobs>"))
+    with pytest.raises(FetchError, match="not usable XML"):
+        await client.get_xml(FEED)
+    gone = "https://gone.jobs.personio.de/xml?language=en"
+    respx.get(gone).mock(return_value=httpx.Response(404, text="<!DOCTYPE html><p>gone</p>"))
+    with pytest.raises(NotFound):
+        await client.get_xml(gone)

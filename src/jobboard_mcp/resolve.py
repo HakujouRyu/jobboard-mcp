@@ -5,8 +5,8 @@ Three sources of evidence, combined:
 2. Probe the Greenhouse boards listed for the name in the bundled directory (``directory.py``),
    which covers tokens that don't follow from the name.
 3. Fetch the careers page, plus up to two same-site careers/jobs links from it, and look for
-   links or embeds pointing at a Greenhouse, Ashby, Lever, Workable, Rippling, Workday, or
-   Oracle board.
+   links or embeds pointing at a Greenhouse, Ashby, Lever, Workable, Rippling, Personio,
+   Workday, or Oracle board.
 
 Nothing else is scraped: pages are only scanned for board URLs.
 """
@@ -51,11 +51,14 @@ _BOARD_PATTERNS: list[tuple[Ats, re.Pattern[str]]] = [
     (Ats.WORKABLE, re.compile(rf"apply\.workable\.com/(?!api/|j/)({_TOKEN})", re.I)),
     (Ats.RIPPLING, re.compile(rf"api\.rippling\.com/platform/api/ats/v\d/board/({_TOKEN})", re.I)),
     (Ats.RIPPLING, re.compile(rf"ats\.rippling\.com/(?:[a-z]{{2}}-[a-z]{{2}}/)?(?!api/|internal/)({_TOKEN})", re.I)),  # noqa: E501
+    # The token is the subdomain. The lookbehind starts each match at the beginning of a
+    # label run, so a long run of letters is scanned once, not from every position.
+    (Ats.PERSONIO, re.compile(r"(?<![A-Za-z0-9.-])([A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)\.jobs\.personio\.(?:de|com)\b", re.I)),  # noqa: E501
 ]  # fmt: skip
 # Unsupported systems worth naming in the evidence.
 _OTHER_ATS = re.compile(
     r"\b(smartrecruiters\.com|recruitee\.com|bamboohr\.com|"
-    r"jobvite\.com|breezy\.hr|teamtailor\.com|personio\.\w+|pinpointhq\.com|"
+    r"jobvite\.com|breezy\.hr|teamtailor\.com|pinpointhq\.com|"
     r"icims\.com|phenompeople\.com|successfactors\.\w+|taleo\.net|wellfound\.com)",
     re.I,
 )

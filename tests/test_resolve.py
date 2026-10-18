@@ -50,6 +50,9 @@ def not_found_everywhere_else(router: respx.MockRouter) -> None:
     """Registered last: every other probe is an unknown token."""
     for host in (GH, ASHBY, LEVER, WORKABLE, RIPPLING):
         router.get(url__startswith=host).mock(return_value=httpx.Response(404, text="Not Found"))
+    router.get(url__regex=r"https://[a-z0-9-]+\.jobs\.personio\.de/").mock(
+        return_value=httpx.Response(404, text="Not Found")
+    )
 
 
 @pytest.mark.parametrize(

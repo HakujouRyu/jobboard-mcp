@@ -84,6 +84,9 @@ def mock_apis(router: respx.MockRouter) -> None:
         "https://api.rippling.com/",
     ):
         router.get(url__startswith=prefix).mock(return_value=httpx.Response(404, text="Not Found"))
+    router.get(url__regex=r"https://[a-z0-9-]+\.jobs\.personio\.de/").mock(
+        return_value=httpx.Response(404, text="Not Found")
+    )
 
 
 @pytest.fixture

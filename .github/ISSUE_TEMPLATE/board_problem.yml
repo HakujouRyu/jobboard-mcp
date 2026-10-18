@@ -17,7 +17,7 @@ body:
     id: ats
     attributes:
       label: ATS
-      options: [Greenhouse, Ashby, Lever, Workable, Rippling, Workday, Oracle Recruiting Cloud, Not sure]
+      options: [Greenhouse, Ashby, Lever, Workable, Rippling, Personio, Workday, Oracle Recruiting Cloud, Not sure]
     validations:
       required: true
   - type: input

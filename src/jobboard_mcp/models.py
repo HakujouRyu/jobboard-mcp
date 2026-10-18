@@ -18,6 +18,7 @@ class Ats(StrEnum):
     ORACLE = "oracle"
     WORKABLE = "workable"
     RIPPLING = "rippling"
+    PERSONIO = "personio"
 
 
 class Remote(StrEnum):

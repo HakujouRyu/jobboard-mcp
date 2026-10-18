@@ -23,7 +23,7 @@ flowchart LR
         direction LR
         server["server.py<br/>tool schemas, ToolError mapping"]
         service["service.py<br/>JobBoardService"]
-        adapters["adapters/<br/>greenhouse · ashby · lever<br/>workable · rippling<br/>workday · oracle"]
+        adapters["adapters/<br/>greenhouse · ashby · lever<br/>workable · rippling · personio<br/>workday · oracle"]
         resolve["resolve.py<br/>board detection"]
         directory["directory.py<br/>known Greenhouse boards"]
         matching["matching.py<br/>fuzzy titles"]
@@ -39,6 +39,7 @@ flowchart LR
     lev["api.lever.co"]
     wk["www.workable.com"]
     rp["api.rippling.com"]
+    pe["*.jobs.personio.de"]
     wd["*.myworkdayjobs.com, *.oraclecloud.com<br/>(careers-site JSON, tier 2)"]
     careers["company careers pages<br/>(resolve_board only)"]
 
@@ -60,6 +61,7 @@ flowchart LR
     http --> lev
     http --> wk
     http --> rp
+    http --> pe
     http -.-> wd
     http -.-> careers
 ```
@@ -192,7 +194,7 @@ Every outbound request goes through `HttpClient`, including the careers-page fet
 
 ```mermaid
 flowchart TD
-    start(["get_json / get_text /<br/>get_site_json / post_site_json"]) --> fresh{"cached and younger than<br/>CACHE_TTL_SECONDS,<br/>and refresh not set?"}
+    start(["get_json / get_xml / get_text /<br/>get_site_json / post_site_json"]) --> fresh{"cached and younger than<br/>CACHE_TTL_SECONDS,<br/>and refresh not set?"}
     fresh -- yes --> hit(["return cached data<br/>cache_hit = true"])
     fresh -- no --> inflight{"same URL already<br/>being fetched?"}
     inflight -- yes --> join(["await that request"])
@@ -210,9 +212,9 @@ flowchart TD
     kind -- yes --> page{"status >= 400?"}
     page -- yes --> nocache(["return page, not cached"])
     page -- no --> store
-    kind -- "no (JSON)" --> j404{"404 or 410?"}
+    kind -- "no (JSON or XML)" --> j404{"404 or 410?"}
     j404 -- yes --> nf(["raise NotFound"])
-    j404 -- no --> j4xx{"other >= 400,<br/>or invalid JSON?"}
+    j404 -- no --> j4xx{"other >= 400, invalid JSON or XML,<br/>or an XML DOCTYPE?"}
     j4xx -- yes --> fe2(["raise FetchError"])
     j4xx -- no --> store["store in cache<br/>with ETag / Last-Modified"]
     store --> done(["return data<br/>cache_hit = false"])
@@ -238,8 +240,9 @@ client's: the service rejects a `careers_url` passed to `resolve_board`, `add_co
 way, `get_text` sends them through `GuardedTransport` (in `urlguard.py`) to stop the server
 being pointed at internal addresses (SSRF). So do `get_site_json` and `post_site_json`, for the
 JSON an employer's careers site loads for itself (tier 2 in ground rule 1), because those hosts
-come from the watchlist too. `get_json` skips it, because the documented APIs' hosts are fixed
-in the adapters. For every guarded request, redirects included:
+come from the watchlist too. `get_json` and `get_xml` skip it, because the documented APIs'
+hosts are fixed in the adapters. Personio's host is the company's own subdomain of
+`jobs.personio.de`, so its adapter accepts only a single hostname label as the token. For every guarded request, redirects included:
 
 1. The URL must be `http` or `https` on the default port, with no username or password.
 2. The host is resolved, and every address it resolves to must be public. Loopback, private,
@@ -275,11 +278,11 @@ flowchart TD
     in --> page{"careers_url given?<br/>(otherwise the watchlist's)"}
     in --> listed["directory lookup: Greenhouse boards<br/>listed for the name (exact, or one<br/>loose match; max 3)"]
 
-    tokens --> probe["probe every token on Greenhouse, Ashby,<br/>Lever, Workable, and Rippling (up to 30 requests), and each<br/>listed board on Greenhouse. Workday and<br/>Oracle tokens have several parts, so<br/>those boards come only from pages"]
+    tokens --> probe["probe every token on Greenhouse, Ashby,<br/>Lever, Workable, Rippling, and Personio<br/>(up to 36 requests), and each<br/>listed board on Greenhouse. Workday and<br/>Oracle tokens have several parts, so<br/>those boards come only from pages"]
     listed --> probe
     probe --> answered["boards that answered,<br/>with job counts; Greenhouse boards<br/>also report company_name"]
 
-    page -- yes --> scan["fetch the careers page; scan it<br/>for Greenhouse / Ashby / Lever / Workable /<br/>Rippling / Workday / Oracle board URLs"]
+    page -- yes --> scan["fetch the careers page; scan it<br/>for Greenhouse / Ashby / Lever / Workable /<br/>Rippling / Personio / Workday / Oracle board URLs"]
     scan --> refs{"board links found?"}
     refs -- no --> follow["follow up to 2 same-site<br/>careers/jobs links from the first page"] --> scan
     refs -- yes --> verify["probe each linked board<br/>(a link to a deleted board doesn't count)"]
@@ -401,7 +404,7 @@ classDiagram
 `Job.id` is `{ats}:{token}:{native_id}`, and `pay_min` / `pay_max` are annual amounts in
 `pay_currency`, never converted.
 
-Enums: `Ats` (greenhouse, ashby, lever, workday, oracle, workable, rippling), `Remote` (remote_us, remote_global, remote_other,
+Enums: `Ats` (greenhouse, ashby, lever, workday, oracle, workable, rippling, personio), `Remote` (remote_us, remote_global, remote_other,
 hybrid, onsite, unknown), `EmploymentType`, `PaySource` (structured, parsed_from_text, none),
 `Source` (documented_api, careers_site, json_ld: the tiers in ground rule 1),
 `CompanyStatus` (ok, not_found, no_board, error, timeout), `Confidence` (high, medium, low),

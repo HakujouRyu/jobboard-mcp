@@ -180,7 +180,7 @@ Oracle adapters are the examples of tier 2 adapters: they search, page, and cap 
 calls.
 
 Use the highest tier in ground rule 1 that the ATS offers. A tier 1 adapter fetches with
-`get_json`; a tier 2 adapter, whose host comes from the watchlist, with `get_site_json` or
+`get_json` (or `get_xml`, for an XML feed like Personio's); a tier 2 adapter, whose host comes from the watchlist, with `get_site_json` or
 `post_site_json`.
 
 1. **Check the live API first.** Fetch two or three real boards, including an empty one and an

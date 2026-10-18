@@ -3,7 +3,8 @@
 Careers pages (``get_text``) and careers-site JSON (``get_site_json``, ``post_site_json``) come
 from hosts named in data, so they go through ``urlguard.GuardedTransport``, which keeps them on
 the public internet, and only where the site's robots.txt allows. They're also paced per host.
-``get_json`` is for the documented job board APIs, whose hosts are fixed in the adapters.
+``get_json`` and ``get_xml`` are for the documented job board APIs, whose hosts are fixed in the
+adapters (Personio's is one subdomain of its own domain).
 """
 
 from __future__ import annotations
@@ -15,6 +16,7 @@ import json
 import logging
 import math
 import time
+import xml.etree.ElementTree as ET
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from typing import Any
@@ -99,6 +101,19 @@ def _retry_after(response: httpx.Response, attempt: int) -> float:
     return min(0.5 * 2**attempt, MAX_BACKOFF_SECONDS)
 
 
+class _NoDoctype(ET.TreeBuilder):
+    """Stops the parse at a DOCTYPE, before any entity in it is declared (billion laughs)."""
+
+    def doctype(self, name: str, pubid: str | None, system: str | None) -> None:
+        raise ValueError("documents with a DOCTYPE are refused")
+
+
+def _parse_xml(content: bytes) -> ET.Element:
+    parser = ET.XMLParser(target=_NoDoctype())
+    parser.feed(content)
+    return parser.close()
+
+
 class HttpClient:
     # Tests turn these off so careers-page routes don't each need a robots.txt, and pages
     # aren't spaced out in real time; see conftest.py.
@@ -159,6 +174,12 @@ class HttpClient:
         """GET a JSON document. Fresh cache entries are served without a request; stale ones
         are revalidated with If-None-Match / If-Modified-Since. ``refresh`` skips the TTL."""
         return await self._get(url, "json", refresh)
+
+    async def get_xml(self, url: str, *, refresh: bool = False) -> Fetched:
+        """GET an XML feed from a documented job board API, as ``get_json``. ``data`` is the
+        parsed root ``Element`` (shared through the cache, so don't change it). Documents with
+        a DOCTYPE are refused, so no entity can be declared or expanded."""
+        return await self._get(url, "xml", refresh)
 
     async def get_text(self, url: str, *, refresh: bool = False) -> Fetched:
         """GET a web page. ``data`` is a TextPage; 4xx pages are returned (not raised) because
@@ -261,6 +282,8 @@ class HttpClient:
         headers: dict[str, str] = {}
         if kind == "text":
             headers["Accept"] = "text/html,application/xhtml+xml;q=0.9,*/*;q=0.5"
+        elif kind == "xml":
+            headers["Accept"] = "application/xml,text/xml;q=0.9"
         method = "GET" if body is None else "POST"
         if entry is not None and method == "GET":
             if entry.etag:
@@ -269,7 +292,7 @@ class HttpClient:
                 headers["If-Modified-Since"] = entry.last_modified
 
         # Hosts that come from data (pages and careers-site JSON) are guarded and paced.
-        guarded = kind != "json"
+        guarded = kind not in ("json", "xml")
         client = self._pages if guarded else self._client
         attempt = 0
         while True:
@@ -321,10 +344,18 @@ class HttpClient:
                     raise NotFound(url, f"HTTP {status}", status)
                 if status >= 400:
                     raise FetchError(url, f"HTTP {status}", status)
-                try:
-                    data = response.json()
-                except ValueError as exc:
-                    raise FetchError(url, "response was not valid JSON", status) from exc
+                if kind == "xml":
+                    try:
+                        data = _parse_xml(response.content)
+                    except (ET.ParseError, ValueError) as exc:
+                        raise FetchError(
+                            url, f"response was not usable XML: {exc}", status
+                        ) from exc
+                else:
+                    try:
+                        data = response.json()
+                    except ValueError as exc:
+                        raise FetchError(url, "response was not valid JSON", status) from exc
             self._cache[key] = _Entry(
                 data=data,
                 etag=response.headers.get("ETag"),

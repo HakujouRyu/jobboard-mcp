@@ -161,6 +161,17 @@
     A Rippling board, included as an example of that ATS. Its documented API lists no
     pay, posting dates, or descriptions.
 
+- company: Vivid
+  ats: personio
+  token: vivid
+  careers_url: https://vivid.jobs.personio.de/
+  domains: [fintech]
+  tags: []
+  interview_note: null
+  notes: >-
+    A Personio board, included as an example of that ATS. Personio is mostly used in
+    Europe, and most of its roles are there.
+
 - company: GitHub
   careers_url: https://github.com/about/careers
   domains: [dev tools]

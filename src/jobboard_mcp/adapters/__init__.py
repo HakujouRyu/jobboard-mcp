@@ -5,6 +5,7 @@ from jobboard_mcp.adapters.base import Adapter, BoardListing, PostingRef
 from jobboard_mcp.adapters.greenhouse import GreenhouseAdapter
 from jobboard_mcp.adapters.lever import LeverAdapter
 from jobboard_mcp.adapters.oracle import OracleAdapter
+from jobboard_mcp.adapters.personio import PersonioAdapter
 from jobboard_mcp.adapters.rippling import RipplingAdapter
 from jobboard_mcp.adapters.workable import WorkableAdapter
 from jobboard_mcp.adapters.workday import WorkdayAdapter
@@ -18,6 +19,7 @@ ADAPTERS: dict[Ats, Adapter] = {
     Ats.ORACLE: OracleAdapter(),
     Ats.WORKABLE: WorkableAdapter(),
     Ats.RIPPLING: RipplingAdapter(),
+    Ats.PERSONIO: PersonioAdapter(),
 }
 
 
