@@ -7,10 +7,10 @@ import httpx
 import pytest
 import respx
 
-from jobboard_mcp.adapters.workday import MAX_PER_SEARCH, PAGE_SIZE, WorkdayAdapter, workplace
+from jobboard_mcp.adapters.workday import MAX_PER_SEARCH, PAGE_SIZE, WorkdayAdapter
 from jobboard_mcp.http import FetchError, HttpClient, NotFound
 from jobboard_mcp.models import Ats, EmploymentType, PaySource, Remote, Source
-from jobboard_mcp.normalize import parse_relative_posted
+from jobboard_mcp.normalize import parse_relative_posted, workplace_from_label
 
 from .conftest import fixture_json
 
@@ -59,11 +59,13 @@ def test_bad_tokens_are_refused(token: str) -> None:
         ("On-site", "onsite"),
         ("Multi-site", "unspecified"),
         ("Location Independent-Commutable", "unspecified"),
+        ("ORA_ON_SITE", "onsite"),
+        ("ORA_REMOTE", "remote"),
         (None, "unspecified"),
     ],
 )
 def test_workplace_labels(label: str | None, expected: str) -> None:
-    assert workplace(label) == expected
+    assert workplace_from_label(label) == expected
 
 
 @pytest.mark.parametrize(

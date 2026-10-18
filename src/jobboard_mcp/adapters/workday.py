@@ -37,6 +37,7 @@ from jobboard_mcp.normalize import (
     parse_date,
     parse_pay_text,
     parse_relative_posted,
+    workplace_from_label,
 )
 
 PAGE_SIZE = 20  # the most Workday serves per request
@@ -58,22 +59,6 @@ _DETAIL_FIELDS = frozenset(Job.model_fields) - {
     "company",
     "unverified_filters",
 }
-
-
-def workplace(remote_type: str | None) -> str:
-    """Map a tenant's remoteType label onto classify_remote's values. Labels are free text
-    ("Remote/Virtual", "Onsite", "Location Independent-Commutable"), so anything that isn't
-    clearly remote, hybrid, or on-site is "unspecified". So is a missing field: tenants that
-    don't use it can't be told apart from jobs that left it blank, so a city alone never
-    makes a job on-site."""
-    label = (remote_type or "").lower()
-    if "hybrid" in label:
-        return "hybrid"
-    if re.search(r"remote|virtual|telecommut|work from home", label):
-        return "remote"
-    if re.search(r"on[\s-]?site|in[\s-]office", label):
-        return "onsite"
-    return "unspecified"
 
 
 class WorkdayAdapter:
@@ -163,7 +148,10 @@ class WorkdayAdapter:
             title=title,
             locations=locations,
             remote=classify_remote(
-                locations, workplace(info.get("remoteType")), [country] if country else [], title
+                locations,
+                workplace_from_label(info.get("remoteType")),
+                [country] if country else [],
+                title,
             ),
             employment_type=employment_type(info.get("timeType"), title),
             posted_at=parse_date(started),

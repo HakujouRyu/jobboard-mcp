@@ -271,6 +271,23 @@ def classify_remote(
     return Remote.UNKNOWN
 
 
+def workplace_from_label(label: str | None) -> str:
+    """Map an employer-defined workplace label (Workday's remoteType, Oracle's WorkplaceType)
+    onto classify_remote's values. The labels are free text ("Remote/Virtual", "Onsite",
+    "ORA_ON_SITE", "Location Independent-Commutable"), so anything that isn't clearly remote,
+    hybrid, or on-site is "unspecified". So is a missing label: employers that don't use the
+    field can't be told apart from jobs that left it blank, so a city alone never makes the
+    job on-site."""
+    text = (label or "").lower()
+    if "hybrid" in text:
+        return "hybrid"
+    if re.search(r"remote|virtual|telecommut|work from home", text):
+        return "remote"
+    if re.search(r"on[\s_-]?site|in[\s_-]office", text):
+        return "onsite"
+    return "unspecified"
+
+
 # --------------------------------------------------------------------------- pay
 
 _SYMBOL_CURRENCY = {"$": "USD", "£": "GBP", "€": "EUR", "₹": "INR"}
