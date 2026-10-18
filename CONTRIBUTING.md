@@ -120,6 +120,7 @@ These are what make the server trustworthy, and review checks for them.
 | Filtering, sorting | `filters.py` |
 | Request behavior: cache, retries, limits | `http.py` |
 | Which addresses careers-page fetches may reach | `urlguard.py` |
+| The bundled Greenhouse board list | Rebuild `boards_greenhouse.tsv` with `scripts/build_board_directory.py`; don't edit it by hand. Update the commit in THIRD_PARTY_NOTICES.md. |
 | New settings | `config.py`, plus the table in the README |
 | New result fields | `models.py`, with a `Field(description=...)` if the name isn't self-explanatory |
 

@@ -1,8 +1,10 @@
 """Find which ATS board a company uses (SPEC §5.4). Read-only: never edits the watchlist.
 
-Two sources of evidence, combined:
+Three sources of evidence, combined:
 1. Probe likely tokens (from the name and the careers-page domain) against each list endpoint.
-2. Fetch the careers page, plus up to two same-site careers/jobs links from it, and look for
+2. Probe the Greenhouse boards listed for the name in the bundled directory (``directory.py``),
+   which covers tokens that don't follow from the name.
+3. Fetch the careers page, plus up to two same-site careers/jobs links from it, and look for
    links or embeds pointing at a Greenhouse, Ashby, or Lever board.
 
 Nothing else is scraped: pages are only scanned for board URLs.
@@ -19,6 +21,7 @@ from urllib.parse import urljoin, urlsplit
 from rapidfuzz import fuzz
 
 from jobboard_mcp.adapters import ADAPTERS
+from jobboard_mcp.directory import directory
 from jobboard_mcp.http import Blocked, FetchError, HttpClient, TextPage
 from jobboard_mcp.models import Ats, BoardCandidate, Confidence, Resolution
 from jobboard_mcp.normalize import normalize_text
@@ -200,8 +203,12 @@ async def resolve_board(
     if not company and not careers_url:
         raise ValueError("pass company and/or careers_url")
     tokens = token_candidates(company, careers_url)
+    board_dir = directory()
+    listed = board_dir.lookup(company) if company else []
+    listed_tokens = [t for t in dict.fromkeys(x.token.lower() for x in listed) if t not in tokens]
     probe_task = asyncio.gather(
-        *(_probe(http, company, ats, t, refresh) for t in tokens for ats in Ats)
+        *(_probe(http, company, ats, t, refresh) for t in tokens for ats in Ats),
+        *(_probe(http, company, Ats.GREENHOUSE, t, refresh) for t in listed_tokens),
     )
     if careers_url:
         probes, (refs, others, checked) = await asyncio.gather(
@@ -215,6 +222,13 @@ async def resolve_board(
         if p is not None:
             p.evidence.insert(0, f"token {p.token!r} answered on {p.ats.value} ({p.jobs} jobs)")
             found[(p.ats, p.token)] = p
+    for listing in listed:
+        f = found.get((Ats.GREENHOUSE, listing.token.lower()))
+        if f is not None:
+            f.evidence.append(
+                f"listed in the board directory as {listing.company!r}"
+                f" (confirmed {board_dir.checked})"
+            )
     for ats, token, page_url in refs:
         f = found.get((ats, token))
         if f is None:
@@ -230,7 +244,7 @@ async def resolve_board(
 
     ranked = sorted(found.values(), key=lambda f: f.rank)
     if not ranked:
-        evidence = [f"no board answered for tokens {tokens}"]
+        evidence = [f"no board answered for tokens {tokens + listed_tokens}"]
         if others:
             evidence.append(f"careers pages reference unsupported systems: {', '.join(others)}")
         return Resolution(evidence=evidence, pages_checked=checked)

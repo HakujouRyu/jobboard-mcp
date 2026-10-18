@@ -25,6 +25,7 @@ flowchart LR
         service["service.py<br/>JobBoardService"]
         adapters["adapters/<br/>greenhouse · ashby · lever"]
         resolve["resolve.py<br/>board detection"]
+        directory["directory.py<br/>known Greenhouse boards"]
         matching["matching.py<br/>fuzzy titles"]
         filters["filters.py<br/>filters, sort"]
         normalize["normalize.py<br/>remote, pay, dates, HTML"]
@@ -47,6 +48,7 @@ flowchart LR
     service --> store
     adapters --> normalize
     resolve --> adapters
+    resolve --> directory
     adapters --> http
     resolve --> http
     store <--> yaml
@@ -64,7 +66,8 @@ flowchart LR
 | [normalize.py](../src/jobboard_mcp/normalize.py) | Pure functions: HTML to text, date parsing, remote classification, pay parsing, employment type, fingerprints. |
 | [filters.py](../src/jobboard_mcp/filters.py) | Pure functions: title terms, the two filter stages, sorting. |
 | [matching.py](../src/jobboard_mcp/matching.py) | Pure functions: title normalization and rapidfuzz scoring for `find_company_posting`, and loose company-name lookup. |
-| [resolve.py](../src/jobboard_mcp/resolve.py) | Works out which board a company uses, from token probes and careers-page links. |
+| [resolve.py](../src/jobboard_mcp/resolve.py) | Works out which board a company uses, from token probes, the board directory, and careers-page links. |
+| [directory.py](../src/jobboard_mcp/directory.py) | Looks a company up in `boards_greenhouse.tsv`, the bundled list of 4,168 Greenhouse boards by company name (from ats-jobs-mcp; see [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md)). Rebuilt by `scripts/build_board_directory.py`. |
 | [watchlist.py](../src/jobboard_mcp/watchlist.py) | Loads and validates the YAML, and makes comment-preserving, atomic edits. |
 | [http.py](../src/jobboard_mcp/http.py) | `HttpClient`: cache, conditional requests, retries, request sharing, and concurrency caps for every outbound request. |
 | [urlguard.py](../src/jobboard_mcp/urlguard.py) | Keeps careers-page fetches on the public internet: checks every request and redirect, and pins the connection to the checked address. |
@@ -91,6 +94,8 @@ flowchart TB
     adapters --> normalize["normalize.py"]
     matching --> normalize
     resolve --> normalize
+    resolve --> directory["directory.py"]
+    directory --> matching
     normalize --> models["models.py"]
     filters --> models
     matching --> models
@@ -249,15 +254,17 @@ ignores proxy environment variables (a proxy would do its own DNS lookup and ski
 
 ## Board resolution
 
-`resolve_board` (and `find_company_posting`, for companies with no known board) combines two
-kinds of evidence. Both run at the same time.
+`resolve_board` (and `find_company_posting`, for companies with no known board) combines three
+kinds of evidence. All run at the same time.
 
 ```mermaid
 flowchart TD
     in(["company and/or careers_url"]) --> tokens["token_candidates():<br/>slugified name, with and without<br/>suffixes like Inc / Labs / Technologies,<br/>plus the careers site's domain (max 6)"]
     in --> page{"careers_url given?<br/>(otherwise the watchlist's)"}
+    in --> listed["directory lookup: Greenhouse boards<br/>listed for the name (exact, or one<br/>loose match; max 3)"]
 
-    tokens --> probe["probe every token on every ATS<br/>list endpoint (up to 18 requests)"]
+    tokens --> probe["probe every token on every ATS<br/>list endpoint (up to 18 requests),<br/>and each listed board on Greenhouse"]
+    listed --> probe
     probe --> answered["boards that answered,<br/>with job counts; Greenhouse boards<br/>also report company_name"]
 
     page -- yes --> scan["fetch the careers page; scan it<br/>for Greenhouse / Ashby / Lever board URLs"]
@@ -275,6 +282,12 @@ flowchart TD
 Pages are only searched for board URLs. Nothing else is read from them. If a page links to an
 ATS this server doesn't support (Workday, Workable, SmartRecruiters, and others), the evidence
 names it, which explains why no board was found.
+
+The directory matters for Greenhouse boards whose token doesn't follow from the name
+(Addepar's is `addepar1`); about 900 of its 4,168 boards are like that. A listed board is
+probed live like any guessed token, and the listing is added to its evidence without raising
+its confidence. Ashby boards aren't included: the source lists them without names, so they add
+nothing to the token guesses.
 
 `resolve_board` never writes. Use `update_company` to save what it finds.
 

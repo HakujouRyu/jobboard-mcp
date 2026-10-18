@@ -48,6 +48,8 @@ The full list is under "Ground rules" in CONTRIBUTING.md. The ones agents break 
   `~/.config/jobboard-mcp/watchlist.yaml`, or an old `data/watchlist.yaml`). Change
   `src/jobboard_mcp/watchlist.example.yaml` only when asked, and keep one board per ATS in it,
   because the live tests use it.
+- **Don't hand-edit `src/jobboard_mcp/boards_greenhouse.tsv`.** It's generated third-party
+  data; rebuild it with `scripts/build_board_directory.py`.
 - **Don't edit field values in `tests/fixtures/`.** They're real, trimmed API responses. To
   cover a new case, record a new fixture (see "Recording a fixture" in CONTRIBUTING.md).
 - **Don't add dependencies** without saying why. Use `uv add`, never pip.

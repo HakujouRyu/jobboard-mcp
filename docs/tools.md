@@ -273,6 +273,10 @@ alone would have missed it.
 | `medium` | A guessed token answered with a non-empty board |
 | `low` | A guessed token exists but the board is empty |
 
+A board found through the bundled Greenhouse directory has `"listed in the board directory as
+'Addepar' (confirmed 2026-08-24)"` in its evidence. It's still probed live, and its confidence
+comes from the table above.
+
 When nothing is found, `ats` and `token` are null, and `evidence` lists the tokens tried and any
 unsupported ATS the pages mention (Workday, Workable, and so on).
 

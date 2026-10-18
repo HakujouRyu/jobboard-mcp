@@ -38,7 +38,8 @@ flowchart LR
   the ATS provides.
 - **Checks whether a posting is still open.**
 - **Finds a role seen elsewhere**, such as on LinkedIn or Indeed, on the company's own board.
-- **Works out which board a company uses**, from its name and careers page.
+- **Works out which board a company uses**, from its name, its careers page, and a bundled
+  list of 4,168 known Greenhouse boards.
 - **Manages the watchlist.** It adds, updates, and archives companies. A new board is checked
   with a live fetch before it's saved, and the file's comments and formatting are kept.
 
@@ -242,4 +243,5 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Everyone taking part is expected to foll
 
 ## License
 
-MIT
+MIT. The bundled Greenhouse board list comes from ats-jobs-mcp, also MIT; see
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

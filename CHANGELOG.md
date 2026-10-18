@@ -8,6 +8,9 @@ All notable changes are recorded here. The format follows
 
 ### Added
 
+- `resolve_board` checks a bundled list of 4,168 Greenhouse boards by company name (from
+  ats-jobs-mcp, MIT), so it finds boards whose token doesn't follow from the name, such as
+  Addepar's `addepar1`. Listed boards are still confirmed live.
 - Every job has a `source`: `documented_api` for the Greenhouse, Ashby, and Lever APIs. Later
   sources read from a careers site's own JSON or its schema.org data will say `careers_site` or
   `json_ld`.
