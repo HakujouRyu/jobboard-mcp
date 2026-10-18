@@ -64,9 +64,9 @@ async def test_greenhouse_pay_parsed_from_list_content(http: HttpClient) -> None
     for j in paid:
         assert j.pay_currency == "USD" and j.pay_min and j.pay_max and j.pay_min <= j.pay_max
         assert j.pay_raw and "$" in j.pay_raw
-        assert not GH.needs_detail_for_pay(j)
+        assert not GH.needs_detail(j)
     unpaid = next(j for j in jobs if j.pay_source is PaySource.NONE)
-    assert GH.needs_detail_for_pay(unpaid)
+    assert GH.needs_detail(unpaid)
 
 
 @respx.mock

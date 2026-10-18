@@ -3,11 +3,15 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Sequence
+from datetime import date
 from typing import Any
 from urllib.parse import urlsplit
 
 from jobboard_mcp.adapters.base import (
+    PAY_FIELDS,
     BoardListing,
+    BoardProbe,
     ListingMemo,
     LiveCheck,
     PostingRef,
@@ -67,6 +71,9 @@ def _pay(raw: dict[str, Any]) -> Pay:
 class AshbyAdapter:
     ats = Ats.ASHBY
     source = Source.DOCUMENTED_API
+    guess_tokens = True
+    detail_fields = PAY_FIELDS
+    max_details: int | None = None
 
     def __init__(self) -> None:
         self._memo = ListingMemo()
@@ -106,7 +113,14 @@ class AshbyAdapter:
         return job
 
     async def list_jobs(
-        self, http: HttpClient, company: str, token: str, *, refresh: bool = False
+        self,
+        http: HttpClient,
+        company: str,
+        token: str,
+        *,
+        refresh: bool = False,
+        search: Sequence[str] = (),
+        today: date | None = None,
     ) -> BoardListing:
         url = self.list_url(token)
         fetched = await http.get_json(url, refresh=refresh)
@@ -144,7 +158,12 @@ class AshbyAdapter:
             return LiveCheck(True, "job is listed on the ashby board", listing.cache_hit)
         return LiveCheck(False, "job is no longer listed on the ashby board", listing.cache_hit)
 
-    def needs_detail_for_pay(self, job: Job) -> bool:
+    async def probe(self, http: HttpClient, token: str, *, refresh: bool = False) -> BoardProbe:
+        data = (await http.get_json(self.list_url(token), refresh=refresh)).data
+        jobs = data.get("jobs") if isinstance(data, dict) else None
+        return BoardProbe(len(jobs) if isinstance(jobs, list) else 0, set())
+
+    def needs_detail(self, job: Job) -> bool:
         return False
 
     def parse_url(self, url: str) -> PostingRef | None:

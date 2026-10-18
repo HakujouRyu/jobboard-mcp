@@ -110,9 +110,13 @@ Green modules are pure: no network, no files, no clock. (`filters` gets "today" 
 ## A sweep, step by step
 
 `sweep_boards` works in two phases. Phase 1 fetches every board in parallel and runs the cheap
-filters. Phase 2 makes extra requests only for the jobs that survive, and only where they can
-add something: today, that means Greenhouse jobs whose list entry had no pay, because Greenhouse
-publishes pay-transparency ranges only on the detail endpoint.
+filters. Phase 2 makes a detail request only for the jobs that survive, and only where the
+adapter says it can add something (`needs_detail`): today, that means Greenhouse jobs whose list
+entry had no pay, because Greenhouse publishes pay-transparency ranges only on the detail
+endpoint. The detail fills in the adapter's `detail_fields`, and the filters then run again,
+because a detail can settle a remote status, date, or pay that the list left unknown. An adapter
+can cap detail calls per board (`max_details`); jobs past the cap keep their list data and the
+board's `note` says so.
 
 ```mermaid
 sequenceDiagram
@@ -132,7 +136,7 @@ sequenceDiagram
     W-->>Svc: WatchlistEntry[]
 
     par every entry with a board
-        Svc->>A: list_jobs(token)
+        Svc->>A: list_jobs(token, search=title_include, today)
         A->>H: get_json(list_url)
         alt fresh in cache
             H-->>A: cached data
@@ -147,15 +151,15 @@ sequenceDiagram
 
     Svc->>Svc: prefilter(): ids, title, remote, date
 
-    par survivors that need a detail call for pay
+    par survivors that need_detail (up to max_details per board)
         Svc->>A: get_job(job_id)
         A->>H: get_json(detail_url?pay_transparency=true)
         H->>API: GET
         API-->>H: JSON
-        A-->>Svc: Job with pay fields
+        A-->>Svc: Job with detail_fields filled in
     end
 
-    Svc->>Svc: passes_pay(), dedupe by id, sort_jobs(), keep the first limit jobs
+    Svc->>Svc: prefilter() again, passes_pay(), dedupe by id, sort_jobs(), keep the first limit jobs
     Svc-->>S: SweepResult
     S-->>C: jobs[], matched, truncated, per_company[], cache_hits, flag_counts, unverified_counts, term_hits
 ```
@@ -165,7 +169,9 @@ Notes:
 - Each board fetch is wrapped so that **one company's failure never fails the sweep**. Its
   error becomes a `per_company` status (`not_found`, `timeout`, `error`). Entries with no board
   get `no_board` without any request.
-- If a pay detail fetch fails, the job is kept with its pay unknown. It isn't dropped.
+- If a detail fetch fails, the job is kept with what its listing had. It isn't dropped.
+- `list_jobs` gets the sweep's `title_include` terms and today's date as hints. Adapters for
+  boards too large to list in full can search for the terms instead; the others ignore both.
 - `per_company` follows watchlist order (or the order of the `companies` argument), so output
   stays the same from run to run.
 - Descriptions are parsed during the sweep, because pay is often only in the text. They are
@@ -343,6 +349,7 @@ classDiagram
         total, matched: int
         status: CompanyStatus
         error: str?
+        note: str?
     }
     class FindResult {
         company, title

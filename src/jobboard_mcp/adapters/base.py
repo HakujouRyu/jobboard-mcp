@@ -2,19 +2,32 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass
+from datetime import date
 from typing import Any, Protocol
 
 from jobboard_mcp.http import HttpClient
 from jobboard_mcp.models import Ats, Job, Source
 from jobboard_mcp.normalize import fingerprint, https_url
 
+# The fields a Greenhouse detail call adds to a listed job.
+PAY_FIELDS = frozenset(
+    {"pay_min", "pay_max", "pay_currency", "pay_posted_interval", "pay_raw", "pay_source"}
+)
+
 
 @dataclass(frozen=True)
 class BoardListing:
     jobs: list[Job]
     cache_hit: bool
+    note: str | None = None  # anything the caller should know, e.g. a search that hit a cap
+
+
+@dataclass(frozen=True)
+class BoardProbe:
+    jobs: int
+    names: set[str]  # company names the board reports about itself (Greenhouse only)
 
 
 @dataclass(frozen=True)
@@ -34,15 +47,32 @@ class PostingRef:
 class Adapter(Protocol):
     ats: Ats
     source: Source  # every job it builds carries this; pass it to build_job when not tier 1
+    guess_tokens: bool  # resolve_board probes guessed tokens here (False when probing is costly)
+    detail_fields: frozenset[str]  # Job fields that get_job fills in for a swept job
+    max_details: int | None  # most detail calls per board in one sweep; None for no cap
 
     def list_url(self, token: str) -> str:
         """The board's public list endpoint."""
         ...
 
     async def list_jobs(
-        self, http: HttpClient, company: str, token: str, *, refresh: bool = False
+        self,
+        http: HttpClient,
+        company: str,
+        token: str,
+        *,
+        refresh: bool = False,
+        search: Sequence[str] = (),
+        today: date | None = None,
     ) -> BoardListing:
-        """Every listed job on the board, normalized, with ``description_text`` filled in."""
+        """The board's listed jobs, normalized. ``search`` holds the sweep's title terms: an
+        ATS that can't list a large board in full searches for them instead (the caller still
+        filters). ``today`` lets an ATS that shows relative dates ("Posted 3 Days Ago") turn
+        them into dates. Both are hints that other adapters ignore."""
+        ...
+
+    async def probe(self, http: HttpClient, token: str, *, refresh: bool = False) -> BoardProbe:
+        """Cheaply check that a board exists. Raises FetchError if it doesn't answer."""
         ...
 
     async def get_job(
@@ -57,8 +87,8 @@ class Adapter(Protocol):
         """Whether the posting is still up, from the ATS API (never a page fetch)."""
         ...
 
-    def needs_detail_for_pay(self, job: Job) -> bool:
-        """True when ``get_job`` can find pay that the list endpoint lacks."""
+    def needs_detail(self, job: Job) -> bool:
+        """True when ``get_job`` can fill in ``detail_fields`` that the listing lacks."""
         ...
 
     def parse_url(self, url: str) -> PostingRef | None:

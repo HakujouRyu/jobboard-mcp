@@ -3,11 +3,15 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Sequence
+from datetime import date
 from typing import Any
 from urllib.parse import parse_qs, urlsplit
 
 from jobboard_mcp.adapters.base import (
+    PAY_FIELDS,
     BoardListing,
+    BoardProbe,
     ListingMemo,
     LiveCheck,
     PostingRef,
@@ -50,6 +54,9 @@ def _structured_pay(ranges: list[dict[str, Any]]) -> Pay:
 class GreenhouseAdapter:
     ats = Ats.GREENHOUSE
     source = Source.DOCUMENTED_API
+    guess_tokens = True
+    detail_fields = PAY_FIELDS
+    max_details: int | None = None
 
     def __init__(self) -> None:
         self._memo = ListingMemo()
@@ -99,7 +106,14 @@ class GreenhouseAdapter:
         return job
 
     async def list_jobs(
-        self, http: HttpClient, company: str, token: str, *, refresh: bool = False
+        self,
+        http: HttpClient,
+        company: str,
+        token: str,
+        *,
+        refresh: bool = False,
+        search: Sequence[str] = (),
+        today: date | None = None,
     ) -> BoardListing:
         url = self.list_url(token)
         fetched = await http.get_json(url, refresh=refresh)
@@ -130,7 +144,13 @@ class GreenhouseAdapter:
             True, f"{self.ats.value} job endpoint returned the posting", fetched.cache_hit
         )
 
-    def needs_detail_for_pay(self, job: Job) -> bool:
+    async def probe(self, http: HttpClient, token: str, *, refresh: bool = False) -> BoardProbe:
+        data = (await http.get_json(self.list_url(token), refresh=refresh)).data
+        jobs = data.get("jobs") if isinstance(data, dict) else None
+        jobs = jobs if isinstance(jobs, list) else []
+        return BoardProbe(len(jobs), {j.get("company_name", "") for j in jobs[:20]} - {""})
+
+    def needs_detail(self, job: Job) -> bool:
         return job.pay_source is PaySource.NONE
 
     def parse_url(self, url: str) -> PostingRef | None:

@@ -196,6 +196,13 @@ class CompanyResult(BaseModel):
     matched: int = 0
     status: CompanyStatus
     error: str | None = None
+    note: str | None = Field(
+        default=None,
+        description=(
+            "Something to know about this board's results, such as a search that stopped at a"
+            " cap or jobs whose details weren't fetched"
+        ),
+    )
 
 
 class SweepResult(BaseModel):

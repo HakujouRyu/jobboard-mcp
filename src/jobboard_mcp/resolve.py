@@ -15,7 +15,6 @@ from __future__ import annotations
 import asyncio
 import re
 from dataclasses import dataclass, field
-from typing import Any
 from urllib.parse import urljoin, urlsplit
 
 from rapidfuzz import fuzz
@@ -27,6 +26,8 @@ from jobboard_mcp.models import Ats, BoardCandidate, Confidence, Resolution
 from jobboard_mcp.normalize import normalize_text
 
 MAX_TOKENS = 6
+# Systems whose boards are probed with guessed tokens; the rest are found from careers pages.
+_GUESSABLE = [ats for ats in Ats if ADAPTERS[ats].guess_tokens]
 MAX_EXTRA_PAGES = 2
 
 # Words dropped from a company name to get its core ("Flower Labs" -> "flower").
@@ -109,18 +110,6 @@ def career_links(page: TextPage, limit: int = MAX_EXTRA_PAGES) -> list[str]:
     return sorted(seen, key=lambda u: seen[u])[:limit]
 
 
-def _job_count(ats: Ats, data: Any) -> int:
-    jobs = data if isinstance(data, list) else (data or {}).get("jobs", [])
-    return len(jobs) if isinstance(jobs, list) else 0
-
-
-def _board_names(ats: Ats, data: Any) -> set[str]:
-    """Company names a board reports about itself (Greenhouse only)."""
-    if ats is not Ats.GREENHOUSE or not isinstance(data, dict):
-        return set()
-    return {j.get("company_name", "") for j in data.get("jobs", [])[:20]} - {""}
-
-
 def _name_matches(company: str | None, names: set[str]) -> bool:
     if not company:
         return False
@@ -153,13 +142,11 @@ async def _probe(
     http: HttpClient, company: str | None, ats: Ats, token: str, refresh: bool
 ) -> _Found | None:
     try:
-        fetched = await http.get_json(ADAPTERS[ats].list_url(token), refresh=refresh)
+        board = await ADAPTERS[ats].probe(http, token, refresh=refresh)
     except FetchError:
         return None
-    names = _board_names(ats, fetched.data)
-    found = _Found(
-        ats, token, _job_count(ats, fetched.data), name_match=_name_matches(company, names)
-    )
+    names = board.names
+    found = _Found(ats, token, board.jobs, name_match=_name_matches(company, names))
     if found.name_match:
         found.evidence.append(f"board reports company name {sorted(names)[0]!r}")
     return found
@@ -207,7 +194,7 @@ async def resolve_board(
     listed = board_dir.lookup(company) if company else []
     listed_tokens = [t for t in dict.fromkeys(x.token.lower() for x in listed) if t not in tokens]
     probe_task = asyncio.gather(
-        *(_probe(http, company, ats, t, refresh) for t in tokens for ats in Ats),
+        *(_probe(http, company, ats, t, refresh) for t in tokens for ats in _GUESSABLE),
         *(_probe(http, company, Ats.GREENHOUSE, t, refresh) for t in listed_tokens),
     )
     if careers_url:

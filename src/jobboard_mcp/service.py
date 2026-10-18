@@ -55,15 +55,6 @@ _NO_CUSTOM_URLS = (
     "only the watchlist's careers_url is used"
 )
 
-_PAY_FIELDS = (
-    "pay_min",
-    "pay_max",
-    "pay_currency",
-    "pay_posted_interval",
-    "pay_raw",
-    "pay_source",
-)
-
 
 @dataclass
 class _Fetch:
@@ -77,6 +68,15 @@ def _status(exc: Exception) -> CompanyStatus:
     if isinstance(exc, FetchError):
         return CompanyStatus(exc.kind)
     return CompanyStatus.ERROR
+
+
+async def _same(job: Job) -> Job:
+    return job
+
+
+def _join(*notes: str | None) -> str | None:
+    text = "; ".join(n for n in notes if n)
+    return text or None
 
 
 class JobBoardService:
@@ -139,9 +139,11 @@ class JobBoardService:
         else:
             entries = [e for e in entries if not e.archived]
 
-        fetches = await asyncio.gather(*(self._fetch_board(e, refresh) for e in entries))
+        fetches = await asyncio.gather(
+            *(self._fetch_board(e, refresh, filters.title_include, filters.today) for e in entries)
+        )
         cache_hits = 0
-        candidates: list[tuple[str, Job]] = []
+        candidates: list[tuple[str, Job, bool]] = []  # company, job, fetch its detail?
         titles: list[str] = []
         for f in fetches:
             e = f.entry
@@ -155,17 +157,37 @@ class JobBoardService:
                 )
                 continue
             cache_hits += f.listing.cache_hit
-            results[e.company] = CompanyResult(
-                company=e.company, ats=e.ats, total=len(f.listing.jobs), status=CompanyStatus.OK
+            result = results[e.company] = CompanyResult(
+                company=e.company,
+                ats=e.ats,
+                total=len(f.listing.jobs),
+                status=CompanyStatus.OK,
+                note=f.listing.note,
             )
             titles.extend(j.title for j in f.listing.jobs)
-            candidates.extend((e.company, j) for j in f.listing.jobs if prefilter(j, filters))
+            adapter = ADAPTERS[e.ats]
+            survivors = [j for j in f.listing.jobs if prefilter(j, filters)]
+            wanted = [j.id for j in survivors if adapter.needs_detail(j)]
+            cap = adapter.max_details
+            if cap is not None and len(wanted) > cap:
+                result.note = _join(
+                    result.note,
+                    f"details fetched for the first {cap} of {len(wanted)} matching jobs; the"
+                    " rest show only what the board's list gives (narrow title_include to"
+                    " cover them)",
+                )
+                wanted = wanted[:cap]
+            detail = set(wanted)
+            candidates.extend((e.company, j, j.id in detail) for j in survivors)
 
-        enriched = await asyncio.gather(*(self._enrich_pay(j, refresh) for _, j in candidates))
+        enriched = await asyncio.gather(
+            *(self._with_detail(j, refresh) if want else _same(j) for _, j, want in candidates)
+        )
         seen: set[str] = set()
         kept: list[Job] = []
-        for (company, _), job in zip(candidates, enriched, strict=True):
-            if job.id in seen or not passes_pay(job, filters):
+        for (company, _, _), job in zip(candidates, enriched, strict=True):
+            # Filter again: a detail call can fill in remote status, date, or pay.
+            if job.id in seen or not prefilter(job, filters) or not passes_pay(job, filters):
                 continue
             seen.add(job.id)
             job = mark_unverified(job, filters)
@@ -190,14 +212,16 @@ class JobBoardService:
             term_hits=term_hits(titles, filters),
         )
 
-    async def _fetch_board(self, entry: WatchlistEntry, refresh: bool) -> _Fetch:
+    async def _fetch_board(
+        self, entry: WatchlistEntry, refresh: bool, search: Sequence[str], today: date
+    ) -> _Fetch:
         result = _Fetch(entry)
         if entry.ats is None or entry.token is None:
             return result
         started = time.monotonic()
         try:
             result.listing = await ADAPTERS[entry.ats].list_jobs(
-                self.http, entry.company, entry.token, refresh=refresh
+                self.http, entry.company, entry.token, refresh=refresh, search=search, today=today
             )
         except Exception as exc:  # one company never fails the sweep
             result.error = exc
@@ -219,18 +243,16 @@ class JobBoardService:
         )
         return result
 
-    async def _enrich_pay(self, job: Job, refresh: bool) -> Job:
+    async def _with_detail(self, job: Job, refresh: bool) -> Job:
         adapter = ADAPTERS[job.ats]
-        if not adapter.needs_detail_for_pay(job):
-            return job
         try:
             detail = await adapter.get_job(
                 self.http, job.company, job.board_token, job.native_id, refresh=refresh
             )
-        except Exception as exc:  # keep the job; pay just stays unknown
-            log.warning("pay detail failed", extra={"fields": {"job": job.id, "error": str(exc)}})
+        except Exception as exc:  # keep the job with what its listing had
+            log.warning("detail failed", extra={"fields": {"job": job.id, "error": str(exc)}})
             return job
-        return job.model_copy(update={k: getattr(detail, k) for k in _PAY_FIELDS})
+        return job.model_copy(update={k: getattr(detail, k) for k in adapter.detail_fields})
 
     # ------------------------------------------------------------------ get_posting
 
@@ -319,7 +341,9 @@ class JobBoardService:
         if ats is None or token is None:
             return result
         try:
-            listing = await ADAPTERS[ats].list_jobs(self.http, name, token, refresh=refresh)
+            listing = await ADAPTERS[ats].list_jobs(
+                self.http, name, token, refresh=refresh, search=[title], today=self.today()
+            )
         except NotFound:
             return result
         result.board_found, result.ats, result.token = True, ats, token

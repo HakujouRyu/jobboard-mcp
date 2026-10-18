@@ -187,14 +187,18 @@ Use the highest tier in ground rule 1 that the ATS offers. A tier 1 adapter fetc
 3. **Add the enum value** to `Ats` in [models.py](src/jobboard_mcp/models.py).
 4. **Write `adapters/<ats>.py`** implementing the `Adapter` protocol in
    [adapters/base.py](src/jobboard_mcp/adapters/base.py):
-   - `list_url(token)`, and `list_jobs(...)`, which wraps parsing in `ListingMemo`
+   - `guess_tokens`, `detail_fields`, and `max_details` (see the protocol's comments)
+   - `list_url(token)`, and `list_jobs(...)`, which wraps parsing in `ListingMemo`. It gets
+     `search` (the sweep's title terms) and `today` as hints; use them only if the board is too
+     large to list in full, or shows relative dates
+   - `probe(...)`, a cheap check that a board exists, for `resolve_board`
    - `to_job(raw, company, token)` using `build_job(...)`, then `job.set_pay(...)`. Feed
      `classify_remote` the structured workplace field (lowercased) when the ATS has one, and
      `None` when it doesn't. Feed it structured countries if there are any.
    - `get_job(...)`, which raises `NotFound` if the job is gone
    - `check_live(...)`, using the API and never the posting page
-   - `needs_detail_for_pay(job)`: `True` only if the detail endpoint has pay that the list
-     doesn't
+   - `needs_detail(job)`: `True` only if the detail endpoint has `detail_fields` that the
+     list doesn't
    - `parse_url(url)`, for every public posting URL form
 5. **Register it** in `ADAPTERS` in
    [adapters/\_\_init\_\_.py](src/jobboard_mcp/adapters/__init__.py).

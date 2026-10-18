@@ -133,6 +133,11 @@ Example result, abridged. The job is real (from the recorded GitLab fixture). Th
 | `timeout` | No response within `HTTP_TIMEOUT_SECONDS`. |
 | `error` | Anything else (5xx after retries, invalid JSON, a name not on the watchlist). See `error`. |
 
+A `per_company` row can also carry a `note`, null unless something about that board's results
+needs saying, such as a search that stopped at a cap or matching jobs whose details weren't
+fetched. Jobs in that position are kept with what the board's list gives, and any filter they
+couldn't be checked against is in their `unverified_filters`.
+
 ---
 
 ## `get_posting`
