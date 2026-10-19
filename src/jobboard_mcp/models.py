@@ -1,0 +1,333 @@
+"""Pydantic models for normalized jobs, the watchlist, and tool results."""
+
+from __future__ import annotations
+
+import json
+from datetime import date, datetime
+from enum import StrEnum
+from typing import Any
+
+from pydantic import BaseModel, ConfigDict, Field, computed_field
+
+
+class Ats(StrEnum):
+    GREENHOUSE = "greenhouse"
+    ASHBY = "ashby"
+    LEVER = "lever"
+    WORKDAY = "workday"
+    ORACLE = "oracle"
+    WORKABLE = "workable"
+    RIPPLING = "rippling"
+    PERSONIO = "personio"
+
+
+class Remote(StrEnum):
+    REMOTE_US = "remote_us"
+    REMOTE_GLOBAL = "remote_global"
+    REMOTE_OTHER = "remote_other"
+    HYBRID = "hybrid"
+    ONSITE = "onsite"
+    UNKNOWN = "unknown"
+
+
+class EmploymentType(StrEnum):
+    FULL_TIME = "full_time"
+    PART_TIME = "part_time"
+    CONTRACT = "contract"
+    INTERN = "intern"
+    UNKNOWN = "unknown"
+
+
+class PaySource(StrEnum):
+    STRUCTURED = "structured"
+    PARSED_FROM_TEXT = "parsed_from_text"
+    NONE = "none"
+
+
+class Source(StrEnum):
+    """Where a job's data came from: the tier in ground rule 1 (CONTRIBUTING.md)."""
+
+    DOCUMENTED_API = "documented_api"  # tier 1: the ATS's documented public API
+    CAREERS_SITE = "careers_site"  # tier 2: JSON the careers site loads; can change unannounced
+    JSON_LD = "json_ld"  # tier 3: schema.org JobPosting data in a careers page
+
+
+class CompanyStatus(StrEnum):
+    OK = "ok"
+    NOT_FOUND = "not_found"  # board token returned 404
+    NO_BOARD = "no_board"  # watchlist entry has no known ATS/token
+    ERROR = "error"
+    TIMEOUT = "timeout"
+
+
+# Job.flags values: data that's missing from the job, whatever filters were used.
+FLAG_PAY_UNKNOWN = "pay_unknown"
+FLAG_DATE_UNKNOWN = "date_unknown"
+FLAG_REMOTE_UNKNOWN = "remote_unknown"
+
+_ANNUAL = "Annual, in pay_currency (hourly pay x 2080, monthly x 12, weekly x 52); null if unknown"
+
+
+class PayAmount(BaseModel):
+    """Annualized pay in one currency, as posted. Never converted."""
+
+    currency: str | None = None
+    min: int | None = None
+    max: int | None = None
+    interval: str | None = None  # as posted: year / hour / month / week / mixed
+
+
+class Pay(BaseModel):
+    """Result of pay normalization: the primary currency (USD when posted, else the first
+    one posted), plus any other currencies the posting lists."""
+
+    min: int | None = None
+    max: int | None = None
+    currency: str | None = None
+    interval: str | None = None  # as posted: year / hour / month / week / mixed
+    raw: str | None = None
+    source: PaySource = PaySource.NONE
+    other: list[PayAmount] = Field(default_factory=list)
+
+
+class Job(BaseModel):
+    id: str = Field(description="{ats}:{token}:{native_id}")
+    fingerprint: str = Field(description="Hash of normalized company + title + locations")
+    company: str
+    ats: Ats
+    source: Source = Field(
+        default=Source.DOCUMENTED_API,
+        description=(
+            "documented_api: the ATS's documented API. careers_site: JSON the careers site loads"
+            " for itself, undocumented and liable to change. json_ld: schema.org data in a page."
+        ),
+    )
+    board_token: str
+    native_id: str
+    title: str
+    team: str | None = None
+    locations: list[str] = Field(default_factory=list)
+    remote: Remote = Remote.UNKNOWN
+    employment_type: EmploymentType | None = None
+    posted_at: date | None = None
+    updated_at: date | None = None
+    date_source: str | None = None
+    pay_min: int | None = Field(default=None, description=_ANNUAL)
+    pay_max: int | None = Field(default=None, description=_ANNUAL)
+    pay_currency: str | None = Field(
+        default=None,
+        description="Currency of pay_min/pay_max as posted: USD when offered, else the first",
+    )
+    pay_other_currencies: list[PayAmount] = Field(
+        default_factory=list,
+        description="The same role's pay in other currencies the posting lists, annualized",
+    )
+    pay_posted_interval: str | None = Field(
+        default=None,
+        description=(
+            "How the pay was posted: year, hour, month, week, or mixed. "
+            "pay_min and pay_max are always annualized."
+        ),
+    )
+    pay_raw: str | None = None
+    pay_source: PaySource = PaySource.NONE
+    url: str
+    apply_url: str | None = None
+    description_text: str | None = None
+    unverified_filters: list[str] = Field(
+        default_factory=list,
+        description=(
+            "sweep_boards filters this job was kept under without being checked, because the"
+            " data was missing: remote (status unknown), min_pay (no pay, or none in"
+            " min_pay_currency), posted_within_days (date unknown). Check before treating the"
+            " job as meeting the search. Always empty outside sweep_boards."
+        ),
+    )
+
+    # Publish computed fields (flags) in the tool output schema, not only in the output.
+    model_config = ConfigDict(json_schema_mode_override="serialization")
+
+    @computed_field(
+        description="Missing data: pay_unknown (no pay posted), date_unknown, remote_unknown"
+    )
+    @property
+    def flags(self) -> list[str]:
+        """Worked out from the job's own fields, so it stays right after pay is filled in."""
+        flags: list[str] = []
+        if self.pay_min is None and self.pay_max is None:
+            flags.append(FLAG_PAY_UNKNOWN)
+        if self.posted_at is None:
+            flags.append(FLAG_DATE_UNKNOWN)
+        if self.remote is Remote.UNKNOWN:
+            flags.append(FLAG_REMOTE_UNKNOWN)
+        return flags
+
+    def set_pay(self, pay: Pay) -> None:
+        self.pay_min, self.pay_max = pay.min, pay.max
+        self.pay_currency, self.pay_posted_interval = pay.currency, pay.interval
+        self.pay_raw, self.pay_source = pay.raw, pay.source
+        self.pay_other_currencies = list(pay.other)
+
+    def pay_max_in(self, currency: str) -> int | None:
+        """The annual maximum posted in ``currency``, or None if none was."""
+        want = currency.upper()
+        if (self.pay_currency or "").upper() == want:
+            return self.pay_max
+        for amount in self.pay_other_currencies:
+            if (amount.currency or "").upper() == want:
+                return amount.max
+        return None
+
+
+class WatchlistEntry(BaseModel):
+    company: str
+    ats: Ats | None = None
+    token: str | None = None
+    careers_url: str | None = None
+    domains: list[str] = Field(default_factory=list)
+    tags: list[str] = Field(default_factory=list)
+    interview_note: str | None = None
+    notes: str | None = None
+    archived: bool = Field(
+        default=False,
+        description="Archived companies are skipped by sweeps and hidden by list_watchlist",
+    )
+
+
+class CompanyResult(BaseModel):
+    company: str
+    ats: Ats | None = None
+    total: int = 0
+    matched: int = 0
+    status: CompanyStatus
+    error: str | None = None
+    note: str | None = Field(
+        default=None,
+        description=(
+            "Something to know about this board's results, such as a search that stopped at a"
+            " cap or jobs whose details weren't fetched"
+        ),
+    )
+
+
+class SweepResult(BaseModel):
+    jobs: list[Job]
+    matched: int = Field(description="Jobs that passed the filters, before limit was applied")
+    truncated: bool = Field(
+        description=(
+            "True when limit cut the list. Narrow the filters, or pass the returned ids in"
+            " exclude_ids to get the next page."
+        )
+    )
+    per_company: list[CompanyResult]
+    fetched_at: datetime
+    cache_hits: int = Field(description="Boards served from cache instead of refetched")
+    flag_counts: dict[str, int] = Field(
+        default_factory=dict, description="How many returned jobs carry each flag"
+    )
+    unverified_counts: dict[str, int] = Field(
+        default_factory=dict,
+        description="How many returned jobs list each filter in unverified_filters",
+    )
+    term_hits: dict[str, int] = Field(
+        default_factory=dict,
+        description=(
+            "For each title_include and title_exclude term, how many jobs on the swept boards"
+            " have a title it matches, before any filter. 0 means the term matches nothing."
+        ),
+    )
+
+
+def raw_json(value: Any) -> str:
+    """Compact, stable JSON for pay_raw and similar audit fields."""
+    return json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+
+
+# --------------------------------------------------------------------------- M2 results
+
+
+class Confidence(StrEnum):
+    HIGH = "high"  # careers page links to the board, or the board names the company
+    MEDIUM = "medium"  # a guessed token returned a non-empty board
+    LOW = "low"  # a guessed token exists but the board is empty
+
+
+class BoardCandidate(BaseModel):
+    ats: Ats
+    token: str
+    jobs: int
+    confidence: Confidence
+    evidence: list[str] = Field(default_factory=list)
+
+
+class Resolution(BaseModel):
+    ats: Ats | None = None
+    token: str | None = None
+    confidence: Confidence | None = None
+    jobs: int | None = Field(default=None, description="Jobs on the board when checked")
+    evidence: list[str] = Field(default_factory=list)
+    alternatives: list[BoardCandidate] = Field(
+        default_factory=list, description="Other boards that also answered"
+    )
+    pages_checked: list[str] = Field(default_factory=list)
+
+
+class PostingMatch(BaseModel):
+    score: float = Field(description="0-100; title similarity, adjusted for location if given")
+    title_score: float
+    location_score: float | None = None
+    job: Job
+
+
+class WatchlistMatch(StrEnum):
+    NAME = "name"  # the name matched a watchlist company, ignoring case
+    LOOSE_NAME = "loose_name"  # one company's name starts with the other's, word for word
+    BOARD = "board"  # the resolved board belongs to a watchlist company
+
+
+class FindResult(BaseModel):
+    company: str = Field(description="The watchlist's name for the company when it's watched")
+    title: str
+    watchlist_match: WatchlistMatch | None = Field(
+        default=None, description="How the company was found on the watchlist; null if it wasn't"
+    )
+    board_found: bool
+    ats: Ats | None = None
+    token: str | None = None
+    resolution: Resolution | None = Field(
+        default=None, description="Present when the board was not on the watchlist"
+    )
+    candidates: list[PostingMatch] = Field(default_factory=list)
+
+
+class LiveResult(BaseModel):
+    live: bool
+    checked_at: datetime
+    reason: str
+    ats: Ats
+    token: str
+    job_id: str
+    from_cache: bool = Field(description="Answered from the cache rather than a new request")
+
+
+class BoardCheck(BaseModel):
+    status: CompanyStatus
+    jobs: int = 0
+    error: str | None = None
+
+
+class WatchlistView(BaseModel):
+    companies: list[WatchlistEntry]
+    total: int
+    readonly: bool
+    path: str = Field(description="The watchlist file, for editing it by hand")
+    archived_hidden: int = Field(
+        default=0, description="Archived companies left out; pass include_archived to see them"
+    )
+
+
+class WatchlistChange(BaseModel):
+    entry: WatchlistEntry
+    board_check: BoardCheck | None = Field(
+        default=None, description="Live check of the board, when one is set"
+    )

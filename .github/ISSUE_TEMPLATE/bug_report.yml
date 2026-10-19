@@ -1,0 +1,52 @@
+name: Bug report
+description: A tool errors, crashes, or returns something wrong.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        If a single company's board parses wrong (pay, remote status, dates, missing jobs), use
+        the **Board problem** form instead. For security issues, see SECURITY.md.
+  - type: input
+    id: tool
+    attributes:
+      label: Tool
+      description: Which tool did you call?
+      placeholder: sweep_boards
+    validations:
+      required: true
+  - type: textarea
+    id: args
+    attributes:
+      label: Arguments
+      description: The arguments you passed, as JSON.
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened, and what did you expect?
+      description: Paste the relevant part of the output or error.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: >-
+        Server stderr, ideally with LOG_LEVEL=DEBUG. In the Claude desktop app it's in
+        mcp-server-jobboard.log in the app's logs folder.
+      render: text
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: 0.1.0 or a commit SHA
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: OS and MCP client
+      placeholder: Windows 11, Claude desktop app

@@ -1,0 +1,1194 @@
+{
+ "apiVersion": "1",
+ "jobs": [
+  {
+   "id": "30600762-62fe-4ffb-9b6e-98f145329ea3",
+   "title": "Technical Executive Communications, Senior Manager",
+   "department": "Marketing",
+   "team": "Marketing ",
+   "employmentType": "FullTime",
+   "location": "San Francisco, California",
+   "shouldDisplayCompensationOnJobPostings": true,
+   "secondaryLocations": [
+    {
+     "location": "San Francisco, California",
+     "address": {
+      "postalAddress": {
+       "addressCountry": "United States"
+      }
+     }
+    }
+   ],
+   "publishedAt": "2026-09-02T17:39:36.525+00:00",
+   "isListed": true,
+   "isRemote": true,
+   "workplaceType": "Hybrid",
+   "address": {
+    "postalAddress": {
+     "addressCountry": "United States"
+    }
+   },
+   "jobUrl": "https://jobs.ashbyhq.com/temporal/30600762-62fe-4ffb-9b6e-98f145329ea3",
+   "applyUrl": "https://jobs.ashbyhq.com/temporal/30600762-62fe-4ffb-9b6e-98f145329ea3/application",
+   "descriptionHtml": "<p style=\"min-height:1.5em\"><strong>Role summary</strong></p><p style=\"min-height:1.5em\">We're looking for a technical storyteller to own the external voice of our co-founder and CEO, Samar Abbas, and our co-founder and CTO, Maxim Fateev. You come out of developer relations, technical communications, or technical product marketing, turning technical depth into content developers respect, and you'll bring that craft to how both founders show up on stage, in print, and on their own feeds.</p><p style=\"min-height:1.5em\">You can think alongside Samar and Maxim without a translation layer, and write in a way that earns a developer audience instead of talking past it. Part of the job is connective: you chase down the substance and positioning that feed their voice from across the company, then turn it into something worth reading.</p><p style=\"min-height:1.5em\">This role reports to the Senior Director of Brand Communications, and it's built to grow. The person who does it well will shape how executive communications works at Temporal as the company and its founders' presence scale.</p><p style=\"min-height:1.5em\"><strong>What You'll Do</strong></p><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\"><strong>Run their social and short-form voice:</strong> own the day-to-day presence, drafting posts, reactions, and takes in each founder's actual voice, knowing the difference between something that lands with developers on X or Hacker News and something that gets ratioed, and building their following as a channel you're accountable for.</p></li><li><p style=\"min-height:1.5em\"><strong>Keep each of them sounding like themselves:</strong> learn how Samar and Maxim each think, well enough to surface what's genuinely theirs and keep a house voice from creeping in over it.</p></li><li><p style=\"min-height:1.5em\"><strong>Ghostwrite their long-form:</strong> turn a rough voice memo or a whiteboard sketch of an argument into the essays, bylines, and technical posts that carry their thinking, finished enough to read like they wrote it themselves.</p></li><li><p style=\"min-height:1.5em\"><strong>Prepare them to speak:</strong> build the narratives, talk tracks, and supporting material for Replay keynotes, customer meetings, fireside chats, and briefings, partnering with Product Marketing on the technical story and positioning, and running the prep so they walk in knowing the material cold.</p></li><li><p style=\"min-height:1.5em\"><strong>Partner with Media Relations on earned credibility:</strong> work alongside the media team to translate the founders' point of view into press that lands, bringing the technical fluency to get their thinking right while they bring the reporters and the craft.</p></li><li><p style=\"min-height:1.5em\"><strong>Travel: </strong>Maxim and Samar prefer frequent in-person collaboration, so travel is expected for this role.</p></li></ul><p style=\"min-height:1.5em\"><strong>What Success Looks Like</strong></p><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Samar and Maxim have strong, distinctive presences in their own voice, with followings that grow month over month among the developers and technical leaders who matter.</p></li><li><p style=\"min-height:1.5em\">The longer you work with them, the more they sound like themselves, sharper and more distinct, and less like anyone media-trained them.</p></li><li><p style=\"min-height:1.5em\">Their long-form lands with engineers and sparks real conversation, published on a steady cadence.</p></li><li><p style=\"min-height:1.5em\">They're speaking at the conferences and on the podcasts you'd want them at, and they walk in fully prepared.</p></li><li><p style=\"min-height:1.5em\">Inbound builds: podcasts, conference organizers, and reporters come looking for them.</p></li><li><p style=\"min-height:1.5em\">Across social, stage, long-form, and press, the founders come through as the same sharp, credible people, and their reach compounds because of it.</p></li></ul><p style=\"min-height:1.5em\"><strong>What You'll Bring</strong></p><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Your background is in developer relations, technical communications, or technical product marketing, and you've made technical material that developers actually read. This part can't be faked.</p></li><li><p style=\"min-height:1.5em\">You've run social for a company, a founder, or an executive, and you know the culture well enough to feel which posts land before you hit send.</p></li><li><p style=\"min-height:1.5em\">You've written for or as a technical voice, and you know the difference between prose that reads well and words a specific person can actually say out loud as their own.</p></li><li><p style=\"min-height:1.5em\">You're technically fluent. You can hold your own with an engineer and call out when an argument doesn't hold up.</p></li><li><p style=\"min-height:1.5em\">You bring your own point of view and a backlog of ideas, and you don't wait to be handed a brief.</p></li><li><p style=\"min-height:1.5em\">You live in this world, close enough to AI, infrastructure, and developer culture to know which conversations to pull the founders into and where things are heading next.</p></li><li><p style=\"min-height:1.5em\">You move fast, take the ball, and keep pace with two founders who think out loud.</p></li><li><p style=\"min-height:1.5em\">Familiarity with durable execution, workflow orchestration, or distributed systems is a real plus.</p></li></ul><p style=\"min-height:1.5em\"></p><p style=\"min-height:1.5em\">Temporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.</p><p style=\"min-height:1.5em\">Temporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.</p>",
+   "descriptionPlain": "Role summary\n\nWe're looking for a technical storyteller to own the external voice of our co-founder and CEO, Samar Abbas, and our co-founder and CTO, Maxim Fateev. You come out of developer relations, technical communications, or technical product marketing, turning technical depth into content developers respect, and you'll bring that craft to how both founders show up on stage, in print, and on their own feeds.\n\nYou can think alongside Samar and Maxim without a translation layer, and write in a way that earns a developer audience instead of talking past it. Part of the job is connective: you chase down the substance and positioning that feed their voice from across the company, then turn it into something worth reading.\n\nThis role reports to the Senior Director of Brand Communications, and it's built to grow. The person who does it well will shape how executive communications works at Temporal as the company and its founders' presence scale.\n\nWhat You'll Do\n\n - Run their social and short-form voice: own the day-to-day presence, drafting posts, reactions, and takes in each founder's actual voice, knowing the difference between something that lands with developers on X or Hacker News and something that gets ratioed, and building their following as a channel you're accountable for.\n\n - Keep each of them sounding like themselves: learn how Samar and Maxim each think, well enough to surface what's genuinely theirs and keep a house voice from creeping in over it.\n\n - Ghostwrite their long-form: turn a rough voice memo or a whiteboard sketch of an argument into the essays, bylines, and technical posts that carry their thinking, finished enough to read like they wrote it themselves.\n\n - Prepare them to speak: build the narratives, talk tracks, and supporting material for Replay keynotes, customer meetings, fireside chats, and briefings, partnering with Product Marketing on the technical story and positioning, and running the prep so they walk in knowing the material cold.\n\n - Partner with Media Relations on earned credibility: work alongside the media team to translate the founders' point of view into press that lands, bringing the technical fluency to get their thinking right while they bring the reporters and the craft.\n\n - Travel: Maxim and Samar prefer frequent in-person collaboration, so travel is expected for this role.\n\nWhat Success Looks Like\n\n - Samar and Maxim have strong, distinctive presences in their own voice, with followings that grow month over month among the developers and technical leaders who matter.\n\n - The longer you work with them, the more they sound like themselves, sharper and more distinct, and less like anyone media-trained them.\n\n - Their long-form lands with engineers and sparks real conversation, published on a steady cadence.\n\n - They're speaking at the conferences and on the podcasts you'd want them at, and they walk in fully prepared.\n\n - Inbound builds: podcasts, conference organizers, and reporters come looking for them.\n\n - Across social, stage, long-form, and press, the founders come through as the same sharp, credible people, and their reach compounds because of it.\n\nWhat You'll Bring\n\n - Your background is in developer relations, technical communications, or technical product marketing, and you've made technical material that developers actually read. This part can't be faked.\n\n - You've run social for a company, a founder, or an executive, and you know the culture well enough to feel which posts land before you hit send.\n\n - You've written for or as a technical voice, and you know the difference between prose that reads well and words a specific person can actually say out loud as their own.\n\n - You're technically fluent. You can hold your own with an engineer and call out when an argument doesn't hold up.\n\n - You bring your own point of view and a backlog of ideas, and you don't wait to be handed a brief.\n\n - You live in this world, close enough to AI, infrastructure, and developer culture to know which conversations to pull the founders into and where things are heading next.\n\n - You move fast, take the ball, and keep pace with two founders who think out loud.\n\n - Familiarity with durable execution, workflow orchestration, or distributed systems is a real plus.\n\n\n\nTemporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.\n\nTemporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.",
+   "compensation": {
+    "compensationTierSummary": "$172.8K – $283.5K • Offers Equity • Multiple Ranges",
+    "scrapeableCompensationSalarySummary": "$172,800 - $283,500",
+    "compensationTiers": [
+     {
+      "id": "c6ab2f08-c6e6-4d9c-a3fc-927cb7def3a9",
+      "tierSummary": "Salary $216,000 – $283,500 • Offers Equity",
+      "title": "US - Tier 1",
+      "additionalInformation": null,
+      "components": [
+       {
+        "id": "d61aacd5-43ac-4110-a9b6-c6b8fc793cbc",
+        "summary": "Salary $216,000 – $283,500",
+        "compensationType": "Salary",
+        "interval": "1 YEAR",
+        "currencyCode": "USD",
+        "minValue": 216000,
+        "maxValue": 283500
+       },
+       {
+        "id": "bd00efe1-000b-400b-8753-bbe64776aaa9",
+        "summary": "Offers Equity",
+        "compensationType": "EquityCashValue",
+        "interval": "1 YEAR",
+        "currencyCode": "USD",
+        "minValue": null,
+        "maxValue": null
+       }
+      ]
+     },
+     {
+      "id": "6dd38c16-a9f9-4cd4-9180-ee21f9c930de",
+      "tierSummary": "Salary $194,400 – $255,150 • Offers Equity",
+      "title": "US - Tier 2",
+      "additionalInformation": null,
+      "components": [
+       {
+        "id": "ba25b622-64d4-47f8-90fd-7d1ba17565c3",
+        "summary": "Salary $194,400 – $255,150",
+        "compensationType": "Salary",
+        "interval": "1 YEAR",
+        "currencyCode": "USD",
+        "minValue": 194400,
+        "maxValue": 255150
+       },
+       {
+        "id": "2a43d7b1-859a-4176-8cd2-bc680c9ada15",
+        "summary": "Offers Equity",
+        "compensationType": "EquityCashValue",
+        "interval": "1 YEAR",
+        "currencyCode": "USD",
+        "minValue": null,
+        "maxValue": null
+       }
+      ]
+     },
+     {
+      "id": "a7a62adf-4edd-46ef-8852-03504051ba78",
+      "tierSummary": "Salary $172,800 – $226,800 • Offers Equity",
+      "title": "US - Tier 3",
+      "additionalInformation": null,
+      "components": [
+       {
+        "id": "dbd879a3-4b66-44b4-ae03-acca9bb4a3df",
+        "summary": "Salary $172,800 – $226,800",
+        "compensationType": "Salary",
+        "interval": "1 YEAR",
+        "currencyCode": "USD",
+        "minValue": 172800,
+        "maxValue": 226800
+       },
+       {
+        "id": "da84cb79-04b8-4ccb-afb3-e9ef6a03e1f1",
+        "summary": "Offers Equity",
+        "compensationType": "EquityCashValue",
+        "interval": "1 YEAR",
+        "currencyCode": "USD",
+        "minValue": null,
+        "maxValue": null
+       }
+      ]
+     }
+    ],
+    "summaryComponents": [
+     {
+      "minValue": 172800,
+      "maxValue": 283500,
+      "currencyCode": "USD",
+      "interval": "1 YEAR",
+      "compensationType": "Salary"
+     },
+     {
+      "compensationType": "EquityCashValue",
+      "minValue": null,
+      "maxValue": null,
+      "interval": "1 YEAR"
+     }
+    ]
+   }
+  },
+  {
+   "id": "01e59346-2cf2-4123-8df1-c8a486eced72",
+   "title": "Senior Product Manager, Hybrid Platform & Deployment Models",
+   "department": "Product",
+   "team": "Product Management",
+   "employmentType": "FullTime",
+   "location": "United States (Remote)",
+   "shouldDisplayCompensationOnJobPostings": true,
+   "secondaryLocations": [
+    {
+     "location": "Canada (Remote)",
+     "address": {
+      "postalAddress": {
+       "addressCountry": "Canada"
+      }
+     }
+    }
+   ],
+   "publishedAt": "2026-09-02T16:27:31.335+00:00",
+   "isListed": true,
+   "isRemote": true,
+   "workplaceType": "Remote",
+   "address": {
+    "postalAddress": {
+     "addressCountry": "United States"
+    }
+   },
+   "jobUrl": "https://jobs.ashbyhq.com/temporal/01e59346-2cf2-4123-8df1-c8a486eced72",
+   "applyUrl": "https://jobs.ashbyhq.com/temporal/01e59346-2cf2-4123-8df1-c8a486eced72/application",
+   "descriptionHtml": "<h2>Role Summary</h2><p style=\"min-height:1.5em\">Temporal helps developers build and run reliable systems with durable execution. Many customers want to use Temporal in environments where standard Temporal Cloud may not be an option given regulatory, infrastructure, or control requirements—such as self-hosted deployments, FedRAMP-aligned needs, sovereign clouds, and hybrid architectures that span cloud and on‑prem environments.</p><p style=\"min-height:1.5em\">In this role, you’ll own the product surface area that enables companies to deploy, operate, and connect Temporal across self-hosted and Temporal Cloud environments. You’ll partner closely with Engineering, Resident Architects, and self-hosted services to deliver durable, operable capabilities that let customers run Temporal in the environment that best fits their risk and compliance posture.</p><p style=\"min-height:1.5em\"></p><h2>What You’ll Do</h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Own supported <strong>self-hosted and hybrid deployment models</strong>, including clear positioning, lifecycle expectations, and customer outcomes.</p></li><li><p style=\"min-height:1.5em\">Improve <strong>installation, configuration, upgrades, and operability</strong> so customers can run Temporal confidently in production across varied infrastructure.</p></li><li><p style=\"min-height:1.5em\">Drive product direction for <strong>production readiness and operational tooling</strong> (observability, benchmarking, runbooks, diagnostics, upgrade safety).</p></li><li><p style=\"min-height:1.5em\">Define strategy and requirements around <strong>database and storage choices</strong>, balancing operability, reliability, and customer constraints.</p></li><li><p style=\"min-height:1.5em\">Own <strong>multi-region and multi-cloud topology</strong> capabilities for self-hosted environments, including performance and resilience tradeoffs.</p></li><li><p style=\"min-height:1.5em\">Partner with <strong>Resident Architects</strong> and self-hosted services teams to translate customer needs into roadmap, packaging, and repeatable deployment patterns.</p></li><li><p style=\"min-height:1.5em\">Own <strong>Temporal Proxy</strong> as an end-to-end product: roadmap, packaging, customer deployment experience, and operability.</p></li></ul><p style=\"min-height:1.5em\"></p><h2>What You’ll Bring</h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Product leadership experience shipping and iterating on <strong>infrastructure/platform products</strong>, ideally with high reliability and operational requirements.</p></li><li><p style=\"min-height:1.5em\">Strong ability to translate complex customer needs (security/compliance, networking, topology, data, ops) into <strong>clear product requirements</strong> and high-leverage roadmaps.</p></li><li><p style=\"min-height:1.5em\">Comfort partnering with engineering on technical domains like <strong>deployment architecture, replication, storage systems, and operational tooling</strong> (without needing to write production code).</p></li><li><p style=\"min-height:1.5em\">Experience driving alignment across stakeholders (Engineering, Security, Support, Field/Resident Architects, Solutions, Sales) and making durable decisions in ambiguous environments.</p></li><li><p style=\"min-height:1.5em\">Strong written communication skills—able to produce crisp PRDs, decision docs, and customer-facing guidance.</p></li><li><p style=\"min-height:1.5em\">A customer-first mindset and appreciation for “last mile” quality: docs, upgrade paths, diagnostics, and operational clarity.</p></li></ul><p style=\"min-height:1.5em\"></p><h2>Nice to Haves</h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Familiarity with regulated and controlled environments (e.g., <strong>FedRAMP-aligned</strong>, sovereign cloud constraints) and the operational realities of enterprise self-hosting.</p></li><li><p style=\"min-height:1.5em\">Experience with <strong>hybrid architectures</strong>, migration programs, or long-lived interoperability across environments.</p></li><li><p style=\"min-height:1.5em\">Experience with <strong>benchmarking/performance testing</strong> and turning results into product improvements and guidance.</p></li><li><p style=\"min-height:1.5em\">Understanding of <strong>multi-region replication</strong> patterns and failure modes in distributed systems.</p></li></ul><p style=\"min-height:1.5em\">Temporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.</p><p style=\"min-height:1.5em\">Temporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.</p>",
+   "descriptionPlain": "ROLE SUMMARY\n\nTemporal helps developers build and run reliable systems with durable execution. Many customers want to use Temporal in environments where standard Temporal Cloud may not be an option given regulatory, infrastructure, or control requirements—such as self-hosted deployments, FedRAMP-aligned needs, sovereign clouds, and hybrid architectures that span cloud and on‑prem environments.\n\nIn this role, you’ll own the product surface area that enables companies to deploy, operate, and connect Temporal across self-hosted and Temporal Cloud environments. You’ll partner closely with Engineering, Resident Architects, and self-hosted services to deliver durable, operable capabilities that let customers run Temporal in the environment that best fits their risk and compliance posture.\n\n\n\n\nWHAT YOU’LL DO\n\n - Own supported self-hosted and hybrid deployment models, including clear positioning, lifecycle expectations, and customer outcomes.\n\n - Improve installation, configuration, upgrades, and operability so customers can run Temporal confidently in production across varied infrastructure.\n\n - Drive product direction for production readiness and operational tooling (observability, benchmarking, runbooks, diagnostics, upgrade safety).\n\n - Define strategy and requirements around database and storage choices, balancing operability, reliability, and customer constraints.\n\n - Own multi-region and multi-cloud topology capabilities for self-hosted environments, including performance and resilience tradeoffs.\n\n - Partner with Resident Architects and self-hosted services teams to translate customer needs into roadmap, packaging, and repeatable deployment patterns.\n\n - Own Temporal Proxy as an end-to-end product: roadmap, packaging, customer deployment experience, and operability.\n\n\n\n\nWHAT YOU’LL BRING\n\n - Product leadership experience shipping and iterating on infrastructure/platform products, ideally with high reliability and operational requirements.\n\n - Strong ability to translate complex customer needs (security/compliance, networking, topology, data, ops) into clear product requirements and high-leverage roadmaps.\n\n - Comfort partnering with engineering on technical domains like deployment architecture, replication, storage systems, and operational tooling (without needing to write production code).\n\n - Experience driving alignment across stakeholders (Engineering, Security, Support, Field/Resident Architects, Solutions, Sales) and making durable decisions in ambiguous environments.\n\n - Strong written communication skills—able to produce crisp PRDs, decision docs, and customer-facing guidance.\n\n - A customer-first mindset and appreciation for “last mile” quality: docs, upgrade paths, diagnostics, and operational clarity.\n\n\n\n\nNICE TO HAVES\n\n - Familiarity with regulated and controlled environments (e.g., FedRAMP-aligned, sovereign cloud constraints) and the operational realities of enterprise self-hosting.\n\n - Experience with hybrid architectures, migration programs, or long-lived interoperability across environments.\n\n - Experience with benchmarking/performance testing and turning results into product improvements and guidance.\n\n - Understanding of multi-region replication patterns and failure modes in distributed systems.\n\nTemporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.\n\nTemporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.",
+   "compensation": {
+    "compensationTierSummary": "$137,600 – $225,750 • Offers Equity • Multiple Ranges",
+    "scrapeableCompensationSalarySummary": "$137,600 - $225,750",
+    "compensationTiers": [
+     {
+      "id": "9691b18d-4e19-4c9d-bed9-4510c062061c",
+      "tierSummary": "Salary $172,000 – $225,750 • Offers Equity",
+      "title": "US - Tier 1",
+      "additionalInformation": null,
+      "components": [
+       {
+        "id": "e4f520a1-ef68-443e-9e34-5631d4ab7021",
+        "summary": "Offers Equity",
+        "compensationType": "EquityCashValue",
+        "interval": "1 YEAR",
+        "currencyCode": "USD",
+        "minValue": null,
+        "maxValue": null
+       },
+       {
+        "id": "2329346e-928b-4f7c-8a82-aae35ffce7a9",
+        "summary": "Salary $172,000 – $225,750",
+        "compensationType": "Salary",
+        "interval": "1 YEAR",
+        "currencyCode": "USD",
+        "minValue": 172000,
+        "maxValue": 225750
+       }
+      ]
+     },
+     {
+      "id": "29b915c9-ae35-436c-816f-c855189c5699",
+      "tierSummary": "Salary $154,800 – $203,175 • Offers Equity",
+      "title": "US - Tier 2",
+      "additionalInformation": null,
+      "components": [
+       {
+        "id": "3ba9b970-ae1e-4bba-a848-235a391343f9",
+        "summary": "Offers Equity",
+        "compensationType": "EquityCashValue",
+        "interval": "1 YEAR",
+        "currencyCode": "USD",
+        "minValue": null,
+        "maxValue": null
+       },
+       {
+        "id": "4f9db626-3c02-4ba3-b81a-f2d01a7de938",
+        "summary": "Salary $154,800 – $203,175",
+        "compensationType": "Salary",
+        "interval": "1 YEAR",
+        "currencyCode": "USD",
+        "minValue": 154800,
+        "maxValue": 203175
+       }
+      ]
+     },
+     {
+      "id": "d4728cd8-6bb1-43c6-98eb-c3680a642b94",
+      "tierSummary": "Salary $137,600 – $180,600 • Offers Equity",
+      "title": "US - Tier 3",
+      "additionalInformation": null,
+      "components": [
+       {
+        "id": "901e1e60-b706-4ca9-8c70-c3e2e97c12fc",
+        "summary": "Offers Equity",
+        "compensationType": "EquityCashValue",
+        "interval": "1 YEAR",
+        "currencyCode": "USD",
+        "minValue": null,
+        "maxValue": null
+       },
+       {
+        "id": "3b38d6e4-c58d-46a4-89b9-4c96e1d98f44",
+        "summary": "Salary $137,600 – $180,600",
+        "compensationType": "Salary",
+        "interval": "1 YEAR",
+        "currencyCode": "USD",
+        "minValue": 137600,
+        "maxValue": 180600
+       }
+      ]
+     }
+    ],
+    "summaryComponents": [
+     {
+      "compensationType": "EquityCashValue",
+      "minValue": null,
+      "maxValue": null,
+      "interval": "1 YEAR"
+     },
+     {
+      "minValue": 137600,
+      "maxValue": 225750,
+      "currencyCode": "USD",
+      "interval": "1 YEAR",
+      "compensationType": "Salary"
+     }
+    ]
+   }
+  },
+  {
+   "id": "956e8190-8493-485d-93a8-0b84a9daec9b",
+   "title": "Manager, India Partnerships",
+   "department": "Sales",
+   "team": "Partnerships",
+   "employmentType": "FullTime",
+   "location": "Bengaluru, Karnataka",
+   "shouldDisplayCompensationOnJobPostings": true,
+   "secondaryLocations": [],
+   "publishedAt": "2026-09-01T23:05:33.027+00:00",
+   "isListed": true,
+   "isRemote": true,
+   "workplaceType": "Remote",
+   "address": {
+    "postalAddress": {
+     "addressRegion": "Karnataka",
+     "addressCountry": "India",
+     "addressLocality": "Bengaluru"
+    }
+   },
+   "jobUrl": "https://jobs.ashbyhq.com/temporal/956e8190-8493-485d-93a8-0b84a9daec9b",
+   "applyUrl": "https://jobs.ashbyhq.com/temporal/956e8190-8493-485d-93a8-0b84a9daec9b/application",
+   "descriptionHtml": "<h2><strong>Role Summary</strong></h2><p style=\"min-height:1.5em\">Temporal is a paradigm shift in modern application development, and one of the fastest developer movements in recent memory. Following our $300M Series D at a $5B valuation, we’re continuing to power the future of durable applications and have quickly become the orchestrator of choice for production agentic workloads. As Manager, India Partnerships - and our first partnerships hire in India - you’ll build our partner ecosystem and go-to-market from the ground up. Your primary goal is to be a force multiplier for the India sales team and a critical lever in beating the number, bringing the full breadth of partner motions - SIs, Cloud, ISV, etc - to originate and accelerate closed/won business, as well as driving post-sale consumption and success through partners. You’ll work hand-in-hand with our India field teams to execute with partners, and build a thriving partner ecosystem in India from the ground up.</p><p style=\"min-height:1.5em\">A secondary - but critical - mandate is to activate Global System Integrators (GSIs) locally in India in close partnership with Temporal’s global partner team. You’ll translate global GSI relationships, programs, and investments into local execution through activating decision makers and delivery teams. This role is incredibly unique and high leverage - serving as a force multiplier for both the India business, as well as our global GSI strategy.</p><p style=\"min-height:1.5em\"></p><h2><strong>What You’ll Do</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Own and grow the India partner ecosystem across SI/GSI and Cloud in particular, as well shaping the strategy and prioritization across other partner motions</p></li><li><p style=\"min-height:1.5em\">Relentlessly focus on helping India exceed its number through partner-sourced and influenced business - maximizing pipeline, accelerating deals, and building partner plays aligned to India field priorities</p></li><li><p style=\"min-height:1.5em\">Be a trusted advisor and force multiplier for our India field teams, working hand-in-hand with sales and cross-functional partners to execute the highest-impact partner motions</p></li><li><p style=\"min-height:1.5em\">Activate GSIs locally in India in lockstep with the global partner team, translating global relationships and programs into local activation, enablement, pipeline, and wins</p></li><li><p style=\"min-height:1.5em\">Partner with our Technical Services teams to accelerate SI and GSI technical enablement, practitioner readiness, and project success</p></li><li><p style=\"min-height:1.5em\">Operate and execute across business development, direct selling, partner management, field engagement, and partner-led deal strategy</p></li><li><p style=\"min-height:1.5em\">Develop and execute creative business development plays to drive net new business, consumption acceleration, and repeatable partner-led growth in India</p></li><li><p style=\"min-height:1.5em\">Serve as the primary advocate for India partners while coordinating closely with global partner owners, ensuring local execution reinforces global strategy and India priorities are represented globally</p></li><li><p style=\"min-height:1.5em\">Embed a partner-first mentality within Temporal’s India sales organization and make partners a consistent part of account planning, pipeline creation, and deal execution</p></li></ul><h2><strong>What You’ll Bring</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">7+ years in India partnerships, alliances, and/or enterprise sales, with a proven track record of building and scaling partner ecosystems across SIs, GSIs and Cloud partners</p></li><li><p style=\"min-height:1.5em\">Excellent attention to detail, excellent work ethic and unwavering commitment to delivering business results </p></li><li><p style=\"min-height:1.5em\">Demonstrated ability to build rapport with and influence sales, cross-functional teams, partner executives, and global alliance stakeholders</p></li><li><p style=\"min-height:1.5em\">Highly motivated self-starter that embraces white space, and turns that white space into opportunities and impact </p></li></ul><h3></h3><p style=\"min-height:1.5em\"></p><p style=\"min-height:1.5em\">Temporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.</p><p style=\"min-height:1.5em\">Temporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.</p>",
+   "descriptionPlain": "ROLE SUMMARY\n\nTemporal is a paradigm shift in modern application development, and one of the fastest developer movements in recent memory. Following our $300M Series D at a $5B valuation, we’re continuing to power the future of durable applications and have quickly become the orchestrator of choice for production agentic workloads. As Manager, India Partnerships - and our first partnerships hire in India - you’ll build our partner ecosystem and go-to-market from the ground up. Your primary goal is to be a force multiplier for the India sales team and a critical lever in beating the number, bringing the full breadth of partner motions - SIs, Cloud, ISV, etc - to originate and accelerate closed/won business, as well as driving post-sale consumption and success through partners. You’ll work hand-in-hand with our India field teams to execute with partners, and build a thriving partner ecosystem in India from the ground up.\n\nA secondary - but critical - mandate is to activate Global System Integrators (GSIs) locally in India in close partnership with Temporal’s global partner team. You’ll translate global GSI relationships, programs, and investments into local execution through activating decision makers and delivery teams. This role is incredibly unique and high leverage - serving as a force multiplier for both the India business, as well as our global GSI strategy.\n\n\n\n\nWHAT YOU’LL DO\n\n - Own and grow the India partner ecosystem across SI/GSI and Cloud in particular, as well shaping the strategy and prioritization across other partner motions\n\n - Relentlessly focus on helping India exceed its number through partner-sourced and influenced business - maximizing pipeline, accelerating deals, and building partner plays aligned to India field priorities\n\n - Be a trusted advisor and force multiplier for our India field teams, working hand-in-hand with sales and cross-functional partners to execute the highest-impact partner motions\n\n - Activate GSIs locally in India in lockstep with the global partner team, translating global relationships and programs into local activation, enablement, pipeline, and wins\n\n - Partner with our Technical Services teams to accelerate SI and GSI technical enablement, practitioner readiness, and project success\n\n - Operate and execute across business development, direct selling, partner management, field engagement, and partner-led deal strategy\n\n - Develop and execute creative business development plays to drive net new business, consumption acceleration, and repeatable partner-led growth in India\n\n - Serve as the primary advocate for India partners while coordinating closely with global partner owners, ensuring local execution reinforces global strategy and India priorities are represented globally\n\n - Embed a partner-first mentality within Temporal’s India sales organization and make partners a consistent part of account planning, pipeline creation, and deal execution\n\n\nWHAT YOU’LL BRING\n\n - 7+ years in India partnerships, alliances, and/or enterprise sales, with a proven track record of building and scaling partner ecosystems across SIs, GSIs and Cloud partners\n\n - Excellent attention to detail, excellent work ethic and unwavering commitment to delivering business results \n\n - Demonstrated ability to build rapport with and influence sales, cross-functional teams, partner executives, and global alliance stakeholders\n\n - Highly motivated self-starter that embraces white space, and turns that white space into opportunities and impact \n\n\n\n\n\n\nTemporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.\n\nTemporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.",
+   "compensation": {
+    "compensationTierSummary": null,
+    "scrapeableCompensationSalarySummary": null,
+    "compensationTiers": [],
+    "summaryComponents": []
+   }
+  },
+  {
+   "id": "db6c81bf-1af3-4792-9473-1a8ee4518a06",
+   "title": "Staff Solutions Architect, Banking (India)",
+   "department": "Sales",
+   "team": "Solutions Architecture",
+   "employmentType": "FullTime",
+   "location": "Bengaluru, Karnataka",
+   "shouldDisplayCompensationOnJobPostings": true,
+   "secondaryLocations": [],
+   "publishedAt": "2026-07-13T16:09:45.730+00:00",
+   "isListed": true,
+   "isRemote": true,
+   "workplaceType": "Remote",
+   "address": {
+    "postalAddress": {
+     "addressRegion": "Karnataka",
+     "addressCountry": "India",
+     "addressLocality": "Bengaluru"
+    }
+   },
+   "jobUrl": "https://jobs.ashbyhq.com/temporal/db6c81bf-1af3-4792-9473-1a8ee4518a06",
+   "applyUrl": "https://jobs.ashbyhq.com/temporal/db6c81bf-1af3-4792-9473-1a8ee4518a06/application",
+   "descriptionHtml": "<h2> Role Summary</h2><p style=\"min-height:1.5em\">The Staff Solutions Architect is Temporal's primary customer-facing technical leader within the <strong>Banking team,</strong> with a focus on the <strong>APJ (India) </strong>region. In this crucial role, you’ll work directly with prospects and customers, guiding them in understanding the suitability of their applications for Temporal’s platform and showcasing the technical advantages of our cloud service. Your contribution is vital in positioning Temporal against alternative technologies, helping customer engineering teams expand production applications using Temporal, and owning the technical relationship with key decision-makers. Your role is integral to our success.</p><h2><strong>What You’ll Do</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Collaborate with prospects to determine if their applications fit Temporal’s platform well.</p></li><li><p style=\"min-height:1.5em\">Educate customers and prospects on the technical benefits and limitations of Temporal’s platform and cloud service.</p></li><li><p style=\"min-height:1.5em\">Position Temporal as a leading solution against competing technologies and architectural patterns.</p></li><li><p style=\"min-height:1.5em\">Foster an environment within customer engineering organizations to increase the adoption and expansion of Temporal in production environments.</p></li><li><p style=\"min-height:1.5em\">Partner closely with Account Executives to develop and execute comprehensive account plans.</p></li><li><p style=\"min-height:1.5em\">Manage and nurture relationships with technical decision-makers within customer organizations, ensuring they fully leverage Temporal’s capabilities.</p></li></ul><h2><strong>What You’ll Bring</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Reside within <strong>Bangalore, India</strong>.</p></li><li><p style=\"min-height:1.5em\">Exceptional technical communication skills, including presenting, whiteboarding, and writing.</p></li><li><p style=\"min-height:1.5em\">Deep understanding of distributed system technologies, design principles, and best practices.</p></li><li><p style=\"min-height:1.5em\">Proficiency in building application prototypes and providing design, development, build, and deployment guidance using one or more of Temporal’s supported languages: Java, Golang, TypeScript, Python, C# or PHP.</p></li><li><p style=\"min-height:1.5em\">Firm grasp of operational considerations in production environments, such as security, reliability, performance, cost management, and operations.</p></li><li><p style=\"min-height:1.5em\">Ability to provide insightful advice on architectural topics, including application patterns and platform architectures.</p></li><li><p style=\"min-height:1.5em\">Experience with at least one major cloud provider and familiarity with commonly used application development and production services.</p></li><li><p style=\"min-height:1.5em\">Serve as a strategic technical advisor to Sales Account Executives, assisting with scoping and sizing opportunities and offering guidance on technical fit and challenges.</p></li></ul><h2><strong>Nice to Have</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Prior experience with FinTech and/or FinServe.</p></li><li><p style=\"min-height:1.5em\">Likes to learn new technical topics, often directly from Engineering</p></li><li><p style=\"min-height:1.5em\">Can come up to speed without any sales-specific training (i.e., from docs, videos &amp; conversations)</p></li><li><p style=\"min-height:1.5em\">Partners well with engineers working at customer organizations</p></li></ul><p style=\"min-height:1.5em\">Temporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.</p><p style=\"min-height:1.5em\">Temporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.</p>",
+   "descriptionPlain": " ROLE SUMMARY\n\nThe Staff Solutions Architect is Temporal's primary customer-facing technical leader within the Banking team, with a focus on the APJ (India) region. In this crucial role, you’ll work directly with prospects and customers, guiding them in understanding the suitability of their applications for Temporal’s platform and showcasing the technical advantages of our cloud service. Your contribution is vital in positioning Temporal against alternative technologies, helping customer engineering teams expand production applications using Temporal, and owning the technical relationship with key decision-makers. Your role is integral to our success.\n\n\nWHAT YOU’LL DO\n\n - Collaborate with prospects to determine if their applications fit Temporal’s platform well.\n\n - Educate customers and prospects on the technical benefits and limitations of Temporal’s platform and cloud service.\n\n - Position Temporal as a leading solution against competing technologies and architectural patterns.\n\n - Foster an environment within customer engineering organizations to increase the adoption and expansion of Temporal in production environments.\n\n - Partner closely with Account Executives to develop and execute comprehensive account plans.\n\n - Manage and nurture relationships with technical decision-makers within customer organizations, ensuring they fully leverage Temporal’s capabilities.\n\n\nWHAT YOU’LL BRING\n\n - Reside within Bangalore, India.\n\n - Exceptional technical communication skills, including presenting, whiteboarding, and writing.\n\n - Deep understanding of distributed system technologies, design principles, and best practices.\n\n - Proficiency in building application prototypes and providing design, development, build, and deployment guidance using one or more of Temporal’s supported languages: Java, Golang, TypeScript, Python, C# or PHP.\n\n - Firm grasp of operational considerations in production environments, such as security, reliability, performance, cost management, and operations.\n\n - Ability to provide insightful advice on architectural topics, including application patterns and platform architectures.\n\n - Experience with at least one major cloud provider and familiarity with commonly used application development and production services.\n\n - Serve as a strategic technical advisor to Sales Account Executives, assisting with scoping and sizing opportunities and offering guidance on technical fit and challenges.\n\n\nNICE TO HAVE\n\n - Prior experience with FinTech and/or FinServe.\n\n - Likes to learn new technical topics, often directly from Engineering\n\n - Can come up to speed without any sales-specific training (i.e., from docs, videos & conversations)\n\n - Partners well with engineers working at customer organizations\n\nTemporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.\n\nTemporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.",
+   "compensation": {
+    "compensationTierSummary": "₹56L – ₹73.5L • ₹24L – ₹31.5L Commission",
+    "scrapeableCompensationSalarySummary": "₹56L - ₹73.5L",
+    "compensationTiers": [
+     {
+      "id": "f165adae-0faa-49fb-914e-1f2b5337255b",
+      "tierSummary": "Salary ₹56L – ₹73.5L • ₹24L – ₹31.5L Commission",
+      "title": "India",
+      "additionalInformation": null,
+      "components": [
+       {
+        "id": "b3246d91-f271-44cf-a929-59fbf80ffbb6",
+        "summary": "Salary ₹56L – ₹73.5L",
+        "compensationType": "Salary",
+        "interval": "1 YEAR",
+        "currencyCode": "INR",
+        "minValue": 5600000,
+        "maxValue": 7350000
+       },
+       {
+        "id": "ae4852d8-dd6e-482b-a77f-d34bd81b673b",
+        "summary": "₹24L – ₹31.5L Commission",
+        "compensationType": "Commission",
+        "interval": "1 YEAR",
+        "currencyCode": "INR",
+        "minValue": 2400000,
+        "maxValue": 3150000
+       }
+      ]
+     }
+    ],
+    "summaryComponents": [
+     {
+      "compensationType": "Salary",
+      "interval": "1 YEAR",
+      "currencyCode": "INR",
+      "minValue": 5600000,
+      "maxValue": 7350000
+     },
+     {
+      "compensationType": "Commission",
+      "interval": "1 YEAR",
+      "currencyCode": "INR",
+      "minValue": 2400000,
+      "maxValue": 3150000
+     }
+    ]
+   }
+  },
+  {
+   "id": "8d36eacb-61cf-466d-ba9a-d5849d3312eb",
+   "title": "Account Executive, EMEA",
+   "department": "Sales",
+   "team": "Account Executives",
+   "employmentType": "FullTime",
+   "location": "Paris, France",
+   "shouldDisplayCompensationOnJobPostings": true,
+   "secondaryLocations": [],
+   "publishedAt": "2026-06-17T18:10:28.006+00:00",
+   "isListed": true,
+   "isRemote": true,
+   "workplaceType": "Remote",
+   "address": {
+    "postalAddress": {
+     "addressRegion": "France",
+     "addressCountry": "France",
+     "addressLocality": "Paris"
+    }
+   },
+   "jobUrl": "https://jobs.ashbyhq.com/temporal/8d36eacb-61cf-466d-ba9a-d5849d3312eb",
+   "applyUrl": "https://jobs.ashbyhq.com/temporal/8d36eacb-61cf-466d-ba9a-d5849d3312eb/application",
+   "descriptionHtml": "<h2><strong>Role Summary</strong></h2><p style=\"min-height:1.5em\">Our fast-moving and highly successful Strategic Sales team is growing, and we are seeking the next <strong>Account Executive</strong> in <strong>Paris, France</strong> to join our team! Temporal is a remote-first company; however, this role is focused on EMEA to better support our customers and collaborate more effectively with regional teammates. </p><p style=\"min-height:1.5em\">We are looking for those who share our values, challenge 'standard' thinking, and want to influence our future. If you want to be part of an amazing team, have a passion for open-source software, and a desire to build successful customer relationships, then come join us!</p><p style=\"min-height:1.5em\">We are looking for a motivated and enthusiastic Scale Account Executive to join the growing Temporal team. This role will become a main point of contact for Temporal customers by leveraging your technical, sales, and account management skills to help grow usage and discover new use cases across your book of business.</p><h2><strong>What You'll Do</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Activate and implement new logo accounts and get them up and running on the platform </p></li><li><p style=\"min-height:1.5em\">Identify activation and expansion opportunities within your customer base</p></li><li><p style=\"min-height:1.5em\">Be responsible for the success of a broad book of business</p></li><li><p style=\"min-height:1.5em\">Create and grow relationships with our champions</p></li><li><p style=\"min-height:1.5em\">Drive consistent activity, pipeline development and quota attainment</p></li><li><p style=\"min-height:1.5em\">Partner with product marketing to deliver proper messaging and content to Temporal Cloud customers </p></li><li><p style=\"min-height:1.5em\">Design and execute programs to support the identification, design and productionisation of new case cases with your customers </p></li><li><p style=\"min-height:1.5em\">Identify ICP accounts and pursue the right opportunities in the right accounts to drive ARR growth</p></li><li><p style=\"min-height:1.5em\">Work closely with our Start Up Program team and Self Sign Up team to ensure success for the right new logo prospects </p></li></ul><h2><strong>What You'll Bring</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Individuals in this role have a passion for technology and the ambition to dive head-first into new challenges</p></li><li><p style=\"min-height:1.5em\">3+ years experience working in a Sales, Customer Success, Account Management, Sales/Business Development </p></li><li><p style=\"min-height:1.5em\">A background and passion for advocating on behalf of your customers </p></li><li><p style=\"min-height:1.5em\">A mind for technology - we’ll teach you about Temporal and databases, but our customers and product are inherently technical and you should have an aptitude and curiosity to learn about those concepts</p></li><li><p style=\"min-height:1.5em\">The ability to act with a high level of autonomy, you will be expected to take full ownership of your customer portfolio and make key decisions to drive effective customer outcomes</p></li><li><p style=\"min-height:1.5em\">An entrepreneurial mindset - this is a new role at Temporal where you will be required to both deviate from established procedure and often build entirely new process or practices to ensure we best serve this customer segment</p></li><li><p style=\"min-height:1.5em\">Team player and passion for collaboration</p></li><li><p style=\"min-height:1.5em\">Prior experience to tooling like Salesforce, Slack, Outreach, Gong, CommonRoom </p></li><li><p style=\"min-height:1.5em\">Prior exposure to database, cloud, and infrastructure technology is a plus</p></li></ul><div style=\"min-height:1.2em;margin-top:0;margin-bottom:0\"> </div><p style=\"min-height:1.5em\">Temporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.</p><p style=\"min-height:1.5em\">Temporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.</p>",
+   "descriptionPlain": "ROLE SUMMARY\n\nOur fast-moving and highly successful Strategic Sales team is growing, and we are seeking the next Account Executive in Paris, France to join our team! Temporal is a remote-first company; however, this role is focused on EMEA to better support our customers and collaborate more effectively with regional teammates. \n\nWe are looking for those who share our values, challenge 'standard' thinking, and want to influence our future. If you want to be part of an amazing team, have a passion for open-source software, and a desire to build successful customer relationships, then come join us!\n\nWe are looking for a motivated and enthusiastic Scale Account Executive to join the growing Temporal team. This role will become a main point of contact for Temporal customers by leveraging your technical, sales, and account management skills to help grow usage and discover new use cases across your book of business.\n\n\nWHAT YOU'LL DO\n\n - Activate and implement new logo accounts and get them up and running on the platform \n\n - Identify activation and expansion opportunities within your customer base\n\n - Be responsible for the success of a broad book of business\n\n - Create and grow relationships with our champions\n\n - Drive consistent activity, pipeline development and quota attainment\n\n - Partner with product marketing to deliver proper messaging and content to Temporal Cloud customers \n\n - Design and execute programs to support the identification, design and productionisation of new case cases with your customers \n\n - Identify ICP accounts and pursue the right opportunities in the right accounts to drive ARR growth\n\n - Work closely with our Start Up Program team and Self Sign Up team to ensure success for the right new logo prospects \n\n\nWHAT YOU'LL BRING\n\n - Individuals in this role have a passion for technology and the ambition to dive head-first into new challenges\n\n - 3+ years experience working in a Sales, Customer Success, Account Management, Sales/Business Development \n\n - A background and passion for advocating on behalf of your customers \n\n - A mind for technology - we’ll teach you about Temporal and databases, but our customers and product are inherently technical and you should have an aptitude and curiosity to learn about those concepts\n\n - The ability to act with a high level of autonomy, you will be expected to take full ownership of your customer portfolio and make key decisions to drive effective customer outcomes\n\n - An entrepreneurial mindset - this is a new role at Temporal where you will be required to both deviate from established procedure and often build entirely new process or practices to ensure we best serve this customer segment\n\n - Team player and passion for collaboration\n\n - Prior experience to tooling like Salesforce, Slack, Outreach, Gong, CommonRoom \n\n - Prior exposure to database, cloud, and infrastructure technology is a plus\n\n \n\nTemporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.\n\nTemporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.",
+   "compensation": {
+    "compensationTierSummary": "£95K • Offers Equity • £95K Commission",
+    "scrapeableCompensationSalarySummary": "£95K",
+    "compensationTiers": [
+     {
+      "id": "4895b6d3-a644-458d-b638-5bc38e66363b",
+      "tierSummary": "Salary £95K • Offers Equity • £95K Commission",
+      "title": "United Kingdom",
+      "additionalInformation": null,
+      "components": [
+       {
+        "id": "26a7f824-5a40-4db1-9a36-c95f4666520d",
+        "summary": "Salary £95K",
+        "compensationType": "Salary",
+        "interval": "1 YEAR",
+        "currencyCode": "GBP",
+        "minValue": 95000,
+        "maxValue": 95000
+       },
+       {
+        "id": "48ed3743-982e-4c74-862f-20e910c7cd7e",
+        "summary": "£95K Commission",
+        "compensationType": "Commission",
+        "interval": "1 YEAR",
+        "currencyCode": "GBP",
+        "minValue": 95000,
+        "maxValue": 95000
+       },
+       {
+        "id": "a7163e07-adca-4c63-8b18-ff055a7422cd",
+        "summary": "Offers Equity",
+        "compensationType": "EquityCashValue",
+        "interval": "1 YEAR",
+        "currencyCode": "GBP",
+        "minValue": null,
+        "maxValue": null
+       }
+      ]
+     }
+    ],
+    "summaryComponents": [
+     {
+      "compensationType": "Salary",
+      "interval": "1 YEAR",
+      "currencyCode": "GBP",
+      "minValue": 95000,
+      "maxValue": 95000
+     },
+     {
+      "compensationType": "Commission",
+      "interval": "1 YEAR",
+      "currencyCode": "GBP",
+      "minValue": 95000,
+      "maxValue": 95000
+     },
+     {
+      "compensationType": "EquityCashValue",
+      "interval": "1 YEAR",
+      "currencyCode": "GBP",
+      "minValue": null,
+      "maxValue": null
+     }
+    ]
+   }
+  },
+  {
+   "id": "2ebca428-89c2-4cd9-9b30-92bb6d20ad45",
+   "title": "Senior Account Executive, New Logo",
+   "department": "Sales",
+   "team": "Account Executives",
+   "employmentType": "FullTime",
+   "location": "Berlin, Germany",
+   "shouldDisplayCompensationOnJobPostings": true,
+   "secondaryLocations": [],
+   "publishedAt": "2026-01-30T18:16:51.544+00:00",
+   "isListed": true,
+   "isRemote": true,
+   "workplaceType": "Remote",
+   "address": {
+    "postalAddress": {
+     "addressRegion": "Germany",
+     "addressCountry": "Germany",
+     "addressLocality": "Berlin"
+    }
+   },
+   "jobUrl": "https://jobs.ashbyhq.com/temporal/2ebca428-89c2-4cd9-9b30-92bb6d20ad45",
+   "applyUrl": "https://jobs.ashbyhq.com/temporal/2ebca428-89c2-4cd9-9b30-92bb6d20ad45/application",
+   "descriptionHtml": "<h2><strong>Role Summary</strong></h2><p style=\"min-height:1.5em\">Temporal is shaping the future of application development by enabling organizations to build, scale, and run resilient applications. We are seeking a highly skilled and experienced <strong>Senior Account Executive based in Germany </strong>to join our <strong>New Logo team</strong> and drive revenue within some of the largest and most complex enterprise organizations.</p><p style=\"min-height:1.5em\">In this role, you will own the DACH (Germany, Austria and Switzerland) sales territory, navigating matrixed enterprise companies and selling to highly technical personas such as software engineers, engineering leaders, and architects. As a strategic partner to our customers, you will bring a proven ability to lead sophisticated sales processes, uncover opportunities within massive organizations, and drive adoption of Temporal’s solutions. Your entrepreneurial mindset will help you thrive in a high-growth, startup environment, while your expertise in scaling revenue within complex organizations will make you an invaluable asset to our team.</p><p style=\"min-height:1.5em\">Come work with some of the brightest minds in the tech industry and help transform how modern applications are built. You will contribute to the growth of a category-defining company at the forefront of innovation.</p><h2><strong>What You'll Do</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Own and manage the entire sales cycle, from prospecting to close, with a focus on growing revenue with new enterprise customers</p></li><li><p style=\"min-height:1.5em\">Develop and execute strategic sales plans to break into large, matrixed enterprise accounts</p></li><li><p style=\"min-height:1.5em\">Engage with software engineers, architects, and technical stakeholders to understand their needs and position Temporal effectively across a wide range of use cases</p></li><li><p style=\"min-height:1.5em\">Navigate complex technical discussions and align Temporal’s capabilities with customer priorities</p></li><li><p style=\"min-height:1.5em\">Build and nurture quality relationships with prospects, acting as a trusted advisor throughout the sales process</p></li><li><p style=\"min-height:1.5em\">Partner with customer success, solutions architecture, and product teams to ensure a seamless customer experience</p></li><li><p style=\"min-height:1.5em\">Leverage your expertise in enterprise sales to identify and capture high-value opportunities within large, complex organizations, driving net-new customer acquisition</p></li><li><p style=\"min-height:1.5em\">Innovate and adapt sales strategies to meet the dynamic needs of enterprise businesses in a rapidly evolving market</p></li><li><p style=\"min-height:1.5em\">Be based in Germany with the ability to travel throughout the country for in-person meetings</p></li></ul><h2><strong>What You'll Bring</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Demonstrated expertise in enterprise software sales, typically gained through 7+ years of experience in similar roles</p></li><li><p style=\"min-height:1.5em\">Proven track record of selling to software engineers, technical decision-makers, and engineering leaders</p></li><li><p style=\"min-height:1.5em\">Navigate complex technical discussions and collaboratively align Temporal’s capabilities with customer priorities</p></li><li><p style=\"min-height:1.5em\">Demonstrated success navigating and closing deals within large, matrixed enterprise organizations</p></li><li><p style=\"min-height:1.5em\">Experience driving high-growth sales motions within enterprise accounts, identifying opportunities, and scaling revenue</p></li><li><p style=\"min-height:1.5em\">Comfortable operating in a fast-paced, high-growth environment with a hands-on approach and entrepreneurial mindset</p></li><li><p style=\"min-height:1.5em\">Exceptional relationship management skills, with the ability to influence and build trust across multiple levels of an organization</p></li><li><p style=\"min-height:1.5em\">Demonstrated success in consistently achieving or surpassing revenue goals</p></li><li><p style=\"min-height:1.5em\">Experience working with cutting-edge developer tools or infrastructure products</p></li><li><p style=\"min-height:1.5em\">Experience working with OSS, and monetizing OSS</p></li><li><p style=\"min-height:1.5em\">Familiarity with consumption-based sales models and driving adoption of technical products</p></li><li><p style=\"min-height:1.5em\">Outstanding communication and negotiation skills, with the ability to present to technical and executive audiences</p></li><li><p style=\"min-height:1.5em\">A passion for technology and a deep curiosity for solving complex customer challenges</p></li><li><p style=\"min-height:1.5em\"><strong>German language proficiency is a requirement for success in this role.</strong></p></li></ul><p style=\"min-height:1.5em\">Temporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.</p><p style=\"min-height:1.5em\">Temporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.</p>",
+   "descriptionPlain": "ROLE SUMMARY\n\nTemporal is shaping the future of application development by enabling organizations to build, scale, and run resilient applications. We are seeking a highly skilled and experienced Senior Account Executive based in Germany to join our New Logo team and drive revenue within some of the largest and most complex enterprise organizations.\n\nIn this role, you will own the DACH (Germany, Austria and Switzerland) sales territory, navigating matrixed enterprise companies and selling to highly technical personas such as software engineers, engineering leaders, and architects. As a strategic partner to our customers, you will bring a proven ability to lead sophisticated sales processes, uncover opportunities within massive organizations, and drive adoption of Temporal’s solutions. Your entrepreneurial mindset will help you thrive in a high-growth, startup environment, while your expertise in scaling revenue within complex organizations will make you an invaluable asset to our team.\n\nCome work with some of the brightest minds in the tech industry and help transform how modern applications are built. You will contribute to the growth of a category-defining company at the forefront of innovation.\n\n\nWHAT YOU'LL DO\n\n - Own and manage the entire sales cycle, from prospecting to close, with a focus on growing revenue with new enterprise customers\n\n - Develop and execute strategic sales plans to break into large, matrixed enterprise accounts\n\n - Engage with software engineers, architects, and technical stakeholders to understand their needs and position Temporal effectively across a wide range of use cases\n\n - Navigate complex technical discussions and align Temporal’s capabilities with customer priorities\n\n - Build and nurture quality relationships with prospects, acting as a trusted advisor throughout the sales process\n\n - Partner with customer success, solutions architecture, and product teams to ensure a seamless customer experience\n\n - Leverage your expertise in enterprise sales to identify and capture high-value opportunities within large, complex organizations, driving net-new customer acquisition\n\n - Innovate and adapt sales strategies to meet the dynamic needs of enterprise businesses in a rapidly evolving market\n\n - Be based in Germany with the ability to travel throughout the country for in-person meetings\n\n\nWHAT YOU'LL BRING\n\n - Demonstrated expertise in enterprise software sales, typically gained through 7+ years of experience in similar roles\n\n - Proven track record of selling to software engineers, technical decision-makers, and engineering leaders\n\n - Navigate complex technical discussions and collaboratively align Temporal’s capabilities with customer priorities\n\n - Demonstrated success navigating and closing deals within large, matrixed enterprise organizations\n\n - Experience driving high-growth sales motions within enterprise accounts, identifying opportunities, and scaling revenue\n\n - Comfortable operating in a fast-paced, high-growth environment with a hands-on approach and entrepreneurial mindset\n\n - Exceptional relationship management skills, with the ability to influence and build trust across multiple levels of an organization\n\n - Demonstrated success in consistently achieving or surpassing revenue goals\n\n - Experience working with cutting-edge developer tools or infrastructure products\n\n - Experience working with OSS, and monetizing OSS\n\n - Familiarity with consumption-based sales models and driving adoption of technical products\n\n - Outstanding communication and negotiation skills, with the ability to present to technical and executive audiences\n\n - A passion for technology and a deep curiosity for solving complex customer challenges\n\n - German language proficiency is a requirement for success in this role.\n\nTemporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.\n\nTemporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.",
+   "compensation": {
+    "compensationTierSummary": "€125K • Offers Equity • €125K Commission",
+    "scrapeableCompensationSalarySummary": "€125K",
+    "compensationTiers": [
+     {
+      "id": "92a073a1-b39f-4943-ab24-3fbf22e4fbc3",
+      "tierSummary": "Salary €125K • Offers Equity • €125K Commission",
+      "title": "Germany",
+      "additionalInformation": null,
+      "components": [
+       {
+        "id": "4c6bcfe2-f68f-4491-883f-3443beef847a",
+        "summary": "Salary €125K",
+        "compensationType": "Salary",
+        "interval": "1 YEAR",
+        "currencyCode": "EUR",
+        "minValue": 125000,
+        "maxValue": 125000
+       },
+       {
+        "id": "897602cf-a6e6-4bc3-be90-2c44eeef2713",
+        "summary": "Offers Equity",
+        "compensationType": "EquityCashValue",
+        "interval": "1 YEAR",
+        "currencyCode": "EUR",
+        "minValue": null,
+        "maxValue": null
+       },
+       {
+        "id": "8ddb480a-92a2-4069-a4d5-7a2a05179b24",
+        "summary": "€125K Commission",
+        "compensationType": "Commission",
+        "interval": "1 YEAR",
+        "currencyCode": "EUR",
+        "minValue": 125000,
+        "maxValue": 125000
+       }
+      ]
+     }
+    ],
+    "summaryComponents": [
+     {
+      "compensationType": "Salary",
+      "interval": "1 YEAR",
+      "currencyCode": "EUR",
+      "minValue": 125000,
+      "maxValue": 125000
+     },
+     {
+      "compensationType": "EquityCashValue",
+      "interval": "1 YEAR",
+      "currencyCode": "EUR",
+      "minValue": null,
+      "maxValue": null
+     },
+     {
+      "compensationType": "Commission",
+      "interval": "1 YEAR",
+      "currencyCode": "EUR",
+      "minValue": 125000,
+      "maxValue": 125000
+     }
+    ]
+   }
+  },
+  {
+   "id": "1aa528e5-5076-4d98-8b07-92444c692ade",
+   "title": "Business Development Representative",
+   "department": "Sales",
+   "team": "Business Development",
+   "employmentType": "FullTime",
+   "location": "Atlanta, Georgia",
+   "shouldDisplayCompensationOnJobPostings": true,
+   "secondaryLocations": [],
+   "publishedAt": "2026-06-02T17:44:52.454+00:00",
+   "isListed": true,
+   "isRemote": true,
+   "workplaceType": "Hybrid",
+   "address": {
+    "postalAddress": {
+     "addressRegion": "Georgia",
+     "addressCountry": "United States",
+     "addressLocality": "Atlanta"
+    }
+   },
+   "jobUrl": "https://jobs.ashbyhq.com/temporal/1aa528e5-5076-4d98-8b07-92444c692ade",
+   "applyUrl": "https://jobs.ashbyhq.com/temporal/1aa528e5-5076-4d98-8b07-92444c692ade/application",
+   "descriptionHtml": "<h2><strong>Role Summary</strong></h2><p style=\"min-height:1.5em\">We are looking for a motivated and enthusiastic <strong>Business Development Representative</strong> to join the growing Temporal team in <strong>Atlanta, GA</strong>. Our BDRs will work hand in hand with the Sales Team to generate leads and build customer pipelines. This is an entry-level role with a dedicated growth path and training to be a great sales professional.  We are looking for self-starters with a passion for technology and people.</p><h2><strong>What You'll Do</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Proactively outbound prospecting and lead activity management in an effort to qualify and market Temporal to potential customers.</p></li><li><p style=\"min-height:1.5em\">Discover opportunities from leads and set appointments from those leads. </p></li><li><p style=\"min-height:1.5em\">Use of strong selling and influencing skills to set up qualified appointments. </p></li><li><p style=\"min-height:1.5em\">Understand the Temporal OSS and Cloud solutions enough to provide high level introduction. </p></li><li><p style=\"min-height:1.5em\">Leverage taught sales techniques to maximize customer interactions. </p></li><li><p style=\"min-height:1.5em\">Log, track, and maintain outbound activity. </p></li><li><p style=\"min-height:1.5em\">Work closely with the Sales Team and attend customer meetings as required. </p></li><li><p style=\"min-height:1.5em\">Be the architect of a growing team, defining and iterating on processes.</p></li></ul><h2><strong>What You'll Need</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">2+ years of experience in prospecting roles.</p></li><li><p style=\"min-height:1.5em\">Excellent in-person, phone, and written customer communication skills.</p></li><li><p style=\"min-height:1.5em\">Must be able to interact and communicate with individuals at all levels of the organization.</p></li><li><p style=\"min-height:1.5em\">Ability to make formal and informal presentations to staff and clients.</p></li><li><p style=\"min-height:1.5em\">Ability to prioritize work assignments and shift work efforts based on the needs of the department or business goals.</p></li><li><p style=\"min-height:1.5em\">Proficient PC, Spreadsheet, Salesforce.com, and Google Docs skills required.</p></li><li><p style=\"min-height:1.5em\">Ability to manage time effectively, work independently, and be self-motivated</p></li><li><p style=\"min-height:1.5em\">Prior track record of achievement in positions with accountability.</p></li><li><p style=\"min-height:1.5em\">Ability to thrive in a fast-paced startup environment.</p></li><li><p style=\"min-height:1.5em\">Proactive, independent thinker with high energy/positive attitude. </p></li></ul><p style=\"min-height:1.5em\">Temporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.</p><p style=\"min-height:1.5em\">Temporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.</p>",
+   "descriptionPlain": "ROLE SUMMARY\n\nWe are looking for a motivated and enthusiastic Business Development Representative to join the growing Temporal team in Atlanta, GA. Our BDRs will work hand in hand with the Sales Team to generate leads and build customer pipelines. This is an entry-level role with a dedicated growth path and training to be a great sales professional.  We are looking for self-starters with a passion for technology and people.\n\n\nWHAT YOU'LL DO\n\n - Proactively outbound prospecting and lead activity management in an effort to qualify and market Temporal to potential customers.\n\n - Discover opportunities from leads and set appointments from those leads. \n\n - Use of strong selling and influencing skills to set up qualified appointments. \n\n - Understand the Temporal OSS and Cloud solutions enough to provide high level introduction. \n\n - Leverage taught sales techniques to maximize customer interactions. \n\n - Log, track, and maintain outbound activity. \n\n - Work closely with the Sales Team and attend customer meetings as required. \n\n - Be the architect of a growing team, defining and iterating on processes.\n\n\nWHAT YOU'LL NEED\n\n - 2+ years of experience in prospecting roles.\n\n - Excellent in-person, phone, and written customer communication skills.\n\n - Must be able to interact and communicate with individuals at all levels of the organization.\n\n - Ability to make formal and informal presentations to staff and clients.\n\n - Ability to prioritize work assignments and shift work efforts based on the needs of the department or business goals.\n\n - Proficient PC, Spreadsheet, Salesforce.com, and Google Docs skills required.\n\n - Ability to manage time effectively, work independently, and be self-motivated\n\n - Prior track record of achievement in positions with accountability.\n\n - Ability to thrive in a fast-paced startup environment.\n\n - Proactive, independent thinker with high energy/positive attitude. \n\nTemporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.\n\nTemporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.",
+   "compensation": {
+    "compensationTierSummary": "$70K • Offers Equity • $30K Commission",
+    "scrapeableCompensationSalarySummary": "$70K",
+    "compensationTiers": [
+     {
+      "id": "03cad48c-f27d-4af4-a0d8-c89747be6721",
+      "tierSummary": "Salary $70K • Offers Equity • $30K Commission",
+      "title": "United States",
+      "additionalInformation": null,
+      "components": [
+       {
+        "id": "29551915-3ce6-4544-b4aa-5c741dfc7bc8",
+        "summary": "Salary $70K",
+        "compensationType": "Salary",
+        "interval": "1 YEAR",
+        "currencyCode": "USD",
+        "minValue": 70000,
+        "maxValue": 70000
+       },
+       {
+        "id": "a91c75eb-6ec0-4b58-88ce-1616fa9c43a9",
+        "summary": "$30K Commission",
+        "compensationType": "Commission",
+        "interval": "1 YEAR",
+        "currencyCode": "USD",
+        "minValue": 30000,
+        "maxValue": 30000
+       },
+       {
+        "id": "e29d3001-ac4c-4686-89d6-74329f03ad84",
+        "summary": "Offers Equity",
+        "compensationType": "EquityCashValue",
+        "interval": "1 YEAR",
+        "currencyCode": "USD",
+        "minValue": null,
+        "maxValue": null
+       }
+      ]
+     }
+    ],
+    "summaryComponents": [
+     {
+      "compensationType": "Salary",
+      "interval": "1 YEAR",
+      "currencyCode": "USD",
+      "minValue": 70000,
+      "maxValue": 70000
+     },
+     {
+      "compensationType": "Commission",
+      "interval": "1 YEAR",
+      "currencyCode": "USD",
+      "minValue": 30000,
+      "maxValue": 30000
+     },
+     {
+      "compensationType": "EquityCashValue",
+      "interval": "1 YEAR",
+      "currencyCode": "USD",
+      "minValue": null,
+      "maxValue": null
+     }
+    ]
+   }
+  },
+  {
+   "id": "de4ea341-0921-4ab0-878e-bf936021118d",
+   "title": "Staff Solutions Architect, New Logo - Central",
+   "department": "Sales",
+   "team": "Solutions Architecture",
+   "employmentType": "FullTime",
+   "location": "Chicago, Illinois",
+   "shouldDisplayCompensationOnJobPostings": true,
+   "secondaryLocations": [],
+   "publishedAt": "2026-06-24T19:25:10.397+00:00",
+   "isListed": true,
+   "isRemote": true,
+   "workplaceType": "Remote",
+   "address": {
+    "postalAddress": {
+     "addressRegion": "Illinois",
+     "addressCountry": "United States",
+     "addressLocality": "Chicago"
+    }
+   },
+   "jobUrl": "https://jobs.ashbyhq.com/temporal/de4ea341-0921-4ab0-878e-bf936021118d",
+   "applyUrl": "https://jobs.ashbyhq.com/temporal/de4ea341-0921-4ab0-878e-bf936021118d/application",
+   "descriptionHtml": "<h2><strong>Role Summary</strong></h2><p style=\"min-height:1.5em\">The Staff Solutions Architect is Temporal's primary customer-facing technical leader within the New Logo team, with a focus on the <strong>Central region</strong>. In this crucial role, you’ll work directly with prospects and customers, guiding them in understanding the suitability of their applications for Temporal’s platform and showcasing the technical advantages of our cloud service. Your contribution is vital in positioning Temporal against alternative technologies, helping customer engineering teams expand production applications using Temporal, and owning the technical relationship with key decision-makers. Your role is integral to our success.</p><h2><strong>What You'll Do</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Help prospects understand if their application is suitable for Temporal</p></li><li><p style=\"min-height:1.5em\">Help customers &amp; prospects understand the technical benefits and drawbacks of the Temporal platform and cloud service</p></li><li><p style=\"min-height:1.5em\">Position Temporal successfully against alternative technologies or technical patterns</p></li><li><p style=\"min-height:1.5em\">Create the conditions in customer engineering organizations that allow them to expand the number of production applications using Temporal</p></li><li><p style=\"min-height:1.5em\">Partner with Account Executives to develop and execute an overall account plan</p></li><li><p style=\"min-height:1.5em\">Own the relationship with customer technical decision-makers in evaluating and operating temporal applications.</p></li><li><p style=\"min-height:1.5em\">Travel expected to be 25-50%</p></li></ul><h2><strong>What You'll Bring</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Excellent technical communication skills (presenting, whiteboarding, writing)</p></li><li><p style=\"min-height:1.5em\">Comfortable discussing distributed system technologies, design decisions, and best practices</p></li><li><p style=\"min-height:1.5em\">Able to construct application prototypes and follow through with design, development, build, and deployment guidance using one of Temporal’s supported languages (Java, Golang, Typescript, Python, PHP)</p></li><li><p style=\"min-height:1.5em\">Conversant in topics related to operating applications in production, such as security, reliability,  performance, cost management, and operations</p></li><li><p style=\"min-height:1.5em\">Can offer helpful advice and good arguments to customers on architectural topics like application patterns and platform architectures</p></li><li><p style=\"min-height:1.5em\">Comfortable working with at least one of the major cloud providers and using the various services commonly employed for application development &amp; production</p></li><li><p style=\"min-height:1.5em\">Serve as a technical advisor to Sales Account Executives - can help identify good/poor fit use cases, assist with scoping and sizing of opportunities, and anticipate where customer technical choices will work for or against Temporal</p></li></ul><h2><strong>Nice to Have</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Likes to learn new technical topics, often directly from Engineering</p></li><li><p style=\"min-height:1.5em\">Can come up to speed without any sales-specific training (i.e., from docs, videos &amp; conversations)</p></li><li><p style=\"min-height:1.5em\">Partners well with engineers working at customer organizations</p></li><li><p style=\"min-height:1.5em\">Serves as a good technical coach: likes to find ways to make others look smart</p></li></ul><p style=\"min-height:1.5em\">Temporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.</p><p style=\"min-height:1.5em\">Temporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.</p>",
+   "descriptionPlain": "ROLE SUMMARY\n\nThe Staff Solutions Architect is Temporal's primary customer-facing technical leader within the New Logo team, with a focus on the Central region. In this crucial role, you’ll work directly with prospects and customers, guiding them in understanding the suitability of their applications for Temporal’s platform and showcasing the technical advantages of our cloud service. Your contribution is vital in positioning Temporal against alternative technologies, helping customer engineering teams expand production applications using Temporal, and owning the technical relationship with key decision-makers. Your role is integral to our success.\n\n\nWHAT YOU'LL DO\n\n - Help prospects understand if their application is suitable for Temporal\n\n - Help customers & prospects understand the technical benefits and drawbacks of the Temporal platform and cloud service\n\n - Position Temporal successfully against alternative technologies or technical patterns\n\n - Create the conditions in customer engineering organizations that allow them to expand the number of production applications using Temporal\n\n - Partner with Account Executives to develop and execute an overall account plan\n\n - Own the relationship with customer technical decision-makers in evaluating and operating temporal applications.\n\n - Travel expected to be 25-50%\n\n\nWHAT YOU'LL BRING\n\n - Excellent technical communication skills (presenting, whiteboarding, writing)\n\n - Comfortable discussing distributed system technologies, design decisions, and best practices\n\n - Able to construct application prototypes and follow through with design, development, build, and deployment guidance using one of Temporal’s supported languages (Java, Golang, Typescript, Python, PHP)\n\n - Conversant in topics related to operating applications in production, such as security, reliability,  performance, cost management, and operations\n\n - Can offer helpful advice and good arguments to customers on architectural topics like application patterns and platform architectures\n\n - Comfortable working with at least one of the major cloud providers and using the various services commonly employed for application development & production\n\n - Serve as a technical advisor to Sales Account Executives - can help identify good/poor fit use cases, assist with scoping and sizing of opportunities, and anticipate where customer technical choices will work for or against Temporal\n\n\nNICE TO HAVE\n\n - Likes to learn new technical topics, often directly from Engineering\n\n - Can come up to speed without any sales-specific training (i.e., from docs, videos & conversations)\n\n - Partners well with engineers working at customer organizations\n\n - Serves as a good technical coach: likes to find ways to make others look smart\n\nTemporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.\n\nTemporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.",
+   "compensation": {
+    "compensationTierSummary": "$168K – $220.5K • Offers Equity • $72K – $94.5K Commission",
+    "scrapeableCompensationSalarySummary": "$168K - $220.5K",
+    "compensationTiers": [
+     {
+      "id": "796f6642-6b66-4614-9632-57d6c3c97160",
+      "tierSummary": "Salary $168K – $220.5K • Offers Equity • $72K – $94.5K Commission",
+      "title": "United States",
+      "additionalInformation": null,
+      "components": [
+       {
+        "id": "40482dcb-d111-47ad-a2ea-3b8b5c5d9883",
+        "summary": "Salary $168K – $220.5K",
+        "compensationType": "Salary",
+        "interval": "1 YEAR",
+        "currencyCode": "USD",
+        "minValue": 168000,
+        "maxValue": 220500
+       },
+       {
+        "id": "48e87db5-95a4-4ff8-af9f-019b2855bb4e",
+        "summary": "$72K – $94.5K Commission",
+        "compensationType": "Commission",
+        "interval": "1 YEAR",
+        "currencyCode": "USD",
+        "minValue": 72000,
+        "maxValue": 94500
+       },
+       {
+        "id": "de1a896f-629f-4206-9340-643410a10c7f",
+        "summary": "Offers Equity",
+        "compensationType": "EquityCashValue",
+        "interval": "1 YEAR",
+        "currencyCode": "USD",
+        "minValue": null,
+        "maxValue": null
+       }
+      ]
+     }
+    ],
+    "summaryComponents": [
+     {
+      "compensationType": "Salary",
+      "interval": "1 YEAR",
+      "currencyCode": "USD",
+      "minValue": 168000,
+      "maxValue": 220500
+     },
+     {
+      "compensationType": "Commission",
+      "interval": "1 YEAR",
+      "currencyCode": "USD",
+      "minValue": 72000,
+      "maxValue": 94500
+     },
+     {
+      "compensationType": "EquityCashValue",
+      "interval": "1 YEAR",
+      "currencyCode": "USD",
+      "minValue": null,
+      "maxValue": null
+     }
+    ]
+   }
+  },
+  {
+   "id": "e75ff82a-19e2-470e-ac4b-49f0a87acd76",
+   "title": "Senior Platform Architect",
+   "department": "Platform Architecture",
+   "team": "Platform Architecture",
+   "employmentType": "FullTime",
+   "location": "London, England",
+   "shouldDisplayCompensationOnJobPostings": true,
+   "secondaryLocations": [
+    {
+     "location": "Manchester, England",
+     "address": {
+      "postalAddress": {
+       "addressRegion": "England",
+       "addressCountry": "United Kingdom",
+       "addressLocality": "Manchester"
+      }
+     }
+    }
+   ],
+   "publishedAt": "2026-08-17T13:03:43.839+00:00",
+   "isListed": true,
+   "isRemote": true,
+   "workplaceType": "Remote",
+   "address": {
+    "postalAddress": {
+     "addressRegion": "United Kingdom",
+     "addressCountry": "United Kingdom",
+     "addressLocality": "London"
+    }
+   },
+   "jobUrl": "https://jobs.ashbyhq.com/temporal/e75ff82a-19e2-470e-ac4b-49f0a87acd76",
+   "applyUrl": "https://jobs.ashbyhq.com/temporal/e75ff82a-19e2-470e-ac4b-49f0a87acd76/application",
+   "descriptionHtml": "<h2><strong>Role Summary</strong></h2><p style=\"min-height:1.5em\">Join our Technical Services team as a <strong>Senior Platform Architect</strong> and drive transformational outcomes with Temporal. You’ll be the accountable technical owner from purchase to stable production, turning complex challenges into scalable, repeatable solutions. Shape delivery patterns, operational standards, and enablement strategies that accelerate customer success and create lasting competitive advantage across teams and environments.</p><h2><strong>What You'll Do</strong></h2><p style=\"min-height:1.5em\"><strong>Own Production Readiness and Activation</strong></p><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Act as the single owner of customers' scale-proof production readiness</p></li><li><p style=\"min-height:1.5em\">Drive the first production workflow and reduce time-to-production</p></li><li><p style=\"min-height:1.5em\">Establish guardrails and best practices for reliability, failure handling, scaling, and upgrades</p></li><li><p style=\"min-height:1.5em\">Make developers Temporal SDK experts, make customer platform architects Temporal Server and SDK best practice experts</p></li><li><p style=\"min-height:1.5em\">Set up alerting to catch issues before customers do</p></li><li><p style=\"min-height:1.5em\">Work on your assigned customers' most difficult tickets and problems</p></li><li><p style=\"min-height:1.5em\">Identify and remove activation blockers early before they become escalations</p></li><li><p style=\"min-height:1.5em\">Optimize costs and performance with customers</p></li></ul><p style=\"min-height:1.5em\"><strong>Run the Customer's Technical Program</strong></p><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Build and execute a KPI-driven success plan tied to production outcomes</p></li><li><p style=\"min-height:1.5em\">Define standards for patterns, training, governance, and operational readiness</p></li><li><p style=\"min-height:1.5em\">Lead cross-functional coordination of Professional Services, Support, Partners, and internal teams, leveraging project management to ensure on-time, high-quality delivery</p></li><li><p style=\"min-height:1.5em\">Proactively manage technical risk, migrations, and architectural debt</p></li></ul><p style=\"min-height:1.5em\"><strong>Ensure Long-Term Technical Health</strong></p><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Set and validate reliability, observability, and operational standards</p></li><li><p style=\"min-height:1.5em\">Monitor health signals and intervene before the customer knows they're happening</p></li><li><p style=\"min-height:1.5em\">Lead technical reviews, readiness checkpoints, and maturity assessments</p></li><li><p style=\"min-height:1.5em\">Certify teams and workloads as production-ready</p></li></ul><p style=\"min-height:1.5em\"><strong>Drive Adoption Through Production Success</strong></p><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Surface growth signals based on usage, maturity, and confidence</p></li><li><p style=\"min-height:1.5em\">Partner with customers, Growth AEs and Solution Architects to unlock new workloads</p></li><li><p style=\"min-height:1.5em\">Translate production success into clear technical narratives for renewal and growth</p></li><li><p style=\"min-height:1.5em\">Advocate for customer needs and real-world patterns internally</p></li></ul><h2><strong>What You'll Bring</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">You must reside in the United Kingdom, with a preference for London</p></li><li><p style=\"min-height:1.5em\">6+ years of professional software engineering or solutions engineering experience</p></li><li><p style=\"min-height:1.5em\">Strong understanding of distributed systems, workflow orchestration, and reliability engineering principles</p></li><li><p style=\"min-height:1.5em\">Proficiency in at least one modern programming language such as Go, Java, TypeScript, or Python</p></li><li><p style=\"min-height:1.5em\">Experience building, deploying, and operating production systems at scale</p></li><li><p style=\"min-height:1.5em\">Demonstrated ability to debug complex technical issues and guide customers through resolution</p></li><li><p style=\"min-height:1.5em\">Strong customer-facing skills with the ability to communicate technical concepts clearly to diverse audiences</p></li><li><p style=\"min-height:1.5em\">Experience creating technical documentation, runbooks, and training materials</p></li><li><p style=\"min-height:1.5em\">Self-motivated with the ability to work independently while collaborating across teams</p></li><li><p style=\"min-height:1.5em\">Willingness to travel for customer engagements and team events</p></li><li><p style=\"min-height:1.5em\">Travel expected to be 25-50%</p></li></ul><p style=\"min-height:1.5em\"><strong>Nice to Haves</strong></p><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Prior experience with Temporal or similar workflow orchestration platforms</p></li><li><p style=\"min-height:1.5em\">Experience with observability tools and practices for distributed systems</p></li><li><p style=\"min-height:1.5em\">Background in professional services, technical consulting, or solutions engineering roles</p></li><li><p style=\"min-height:1.5em\">Experience with Kubernetes, cloud platforms, and infrastructure-as-code tools</p></li><li><p style=\"min-height:1.5em\">Contributions to open source projects or developer communities</p></li><li><p style=\"min-height:1.5em\">Experience designing and delivering technical training or workshops</p></li></ul><p style=\"min-height:1.5em\">Temporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.</p><p style=\"min-height:1.5em\">Temporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.</p>",
+   "descriptionPlain": "ROLE SUMMARY\n\nJoin our Technical Services team as a Senior Platform Architect and drive transformational outcomes with Temporal. You’ll be the accountable technical owner from purchase to stable production, turning complex challenges into scalable, repeatable solutions. Shape delivery patterns, operational standards, and enablement strategies that accelerate customer success and create lasting competitive advantage across teams and environments.\n\n\nWHAT YOU'LL DO\n\nOwn Production Readiness and Activation\n\n - Act as the single owner of customers' scale-proof production readiness\n\n - Drive the first production workflow and reduce time-to-production\n\n - Establish guardrails and best practices for reliability, failure handling, scaling, and upgrades\n\n - Make developers Temporal SDK experts, make customer platform architects Temporal Server and SDK best practice experts\n\n - Set up alerting to catch issues before customers do\n\n - Work on your assigned customers' most difficult tickets and problems\n\n - Identify and remove activation blockers early before they become escalations\n\n - Optimize costs and performance with customers\n\nRun the Customer's Technical Program\n\n - Build and execute a KPI-driven success plan tied to production outcomes\n\n - Define standards for patterns, training, governance, and operational readiness\n\n - Lead cross-functional coordination of Professional Services, Support, Partners, and internal teams, leveraging project management to ensure on-time, high-quality delivery\n\n - Proactively manage technical risk, migrations, and architectural debt\n\nEnsure Long-Term Technical Health\n\n - Set and validate reliability, observability, and operational standards\n\n - Monitor health signals and intervene before the customer knows they're happening\n\n - Lead technical reviews, readiness checkpoints, and maturity assessments\n\n - Certify teams and workloads as production-ready\n\nDrive Adoption Through Production Success\n\n - Surface growth signals based on usage, maturity, and confidence\n\n - Partner with customers, Growth AEs and Solution Architects to unlock new workloads\n\n - Translate production success into clear technical narratives for renewal and growth\n\n - Advocate for customer needs and real-world patterns internally\n\n\nWHAT YOU'LL BRING\n\n - You must reside in the United Kingdom, with a preference for London\n\n - 6+ years of professional software engineering or solutions engineering experience\n\n - Strong understanding of distributed systems, workflow orchestration, and reliability engineering principles\n\n - Proficiency in at least one modern programming language such as Go, Java, TypeScript, or Python\n\n - Experience building, deploying, and operating production systems at scale\n\n - Demonstrated ability to debug complex technical issues and guide customers through resolution\n\n - Strong customer-facing skills with the ability to communicate technical concepts clearly to diverse audiences\n\n - Experience creating technical documentation, runbooks, and training materials\n\n - Self-motivated with the ability to work independently while collaborating across teams\n\n - Willingness to travel for customer engagements and team events\n\n - Travel expected to be 25-50%\n\nNice to Haves\n\n - Prior experience with Temporal or similar workflow orchestration platforms\n\n - Experience with observability tools and practices for distributed systems\n\n - Background in professional services, technical consulting, or solutions engineering roles\n\n - Experience with Kubernetes, cloud platforms, and infrastructure-as-code tools\n\n - Contributions to open source projects or developer communities\n\n - Experience designing and delivering technical training or workshops\n\nTemporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.\n\nTemporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.",
+   "compensation": {
+    "compensationTierSummary": "€64,400 – €84,525 • Offers Equity • €27,600 – €36,225 Commission",
+    "scrapeableCompensationSalarySummary": "€64,400 - €84,525",
+    "compensationTiers": [
+     {
+      "id": "18d300b5-6c1d-4e60-87d6-9cdc04de7650",
+      "tierSummary": "€64,400 – €84,525 • Offers Equity • €27,600 – €36,225 Commission",
+      "title": "United Kingdom",
+      "additionalInformation": null,
+      "components": [
+       {
+        "id": "236a58e7-0b7d-425d-977c-3f153063592f",
+        "summary": "Offers Equity",
+        "compensationType": "EquityCashValue",
+        "interval": "1 YEAR",
+        "currencyCode": "EUR",
+        "minValue": null,
+        "maxValue": null
+       },
+       {
+        "id": "8c9dd913-4bac-49ab-91f6-af0723096ed8",
+        "summary": "€27,600 – €36,225 Commission",
+        "compensationType": "Commission",
+        "interval": "1 YEAR",
+        "currencyCode": "EUR",
+        "minValue": 27600,
+        "maxValue": 36225
+       },
+       {
+        "id": "d5bec6d9-5660-4d65-a421-e2a3d1ef03f3",
+        "summary": "€64,400 – €84,525",
+        "compensationType": "Salary",
+        "interval": "1 YEAR",
+        "currencyCode": "EUR",
+        "minValue": 64400,
+        "maxValue": 84525
+       }
+      ]
+     }
+    ],
+    "summaryComponents": [
+     {
+      "compensationType": "EquityCashValue",
+      "interval": "1 YEAR",
+      "currencyCode": "EUR",
+      "minValue": null,
+      "maxValue": null
+     },
+     {
+      "compensationType": "Commission",
+      "interval": "1 YEAR",
+      "currencyCode": "EUR",
+      "minValue": 27600,
+      "maxValue": 36225
+     },
+     {
+      "compensationType": "Salary",
+      "interval": "1 YEAR",
+      "currencyCode": "EUR",
+      "minValue": 64400,
+      "maxValue": 84525
+     }
+    ]
+   }
+  },
+  {
+   "id": "d9b9d44f-0a87-4237-b101-360052373643",
+   "title": "Senior Solutions Architect - Singapore",
+   "department": "Sales",
+   "team": "Solutions Architecture",
+   "employmentType": "FullTime",
+   "location": "Singapore, Singapore",
+   "shouldDisplayCompensationOnJobPostings": true,
+   "secondaryLocations": [],
+   "publishedAt": "2026-08-21T18:58:38.568+00:00",
+   "isListed": true,
+   "isRemote": true,
+   "workplaceType": "Remote",
+   "address": {
+    "postalAddress": {
+     "addressRegion": "Singapore",
+     "addressCountry": "Singapore",
+     "addressLocality": "Singapore"
+    }
+   },
+   "jobUrl": "https://jobs.ashbyhq.com/temporal/d9b9d44f-0a87-4237-b101-360052373643",
+   "applyUrl": "https://jobs.ashbyhq.com/temporal/d9b9d44f-0a87-4237-b101-360052373643/application",
+   "descriptionHtml": "<h2><strong>Role Summary</strong></h2><p style=\"min-height:1.5em\">The Senior Solutions Architect is Temporal's primary customer-facing technical leader within <strong>Singapore</strong>, focusing on the <strong>APJ </strong>region. In this crucial role, you’ll work directly with prospects and customers, guiding them in understanding the suitability of their applications for Temporal’s platform and showcasing the technical advantages of our cloud service. Your contribution is vital in positioning Temporal against alternative technologies, helping customer engineering teams expand production applications using Temporal, and owning the technical relationship with key decision-makers. Your role is integral to our success.</p><h2><strong>What You’ll Do</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Collaborate with prospects to determine if their applications fit Temporal’s platform well.</p></li><li><p style=\"min-height:1.5em\">Educate customers and prospects on the technical benefits and limitations of Temporal’s platform and cloud service.</p></li><li><p style=\"min-height:1.5em\">Position Temporal as a leading solution against competing technologies and architectural patterns.</p></li><li><p style=\"min-height:1.5em\">Foster an environment within customer engineering organizations to increase Temporal adoption and expansion in production environments.</p></li><li><p style=\"min-height:1.5em\">Partner closely with Account Executives to develop and execute comprehensive account plans.</p></li><li><p style=\"min-height:1.5em\">Manage and nurture relationships with technical decision-makers at customer organizations to ensure they fully leverage Temporal’s capabilities.</p></li></ul><h2><strong>What You’ll Bring</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Reside in <strong>Singapore</strong> and are eligible to work without sponsorship.</p></li><li><p style=\"min-height:1.5em\">Exceptional technical communication skills, including presenting, whiteboarding, and writing.</p></li><li><p style=\"min-height:1.5em\">Deep understanding of distributed system technologies, design principles, and best practices.</p></li><li><p style=\"min-height:1.5em\">Proficiency in building application prototypes and providing design, development, build, and deployment guidance using one or more of Temporal’s supported languages: Java, Golang, TypeScript, Python, C# or PHP.</p></li><li><p style=\"min-height:1.5em\">Firm grasp of operational considerations in production environments, such as security, reliability, performance, cost management, and operations.</p></li><li><p style=\"min-height:1.5em\">Ability to provide insightful advice on architectural topics, including application patterns and platform architectures.</p></li><li><p style=\"min-height:1.5em\">Experience with at least one major cloud provider and familiarity with commonly used application development and production services.</p></li><li><p style=\"min-height:1.5em\">Serve as a strategic technical advisor to Sales Account Executives, assisting with scoping and sizing opportunities and offering guidance on technical fit and challenges.</p></li></ul><p style=\"min-height:1.5em\">Temporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.</p><p style=\"min-height:1.5em\">Temporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.</p>",
+   "descriptionPlain": "ROLE SUMMARY\n\nThe Senior Solutions Architect is Temporal's primary customer-facing technical leader within Singapore, focusing on the APJ region. In this crucial role, you’ll work directly with prospects and customers, guiding them in understanding the suitability of their applications for Temporal’s platform and showcasing the technical advantages of our cloud service. Your contribution is vital in positioning Temporal against alternative technologies, helping customer engineering teams expand production applications using Temporal, and owning the technical relationship with key decision-makers. Your role is integral to our success.\n\n\nWHAT YOU’LL DO\n\n - Collaborate with prospects to determine if their applications fit Temporal’s platform well.\n\n - Educate customers and prospects on the technical benefits and limitations of Temporal’s platform and cloud service.\n\n - Position Temporal as a leading solution against competing technologies and architectural patterns.\n\n - Foster an environment within customer engineering organizations to increase Temporal adoption and expansion in production environments.\n\n - Partner closely with Account Executives to develop and execute comprehensive account plans.\n\n - Manage and nurture relationships with technical decision-makers at customer organizations to ensure they fully leverage Temporal’s capabilities.\n\n\nWHAT YOU’LL BRING\n\n - Reside in Singapore and are eligible to work without sponsorship.\n\n - Exceptional technical communication skills, including presenting, whiteboarding, and writing.\n\n - Deep understanding of distributed system technologies, design principles, and best practices.\n\n - Proficiency in building application prototypes and providing design, development, build, and deployment guidance using one or more of Temporal’s supported languages: Java, Golang, TypeScript, Python, C# or PHP.\n\n - Firm grasp of operational considerations in production environments, such as security, reliability, performance, cost management, and operations.\n\n - Ability to provide insightful advice on architectural topics, including application patterns and platform architectures.\n\n - Experience with at least one major cloud provider and familiarity with commonly used application development and production services.\n\n - Serve as a strategic technical advisor to Sales Account Executives, assisting with scoping and sizing opportunities and offering guidance on technical fit and challenges.\n\nTemporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.\n\nTemporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.",
+   "compensation": {
+    "compensationTierSummary": "SGD 134.4K – SGD 176.4K • Offers Equity • SGD 57.6K – SGD 75.6K Commission",
+    "scrapeableCompensationSalarySummary": "SGD 134.4K - SGD 176.4K",
+    "compensationTiers": [
+     {
+      "id": "203e703a-e46f-4cf8-852b-d3a58819854a",
+      "tierSummary": "Salary SGD 134.4K – SGD 176.4K • Offers Equity • SGD 57.6K – SGD 75.6K Commission",
+      "title": "Singapore",
+      "additionalInformation": null,
+      "components": [
+       {
+        "id": "18f28b07-61c1-4164-add2-8686272077da",
+        "summary": "Salary SGD 134.4K – SGD 176.4K",
+        "compensationType": "Salary",
+        "interval": "1 YEAR",
+        "currencyCode": "SGD",
+        "minValue": 134400,
+        "maxValue": 176400
+       },
+       {
+        "id": "0de0ee6b-05f3-4c85-8169-403f225c6011",
+        "summary": "Offers Equity",
+        "compensationType": "EquityCashValue",
+        "interval": "1 YEAR",
+        "currencyCode": "SGD",
+        "minValue": null,
+        "maxValue": null
+       },
+       {
+        "id": "52e1c4ff-78f9-4ad7-8d84-47aefda56282",
+        "summary": "SGD 57.6K – SGD 75.6K Commission",
+        "compensationType": "Commission",
+        "interval": "1 YEAR",
+        "currencyCode": "SGD",
+        "minValue": 57600,
+        "maxValue": 75600
+       }
+      ]
+     }
+    ],
+    "summaryComponents": [
+     {
+      "compensationType": "Salary",
+      "interval": "1 YEAR",
+      "currencyCode": "SGD",
+      "minValue": 134400,
+      "maxValue": 176400
+     },
+     {
+      "compensationType": "EquityCashValue",
+      "interval": "1 YEAR",
+      "currencyCode": "SGD",
+      "minValue": null,
+      "maxValue": null
+     },
+     {
+      "compensationType": "Commission",
+      "interval": "1 YEAR",
+      "currencyCode": "SGD",
+      "minValue": 57600,
+      "maxValue": 75600
+     }
+    ]
+   }
+  },
+  {
+   "id": "9a2e32f5-2f85-49ea-b1af-855178bb0af8",
+   "title": "Field Marketing Manager, Sponsorship & Experiential",
+   "department": "Marketing",
+   "team": "Marketing",
+   "employmentType": "FullTime",
+   "location": "London, England",
+   "shouldDisplayCompensationOnJobPostings": true,
+   "secondaryLocations": [],
+   "publishedAt": "2026-06-29T23:59:07.513+00:00",
+   "isListed": true,
+   "isRemote": true,
+   "workplaceType": "Remote",
+   "address": {
+    "postalAddress": {
+     "addressRegion": "United Kingdom",
+     "addressCountry": "United Kingdom",
+     "addressLocality": "London"
+    }
+   },
+   "jobUrl": "https://jobs.ashbyhq.com/temporal/9a2e32f5-2f85-49ea-b1af-855178bb0af8",
+   "applyUrl": "https://jobs.ashbyhq.com/temporal/9a2e32f5-2f85-49ea-b1af-855178bb0af8/application",
+   "descriptionHtml": "<h2><strong>Role Summary</strong></h2><p style=\"min-height:1.5em\">Temporal has made a landmark investment as the front-of-shirt sponsor for Crystal Palace FC in the Premier League. This role is for a field marketer and campaign leader first—someone who can turn the sponsorship into a repeatable engine for UK awareness, customer/prospect engagement, and pipeline influence, with a particular focus on getting the right accounts and buying committees “in the seats” through hospitality and integrated field programs.</p><p style=\"min-height:1.5em\">We’re looking for an experienced field marketer with sports sponsorship and experiential marketing experience, ideally from a larger technical/technology company (or with clearly transferable experience), who understands how to build campaigns that align tightly with Sales priorities and resonate with technical and developer audiences across London and the broader UK market.</p><p style=\"min-height:1.5em\"><strong>Location:</strong></p><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">London strongly preferred.</p></li><li><p style=\"min-height:1.5em\">Candidates based within the United States can also be considered if they have strong connections to the London/UK developer community and are comfortable building local partnerships and delivering in-person activations.</p></li></ul><h3></h3><h2><strong>What You’ll Do</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Lead integrated field marketing plans for the Crystal Palace sponsorship in the UK, translating business goals into campaigns that drive awareness, demand creation, and account engagement.</p></li><li><p style=\"min-height:1.5em\">Partner tightly with Sales (most important):</p><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Build strong operating rhythms with Sales leadership and account teams (planning, prioritization, follow-up, and measurement).</p></li><li><p style=\"min-height:1.5em\">Proactively identify what Sales needs from Marketing to generate engagement and pipeline, and turn that into executable field programs.</p></li><li><p style=\"min-height:1.5em\">Design account-driven experiences that help get the right customers and prospects into hospitality moments, events, and matchday experiences (and convert that engagement into next steps).</p></li></ul></li><li><p style=\"min-height:1.5em\">Bring the Crystal Palace sponsorship to life through engaging field marketing experiences:</p><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Build a season-long activation approach that supports account engagement, executive relationships, and pipeline influence. We are looking for more than just brand impressions.</p></li><li><p style=\"min-height:1.5em\">Develop “in-seat” engagement plays (target account invites, curated hospitality experiences, executive hosting moments, post-match follow-up motions).</p></li></ul></li><li><p style=\"min-height:1.5em\">Grow awareness with technical and developer audiences in the UK:</p><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Create/scale programs that build Temporal’s presence with developers and technical communities in London and across the UK.</p></li><li><p style=\"min-height:1.5em\">Partner with DevRel and local community leaders (and/or tap existing relationships) to create credible, high-signal experiences.</p></li></ul></li><li><p style=\"min-height:1.5em\">Own the partnership execution with Crystal Palace (secondary to field outcomes):</p><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Run operating cadences (weekly check-ins in-season, planning meetings, pre/post-event reviews).</p></li><li><p style=\"min-height:1.5em\">Coordinate rights inventory planning and utilization (player/talent access, matchday assets, content moments, community initiatives).</p></li><li><p style=\"min-height:1.5em\">Manage approvals, timelines, and deliverables; ensure contractual expectations are met.</p></li></ul></li><li><p style=\"min-height:1.5em\">Coordinate cross-functionally to fully integrate programs (content, PR, paid, lifecycle/email, social, SDR/BDR follow-up, partner channels).</p></li><li><p style=\"min-height:1.5em\">Own vendor/agency execution (experiential, production, creative, event partners) with high quality, strong operational rigor, and budget discipline.</p></li><li><p style=\"min-height:1.5em\">Measure impact and tell the performance story:</p><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Define success metrics (pipeline influence where measurable; directional impact where not).</p></li><li><p style=\"min-height:1.5em\">Produce clear recaps and recommendations to improve outcomes throughout the season.</p></li></ul></li></ul><h2><strong>What You’ll Bring</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Strong field marketing and campaign leadership experience, ideally in a technical/technology company, with a track record of delivering integrated programs that support revenue goals.</p></li><li><p style=\"min-height:1.5em\">Proven ability to partner with and influence Sales, including comfort aligning priorities, driving joint planning, and building follow-up motions that convert engagement into pipeline.</p></li><li><p style=\"min-height:1.5em\">Experience leveraging events, hospitality, and experiential marketing to <strong>create meaningful account engagement, attract priority audiences, and inspire continued connection.</strong></p></li><li><p style=\"min-height:1.5em\">Experience marketing to technical and developer audiences (developer platforms, infrastructure, tools, or similarly technical products preferred).</p></li><li><p style=\"min-height:1.5em\">Sponsorship and experiential experience (sports sponsorship strongly preferred), with comfort managing complex partnerships, rights packages, and high-visibility activations.</p></li><li><p style=\"min-height:1.5em\">Strong cross-functional leadership: able to align stakeholders, run tight processes, and execute in fast-moving environments.</p></li><li><p style=\"min-height:1.5em\">Excellent communication skills (written and verbal): comfortable presenting plans, recaps, and recommendations to senior stakeholders.</p></li></ul><h2><strong>Nice to Have</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Experience managing a major sports sponsorship within a large technology company.</p></li><li><p style=\"min-height:1.5em\">DevRel exposure and/or existing connections in the London / UK developer community.</p></li><li><p style=\"min-height:1.5em\">Premiere League sponsorship experience (helpful, but should not outweigh field marketing strength, Sales partnership ability, and technical audience experience).</p></li><li><p style=\"min-height:1.5em\">Highly organized and outcomes-focused; able to run multiple programs in parallel without losing detail.</p></li><li><p style=\"min-height:1.5em\">Collaborative and low-ego; effective at influencing without authority and aligning cross-functional teams.</p></li><li><p style=\"min-height:1.5em\">Strong taste and production instincts for high-visibility experiences.</p></li><li><p style=\"min-height:1.5em\">Comfortable operating with imperfect attribution and able to define success, learn quickly, and iterate.</p></li></ul><p style=\"min-height:1.5em\">Temporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.</p><p style=\"min-height:1.5em\">Temporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.</p>",
+   "descriptionPlain": "ROLE SUMMARY\n\nTemporal has made a landmark investment as the front-of-shirt sponsor for Crystal Palace FC in the Premier League. This role is for a field marketer and campaign leader first—someone who can turn the sponsorship into a repeatable engine for UK awareness, customer/prospect engagement, and pipeline influence, with a particular focus on getting the right accounts and buying committees “in the seats” through hospitality and integrated field programs.\n\nWe’re looking for an experienced field marketer with sports sponsorship and experiential marketing experience, ideally from a larger technical/technology company (or with clearly transferable experience), who understands how to build campaigns that align tightly with Sales priorities and resonate with technical and developer audiences across London and the broader UK market.\n\nLocation:\n\n - London strongly preferred.\n\n - Candidates based within the United States can also be considered if they have strong connections to the London/UK developer community and are comfortable building local partnerships and delivering in-person activations.\n\n\n\n\n\nWHAT YOU’LL DO\n\n - Lead integrated field marketing plans for the Crystal Palace sponsorship in the UK, translating business goals into campaigns that drive awareness, demand creation, and account engagement.\n\n - Partner tightly with Sales (most important):\n   \n   - Build strong operating rhythms with Sales leadership and account teams (planning, prioritization, follow-up, and measurement).\n   \n   - Proactively identify what Sales needs from Marketing to generate engagement and pipeline, and turn that into executable field programs.\n   \n   - Design account-driven experiences that help get the right customers and prospects into hospitality moments, events, and matchday experiences (and convert that engagement into next steps).\n\n - Bring the Crystal Palace sponsorship to life through engaging field marketing experiences:\n   \n   - Build a season-long activation approach that supports account engagement, executive relationships, and pipeline influence. We are looking for more than just brand impressions.\n   \n   - Develop “in-seat” engagement plays (target account invites, curated hospitality experiences, executive hosting moments, post-match follow-up motions).\n\n - Grow awareness with technical and developer audiences in the UK:\n   \n   - Create/scale programs that build Temporal’s presence with developers and technical communities in London and across the UK.\n   \n   - Partner with DevRel and local community leaders (and/or tap existing relationships) to create credible, high-signal experiences.\n\n - Own the partnership execution with Crystal Palace (secondary to field outcomes):\n   \n   - Run operating cadences (weekly check-ins in-season, planning meetings, pre/post-event reviews).\n   \n   - Coordinate rights inventory planning and utilization (player/talent access, matchday assets, content moments, community initiatives).\n   \n   - Manage approvals, timelines, and deliverables; ensure contractual expectations are met.\n\n - Coordinate cross-functionally to fully integrate programs (content, PR, paid, lifecycle/email, social, SDR/BDR follow-up, partner channels).\n\n - Own vendor/agency execution (experiential, production, creative, event partners) with high quality, strong operational rigor, and budget discipline.\n\n - Measure impact and tell the performance story:\n   \n   - Define success metrics (pipeline influence where measurable; directional impact where not).\n   \n   - Produce clear recaps and recommendations to improve outcomes throughout the season.\n\n\nWHAT YOU’LL BRING\n\n - Strong field marketing and campaign leadership experience, ideally in a technical/technology company, with a track record of delivering integrated programs that support revenue goals.\n\n - Proven ability to partner with and influence Sales, including comfort aligning priorities, driving joint planning, and building follow-up motions that convert engagement into pipeline.\n\n - Experience leveraging events, hospitality, and experiential marketing to create meaningful account engagement, attract priority audiences, and inspire continued connection.\n\n - Experience marketing to technical and developer audiences (developer platforms, infrastructure, tools, or similarly technical products preferred).\n\n - Sponsorship and experiential experience (sports sponsorship strongly preferred), with comfort managing complex partnerships, rights packages, and high-visibility activations.\n\n - Strong cross-functional leadership: able to align stakeholders, run tight processes, and execute in fast-moving environments.\n\n - Excellent communication skills (written and verbal): comfortable presenting plans, recaps, and recommendations to senior stakeholders.\n\n\nNICE TO HAVE\n\n - Experience managing a major sports sponsorship within a large technology company.\n\n - DevRel exposure and/or existing connections in the London / UK developer community.\n\n - Premiere League sponsorship experience (helpful, but should not outweigh field marketing strength, Sales partnership ability, and technical audience experience).\n\n - Highly organized and outcomes-focused; able to run multiple programs in parallel without losing detail.\n\n - Collaborative and low-ego; effective at influencing without authority and aligning cross-functional teams.\n\n - Strong taste and production instincts for high-visibility experiences.\n\n - Comfortable operating with imperfect attribution and able to define success, learn quickly, and iterate.\n\nTemporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.\n\nTemporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.",
+   "compensation": {
+    "compensationTierSummary": "£72K – £105K • Offers Equity • Multiple Ranges",
+    "scrapeableCompensationSalarySummary": "£72K - £105K",
+    "compensationTiers": [
+     {
+      "id": "bf34c42f-8581-46c6-8cc7-2439973de199",
+      "tierSummary": "Salary £80K – £105K • Offers Equity",
+      "title": "UK - Tier 1",
+      "additionalInformation": null,
+      "components": [
+       {
+        "id": "5af32117-dd4c-4f99-a57f-1e6a28fc90e6",
+        "summary": "Offers Equity",
+        "compensationType": "EquityCashValue",
+        "interval": "1 YEAR",
+        "currencyCode": "GBP",
+        "minValue": null,
+        "maxValue": null
+       },
+       {
+        "id": "18044a15-0e1a-455f-9497-7c722c385cbc",
+        "summary": "Salary £80K – £105K",
+        "compensationType": "Salary",
+        "interval": "1 YEAR",
+        "currencyCode": "GBP",
+        "minValue": 80000,
+        "maxValue": 105000
+       }
+      ]
+     },
+     {
+      "id": "aaee568e-9182-40db-8083-928c7cbc6c8b",
+      "tierSummary": "Salary £72K – £94.5K • Offers Equity",
+      "title": "UK - Tier 2",
+      "additionalInformation": null,
+      "components": [
+       {
+        "id": "584ef7b5-67da-4dde-a983-35931de04f0c",
+        "summary": "Offers Equity",
+        "compensationType": "EquityCashValue",
+        "interval": "1 YEAR",
+        "currencyCode": "GBP",
+        "minValue": null,
+        "maxValue": null
+       },
+       {
+        "id": "0b862572-e8ec-406f-9fc4-d3533b101098",
+        "summary": "Salary £72K – £94.5K",
+        "compensationType": "Salary",
+        "interval": "1 YEAR",
+        "currencyCode": "GBP",
+        "minValue": 72000,
+        "maxValue": 94500
+       }
+      ]
+     }
+    ],
+    "summaryComponents": [
+     {
+      "compensationType": "EquityCashValue",
+      "minValue": null,
+      "maxValue": null,
+      "interval": "1 YEAR"
+     },
+     {
+      "minValue": 72000,
+      "maxValue": 105000,
+      "currencyCode": "GBP",
+      "interval": "1 YEAR",
+      "compensationType": "Salary"
+     }
+    ]
+   }
+  },
+  {
+   "id": "99b2768c-0ce0-425b-84a4-de0fa400c18b",
+   "title": "Business Development Representative, EMEA",
+   "department": "Sales",
+   "team": "Business Development",
+   "employmentType": "FullTime",
+   "location": "London, England",
+   "shouldDisplayCompensationOnJobPostings": true,
+   "secondaryLocations": [],
+   "publishedAt": "2026-06-15T18:55:37.027+00:00",
+   "isListed": true,
+   "isRemote": true,
+   "workplaceType": "Remote",
+   "address": {
+    "postalAddress": {
+     "addressRegion": "United Kingdom",
+     "addressCountry": "United Kingdom",
+     "addressLocality": "London"
+    }
+   },
+   "jobUrl": "https://jobs.ashbyhq.com/temporal/99b2768c-0ce0-425b-84a4-de0fa400c18b",
+   "applyUrl": "https://jobs.ashbyhq.com/temporal/99b2768c-0ce0-425b-84a4-de0fa400c18b/application",
+   "descriptionHtml": "<h2><strong>Summary</strong></h2><p style=\"min-height:1.5em\">Are you eager to launch your sales career in a fast-growing, innovative tech company? Temporal is seeking a motivated and enthusiastic Business Development Representatives (BDRs) to join our team in <strong>London, England</strong>. As a BDR, you’ll play a pivotal role in driving growth by connecting with potential customers, generating leads, and building strong pipelines for our sales team. </p><p style=\"min-height:1.5em\">This is an entry level role designed for ambitious self-starters who are passionate about technology, thrive in fast-paced environments, and are excited to develop their careers in sales. With a dedicated training program and clear growth path, you’ll have the support and tools to become a standout sales professional while contributing to Temporal’s mission of redefining application development.</p><h2><strong>What You'll Do</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Proactively outbound prospecting and lead activity management in an effort to qualify and market Temporal to potential customers.</p></li><li><p style=\"min-height:1.5em\">Discover opportunities from leads and set appointments from those leads. </p></li><li><p style=\"min-height:1.5em\">Use of strong selling and influencing skills to set up qualified appointments. </p></li><li><p style=\"min-height:1.5em\">Understand the Temporal OSS and Cloud solutions enough to provide high level introduction. </p></li><li><p style=\"min-height:1.5em\">Leverage taught sales techniques to maximize customer interactions. </p></li><li><p style=\"min-height:1.5em\">Log, track, and maintain outbound activity. </p></li><li><p style=\"min-height:1.5em\">Work closely with the Sales Team and attend customer meetings as required. </p></li><li><p style=\"min-height:1.5em\">Be the architect of a growing team, defining and iterating on processes.</p></li></ul><h2><strong>What You'll Need</strong></h2><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">1 to 2+ years of experience in prospecting roles.</p></li><li><p style=\"min-height:1.5em\">Excellent in-person, phone, and written customer communication skills.</p></li><li><p style=\"min-height:1.5em\">Must be able to interact and communicate with individuals at all levels of the organization.</p></li><li><p style=\"min-height:1.5em\">Ability to make formal and informal presentations to staff and clients.</p></li><li><p style=\"min-height:1.5em\">Ability to prioritize work assignments and shift work efforts based on the needs of the department or business goals.</p></li><li><p style=\"min-height:1.5em\">Proficient PC, Spreadsheet, Salesforce.com, and Google Docs skills required.</p></li><li><p style=\"min-height:1.5em\">Ability to manage time effectively, work independently, and be self-motivated</p></li><li><p style=\"min-height:1.5em\">Prior track record of achievement in positions with accountability.</p></li><li><p style=\"min-height:1.5em\">Ability to thrive in a fast-paced startup environment.</p></li><li><p style=\"min-height:1.5em\">Proactive, independent thinker with high energy/positive attitude. </p></li></ul><p style=\"min-height:1.5em\">Temporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.</p><p style=\"min-height:1.5em\">Temporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.</p>",
+   "descriptionPlain": "SUMMARY\n\nAre you eager to launch your sales career in a fast-growing, innovative tech company? Temporal is seeking a motivated and enthusiastic Business Development Representatives (BDRs) to join our team in London, England. As a BDR, you’ll play a pivotal role in driving growth by connecting with potential customers, generating leads, and building strong pipelines for our sales team. \n\nThis is an entry level role designed for ambitious self-starters who are passionate about technology, thrive in fast-paced environments, and are excited to develop their careers in sales. With a dedicated training program and clear growth path, you’ll have the support and tools to become a standout sales professional while contributing to Temporal’s mission of redefining application development.\n\n\nWHAT YOU'LL DO\n\n - Proactively outbound prospecting and lead activity management in an effort to qualify and market Temporal to potential customers.\n\n - Discover opportunities from leads and set appointments from those leads. \n\n - Use of strong selling and influencing skills to set up qualified appointments. \n\n - Understand the Temporal OSS and Cloud solutions enough to provide high level introduction. \n\n - Leverage taught sales techniques to maximize customer interactions. \n\n - Log, track, and maintain outbound activity. \n\n - Work closely with the Sales Team and attend customer meetings as required. \n\n - Be the architect of a growing team, defining and iterating on processes.\n\n\nWHAT YOU'LL NEED\n\n - 1 to 2+ years of experience in prospecting roles.\n\n - Excellent in-person, phone, and written customer communication skills.\n\n - Must be able to interact and communicate with individuals at all levels of the organization.\n\n - Ability to make formal and informal presentations to staff and clients.\n\n - Ability to prioritize work assignments and shift work efforts based on the needs of the department or business goals.\n\n - Proficient PC, Spreadsheet, Salesforce.com, and Google Docs skills required.\n\n - Ability to manage time effectively, work independently, and be self-motivated\n\n - Prior track record of achievement in positions with accountability.\n\n - Ability to thrive in a fast-paced startup environment.\n\n - Proactive, independent thinker with high energy/positive attitude. \n\nTemporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.\n\nTemporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.",
+   "compensation": {
+    "compensationTierSummary": "£42K – £52.5K • Offers Equity • £18K – £22.5K Commission",
+    "scrapeableCompensationSalarySummary": "£42K - £52.5K",
+    "compensationTiers": [
+     {
+      "id": "29ac08c8-25a9-44b3-9896-d1c33c14993e",
+      "tierSummary": "Salary £42K – £52.5K • Offers Equity • £18K – £22.5K Commission",
+      "title": "United Kingdom",
+      "additionalInformation": null,
+      "components": [
+       {
+        "id": "b3caafa2-daa4-4b66-bf61-5e08526327c6",
+        "summary": "Offers Equity",
+        "compensationType": "EquityCashValue",
+        "interval": "1 YEAR",
+        "currencyCode": "GBP",
+        "minValue": null,
+        "maxValue": null
+       },
+       {
+        "id": "78af2976-1b3e-4954-bcb5-c5717825a31b",
+        "summary": "Salary £42K – £52.5K",
+        "compensationType": "Salary",
+        "interval": "1 YEAR",
+        "currencyCode": "GBP",
+        "minValue": 42000,
+        "maxValue": 52500
+       },
+       {
+        "id": "e2a3200f-9578-4975-a7b4-3dcf54581b66",
+        "summary": "£18K – £22.5K Commission",
+        "compensationType": "Commission",
+        "interval": "1 YEAR",
+        "currencyCode": "GBP",
+        "minValue": 18000,
+        "maxValue": 22500
+       }
+      ]
+     }
+    ],
+    "summaryComponents": [
+     {
+      "compensationType": "EquityCashValue",
+      "interval": "1 YEAR",
+      "currencyCode": "GBP",
+      "minValue": null,
+      "maxValue": null
+     },
+     {
+      "compensationType": "Salary",
+      "interval": "1 YEAR",
+      "currencyCode": "GBP",
+      "minValue": 42000,
+      "maxValue": 52500
+     },
+     {
+      "compensationType": "Commission",
+      "interval": "1 YEAR",
+      "currencyCode": "GBP",
+      "minValue": 18000,
+      "maxValue": 22500
+     }
+    ]
+   }
+  },
+  {
+   "id": "8f61683c-d89b-4fea-b7a7-f3161ae15272",
+   "title": "Senior Account Executive, New Logo",
+   "department": "Sales",
+   "team": "Account Executives",
+   "employmentType": "FullTime",
+   "location": "Toronto, Ontario",
+   "shouldDisplayCompensationOnJobPostings": true,
+   "secondaryLocations": [
+    {
+     "location": "Ottawa, Ontario",
+     "address": {
+      "postalAddress": {
+       "addressRegion": "Ontario",
+       "addressCountry": "Canada",
+       "addressLocality": "Ottawa"
+      }
+     }
+    }
+   ],
+   "publishedAt": "2026-09-29T22:45:28.509+00:00",
+   "isListed": true,
+   "isRemote": true,
+   "workplaceType": "Remote",
+   "address": {
+    "postalAddress": {
+     "addressRegion": "Ontario",
+     "addressCountry": "Canada",
+     "addressLocality": "Toronto"
+    }
+   },
+   "jobUrl": "https://jobs.ashbyhq.com/temporal/8f61683c-d89b-4fea-b7a7-f3161ae15272",
+   "applyUrl": "https://jobs.ashbyhq.com/temporal/8f61683c-d89b-4fea-b7a7-f3161ae15272/application",
+   "descriptionHtml": "<h1><strong>Role Summary</strong></h1><p style=\"min-height:1.5em\">Temporal is shaping the future of application development by enabling organizations to build, scale, and run resilient applications. We are seeking a highly skilled and experienced Senior Strategic Account Executive to join our New Logo team and drive revenue within some of the largest and most complex enterprise organizations.</p><p style=\"min-height:1.5em\">In this role, you will own a key sales territory, navigating matrixed enterprise companies and selling to highly technical personas such as software engineers, engineering leaders, and architects. As a strategic partner to our customers, you will bring a proven ability to lead sophisticated sales processes, uncover opportunities within massive organizations, and drive adoption of Temporal’s solutions. Your entrepreneurial mindset will help you thrive in a high-growth, startup environment, while your expertise in scaling revenue within complex organizations will make you an invaluable asset to our team.</p><p style=\"min-height:1.5em\">Come work with some of the brightest minds in the tech industry and help transform how modern applications are built. You will contribute to the growth of a category-defining company at the forefront of innovation.</p><div style=\"min-height:1.2em;margin-top:0;margin-bottom:0\"> </div><div style=\"min-height:1.2em;margin-top:0;margin-bottom:0\"> </div><h1><strong>What You'll Do</strong></h1><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Own and manage the entire sales cycle, from prospecting to close, with a focus on growing revenue with new enterprise customers.</p></li><li><p style=\"min-height:1.5em\">Develop and execute strategic sales plans to break into large, matrixed enterprise accounts.</p></li><li><p style=\"min-height:1.5em\">Engage with software engineers, architects, and technical stakeholders to understand their needs and position Temporal effectively across a wide range of use cases.</p></li><li><p style=\"min-height:1.5em\">Navigate complex technical discussions and align Temporal’s capabilities with customer priorities.</p></li><li><p style=\"min-height:1.5em\">Build and nurture quality relationships with prospects, acting as a trusted advisor throughout the sales process.</p></li><li><p style=\"min-height:1.5em\">Partner with customer success, solutions architecture, and product teams to ensure a seamless customer experience.</p></li><li><p style=\"min-height:1.5em\">Leverage your expertise in enterprise sales to identify and capture high-value opportunities within large, complex organizations, driving net-new customer acquisition.</p></li><li><p style=\"min-height:1.5em\">Innovate and adapt sales strategies to meet the dynamic needs of enterprise businesses in a rapidly evolving market.</p></li></ul><div style=\"min-height:1.2em;margin-top:0;margin-bottom:0\"> </div><h1><strong>What You'll Bring</strong></h1><ul style=\"min-height:1.5em\"><li><p style=\"min-height:1.5em\">Demonstrated expertise in enterprise software sales, typically gained through 10+ years of experience in similar roles.</p></li><li><p style=\"min-height:1.5em\">Proven track record of selling to software engineers, technical decision-makers, and engineering leaders.</p></li><li><p style=\"min-height:1.5em\">Navigate complex technical discussions and collaboratively align Temporal’s capabilities with customer priorities.</p></li><li><p style=\"min-height:1.5em\">Demonstrated success navigating and closing deals within large, matrixed enterprise organizations.</p></li><li><p style=\"min-height:1.5em\">Experience driving high-growth sales motions within enterprise accounts, identifying opportunities, and scaling revenue.</p></li><li><p style=\"min-height:1.5em\">Comfortable operating in a fast-paced, high-growth environment with a hands-on approach and entrepreneurial mindset.</p></li><li><p style=\"min-height:1.5em\">Exceptional relationship management skills, with the ability to influence and build trust across multiple levels of an organization.</p></li><li><p style=\"min-height:1.5em\">Demonstrated success in consistently achieving or surpassing revenue goals.</p></li><li><p style=\"min-height:1.5em\">Experience working with cutting-edge developer tools or infrastructure products.</p></li><li><p style=\"min-height:1.5em\">Familiarity with consumption-based sales models and driving adoption of technical products.</p></li><li><p style=\"min-height:1.5em\">Outstanding communication and negotiation skills, with the ability to present to technical and executive audiences.</p></li><li><p style=\"min-height:1.5em\">A passion for technology and a deep curiosity for solving complex customer challenges.</p></li></ul><p style=\"min-height:1.5em\">Temporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.</p><p style=\"min-height:1.5em\">Temporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.</p>",
+   "descriptionPlain": "ROLE SUMMARY\n\nTemporal is shaping the future of application development by enabling organizations to build, scale, and run resilient applications. We are seeking a highly skilled and experienced Senior Strategic Account Executive to join our New Logo team and drive revenue within some of the largest and most complex enterprise organizations.\n\nIn this role, you will own a key sales territory, navigating matrixed enterprise companies and selling to highly technical personas such as software engineers, engineering leaders, and architects. As a strategic partner to our customers, you will bring a proven ability to lead sophisticated sales processes, uncover opportunities within massive organizations, and drive adoption of Temporal’s solutions. Your entrepreneurial mindset will help you thrive in a high-growth, startup environment, while your expertise in scaling revenue within complex organizations will make you an invaluable asset to our team.\n\nCome work with some of the brightest minds in the tech industry and help transform how modern applications are built. You will contribute to the growth of a category-defining company at the forefront of innovation.\n\n \n \n\n\nWHAT YOU'LL DO\n\n - Own and manage the entire sales cycle, from prospecting to close, with a focus on growing revenue with new enterprise customers.\n\n - Develop and execute strategic sales plans to break into large, matrixed enterprise accounts.\n\n - Engage with software engineers, architects, and technical stakeholders to understand their needs and position Temporal effectively across a wide range of use cases.\n\n - Navigate complex technical discussions and align Temporal’s capabilities with customer priorities.\n\n - Build and nurture quality relationships with prospects, acting as a trusted advisor throughout the sales process.\n\n - Partner with customer success, solutions architecture, and product teams to ensure a seamless customer experience.\n\n - Leverage your expertise in enterprise sales to identify and capture high-value opportunities within large, complex organizations, driving net-new customer acquisition.\n\n - Innovate and adapt sales strategies to meet the dynamic needs of enterprise businesses in a rapidly evolving market.\n\n \n\n\nWHAT YOU'LL BRING\n\n - Demonstrated expertise in enterprise software sales, typically gained through 10+ years of experience in similar roles.\n\n - Proven track record of selling to software engineers, technical decision-makers, and engineering leaders.\n\n - Navigate complex technical discussions and collaboratively align Temporal’s capabilities with customer priorities.\n\n - Demonstrated success navigating and closing deals within large, matrixed enterprise organizations.\n\n - Experience driving high-growth sales motions within enterprise accounts, identifying opportunities, and scaling revenue.\n\n - Comfortable operating in a fast-paced, high-growth environment with a hands-on approach and entrepreneurial mindset.\n\n - Exceptional relationship management skills, with the ability to influence and build trust across multiple levels of an organization.\n\n - Demonstrated success in consistently achieving or surpassing revenue goals.\n\n - Experience working with cutting-edge developer tools or infrastructure products.\n\n - Familiarity with consumption-based sales models and driving adoption of technical products.\n\n - Outstanding communication and negotiation skills, with the ability to present to technical and executive audiences.\n\n - A passion for technology and a deep curiosity for solving complex customer challenges.\n\nTemporal Technologies is an Equal Opportunity Employer. Temporal Technologies does not discriminate on the basis of race, religion, color, sex, gender identity, sexual orientation, age, non-disqualifying physical or mental disability, national origin, veteran status, or any other basis covered by appropriate law. All employment is decided on the basis of qualifications, merit, and business need. We embrace and celebrate differences and diversity.\n\nTemporal is committed to providing access, equal opportunity, and reasonable accommodation for individuals with disabilities in employment, its services, programs, and activities. If you need to request a reasonable accommodation, please let your Recruiter know so we can assist.",
+   "compensation": {
+    "compensationTierSummary": "CA$154K – CA$192.5K • CA$154K – CA$192.5K Commission",
+    "scrapeableCompensationSalarySummary": "CA$154K - CA$192.5K",
+    "compensationTiers": [
+     {
+      "id": "7a96c2be-0277-48b8-8e23-837bc0fe77ea",
+      "tierSummary": "Salary CA$154K – CA$192.5K • CA$154K – CA$192.5K Commission",
+      "title": "Toronto, Canada",
+      "additionalInformation": null,
+      "components": [
+       {
+        "id": "e95675cb-3849-43c1-919e-0d5e1ca2e485",
+        "summary": "CA$154K – CA$192.5K Commission",
+        "compensationType": "Commission",
+        "interval": "1 YEAR",
+        "currencyCode": "CAD",
+        "minValue": 154000,
+        "maxValue": 192500
+       },
+       {
+        "id": "d93548be-fe24-4b55-ab02-dc4b6031ac6b",
+        "summary": "Salary CA$154K – CA$192.5K",
+        "compensationType": "Salary",
+        "interval": "1 YEAR",
+        "currencyCode": "CAD",
+        "minValue": 154000,
+        "maxValue": 192500
+       }
+      ]
+     }
+    ],
+    "summaryComponents": [
+     {
+      "compensationType": "EquityCashValue",
+      "interval": "1 YEAR",
+      "currencyCode": "CAD",
+      "minValue": 110000,
+      "maxValue": null
+     },
+     {
+      "compensationType": "Commission",
+      "interval": "1 YEAR",
+      "currencyCode": "CAD",
+      "minValue": 154000,
+      "maxValue": 192500
+     },
+     {
+      "compensationType": "Salary",
+      "interval": "1 YEAR",
+      "currencyCode": "CAD",
+      "minValue": 154000,
+      "maxValue": 192500
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.coverage
+dist/
+build/
+*.egg-info/
+.env
+
+# The old default watchlist location, ignored so an unmoved copy is never committed.
+data/watchlist.yaml

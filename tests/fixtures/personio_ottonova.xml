@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<workzag-jobs>
+
+<position>
+    <id>2573573</id>
+    <subcompany>ottonova Krankenversicherung AG - 9698</subcompany>
+    <office>München</office>
+    <additionalOffices>
+        <office>Köln</office>
+    </additionalOffices>
+    <department>Risk Management &amp; Actuary</department>
+    <recruitingCategory>Versicherung</recruitingCategory>
+    <name>(Senior) Aktuar (m/w/d) mit Schwerpunkt Solvency II (20h) (m/w/d)</name>
+    <jobDescriptions></jobDescriptions>
+    <employmentType>permanent</employmentType>
+    <seniority>experienced</seniority>
+    <schedule>full-or-part-time</schedule>
+    <keywords>Solvency 2,Risikomanagemen,Aktuariat,Risk Reporting</keywords>
+    <occupation>acturial_analysis</occupation>
+    <occupationCategory>accounting_and_finance</occupationCategory>
+    <createdAt>2026-03-23T15:24:29+00:00</createdAt>
+</position>
+
+<position>
+    <id>2821399</id>
+    <subcompany>ottonova Holding AG - 9680</subcompany>
+    <office>München</office>
+    <department>Product</department>
+    <recruitingCategory>Werkstudenten / Praktikanten</recruitingCategory>
+    <name>Werkstudent - Product Management / Health (m/w/d)</name>
+    <jobDescriptions></jobDescriptions>
+    <employmentType>intern</employmentType>
+    <seniority>student</seniority>
+    <schedule>part-time</schedule>
+    <occupation>product_management</occupation>
+    <occupationCategory>marketing_and_product</occupationCategory>
+    <createdAt>2026-09-30T13:47:36+00:00</createdAt>
+</position>
+
+</workzag-jobs>

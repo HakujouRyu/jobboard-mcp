@@ -1,0 +1,455 @@
+{
+  "items": [
+    {
+      "id": "eb23a6c5-2260-4fb7-b1a5-7e4d23c4417d",
+      "name": "HR Associate (PST/EST Hours)",
+      "url": "https://ats.rippling.com/rippling/jobs/eb23a6c5-2260-4fb7-b1a5-7e4d23c4417d",
+      "department": {
+        "name": "Bizops"
+      },
+      "locations": [
+        {
+          "name": "Philippines",
+          "country": "Philippines",
+          "countryCode": "PH",
+          "state": null,
+          "stateCode": null,
+          "city": null,
+          "workplaceType": "REMOTE"
+        }
+      ],
+      "language": "en-US"
+    },
+    {
+      "id": "dd867687-9cd4-4d9e-b715-6f1d9f4abca7",
+      "name": "Customer Support Specialist - Benefits Marketplace",
+      "url": "https://ats.rippling.com/rippling/jobs/dd867687-9cd4-4d9e-b715-6f1d9f4abca7",
+      "department": {
+        "name": "Customer Support"
+      },
+      "locations": [
+        {
+          "name": "Remote (Washington, US)",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "Washington",
+          "stateCode": "WA",
+          "city": null,
+          "workplaceType": "REMOTE"
+        },
+        {
+          "name": "Remote (OR, USA)",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "Oregon",
+          "stateCode": "OR",
+          "city": "Remote",
+          "workplaceType": "REMOTE"
+        },
+        {
+          "name": "Remote (California, US)",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "California",
+          "stateCode": "CA",
+          "city": null,
+          "workplaceType": "REMOTE"
+        },
+        {
+          "name": "Remote (New Mexico, US)",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "New Mexico",
+          "stateCode": "NM",
+          "city": null,
+          "workplaceType": "REMOTE"
+        },
+        {
+          "name": "Remote (Colorado, US)",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "Colorado",
+          "stateCode": "CO",
+          "city": null,
+          "workplaceType": "REMOTE"
+        },
+        {
+          "name": "Remote (El Paso, Texas, US)",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "Texas",
+          "stateCode": "TX",
+          "city": "El Paso",
+          "workplaceType": "REMOTE"
+        },
+        {
+          "name": "Remote (Arizona, US)",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "Arizona",
+          "stateCode": "AZ",
+          "city": null,
+          "workplaceType": "REMOTE"
+        },
+        {
+          "name": "Remote (Utah, US)",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "Utah",
+          "stateCode": "UT",
+          "city": null,
+          "workplaceType": "REMOTE"
+        },
+        {
+          "name": "Remote (Idaho, US)",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "Idaho",
+          "stateCode": "ID",
+          "city": null,
+          "workplaceType": "REMOTE"
+        },
+        {
+          "name": "Remote (Montana, US)",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "Montana",
+          "stateCode": "MT",
+          "city": null,
+          "workplaceType": "REMOTE"
+        },
+        {
+          "name": "Remote (Wyoming, US)",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "Wyoming",
+          "stateCode": "WY",
+          "city": null,
+          "workplaceType": "REMOTE"
+        },
+        {
+          "name": "Remote (Nevada, US)",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "Nevada",
+          "stateCode": "NV",
+          "city": null,
+          "workplaceType": "REMOTE"
+        }
+      ],
+      "language": "en-US"
+    },
+    {
+      "id": "ce9bf549-cd9d-4dcc-8121-98629fdeffd5",
+      "name": "Senior Manager, Support Operations",
+      "url": "https://ats.rippling.com/rippling/jobs/ce9bf549-cd9d-4dcc-8121-98629fdeffd5",
+      "department": {
+        "name": "Customer Support"
+      },
+      "locations": [
+        {
+          "name": "New York, NY",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "New York",
+          "stateCode": "NY",
+          "city": "New York",
+          "workplaceType": "ON_SITE"
+        },
+        {
+          "name": "San Francisco, CA",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "California",
+          "stateCode": "CA",
+          "city": "San Francisco",
+          "workplaceType": "ON_SITE"
+        },
+        {
+          "name": "Remote (United States)",
+          "country": "United States",
+          "countryCode": "US",
+          "state": null,
+          "stateCode": null,
+          "city": null,
+          "workplaceType": "REMOTE"
+        }
+      ],
+      "language": "en-US"
+    },
+    {
+      "id": "eae8615d-58fb-4e2f-bf8d-0e4c2bc6dbbd",
+      "name": "Technical Support Specialist, Platform",
+      "url": "https://ats.rippling.com/rippling/jobs/eae8615d-58fb-4e2f-bf8d-0e4c2bc6dbbd",
+      "department": {
+        "name": "Customer Support"
+      },
+      "locations": [
+        {
+          "name": "Remote (United States)",
+          "country": "United States",
+          "countryCode": "US",
+          "state": null,
+          "stateCode": null,
+          "city": null,
+          "workplaceType": "REMOTE"
+        }
+      ],
+      "language": "en-US"
+    },
+    {
+      "id": "8924b73a-8f8b-4f35-9ba1-7abf0c4089db",
+      "name": " Senior Engineering Manager - Compliance ",
+      "url": "https://ats.rippling.com/rippling/jobs/8924b73a-8f8b-4f35-9ba1-7abf0c4089db",
+      "department": {
+        "name": "Engineering"
+      },
+      "locations": [
+        {
+          "name": "Bangalore, India",
+          "country": "India",
+          "countryCode": "IN",
+          "state": "Karnataka",
+          "stateCode": "KA",
+          "city": "Bangalore",
+          "workplaceType": "ON_SITE"
+        }
+      ],
+      "language": "en-US"
+    },
+    {
+      "id": "f255bf03-9173-4c0a-8a18-7cc43c27ded8",
+      "name": "Data Science Intern - Summer 2027",
+      "url": "https://ats.rippling.com/rippling/jobs/f255bf03-9173-4c0a-8a18-7cc43c27ded8",
+      "department": {
+        "name": "Engineering"
+      },
+      "locations": [
+        {
+          "name": "San Francisco, CA",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "California",
+          "stateCode": "CA",
+          "city": "San Francisco",
+          "workplaceType": "ON_SITE"
+        }
+      ],
+      "language": "en-US"
+    },
+    {
+      "id": "51ec1407-4563-4927-8b39-ee89d589dc7c",
+      "name": "Engineering Manager, HRIS Flow Platform",
+      "url": "https://ats.rippling.com/rippling/jobs/51ec1407-4563-4927-8b39-ee89d589dc7c",
+      "department": {
+        "name": "Engineering"
+      },
+      "locations": [
+        {
+          "name": "Toronto, Canada",
+          "country": "Canada",
+          "countryCode": "CA",
+          "state": "Ontario",
+          "stateCode": "ON",
+          "city": "Toronto",
+          "workplaceType": "ON_SITE"
+        },
+        {
+          "name": "New York, NY",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "New York",
+          "stateCode": "NY",
+          "city": "New York",
+          "workplaceType": "ON_SITE"
+        },
+        {
+          "name": "San Francisco, CA",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "California",
+          "stateCode": "CA",
+          "city": "San Francisco",
+          "workplaceType": "HYBRID"
+        }
+      ],
+      "language": "en-US"
+    },
+    {
+      "id": "24ca6480-0ec7-4ee7-ac2a-304179e1c14b",
+      "name": "Technical Accounting Manager",
+      "url": "https://ats.rippling.com/rippling/jobs/24ca6480-0ec7-4ee7-ac2a-304179e1c14b",
+      "department": {
+        "name": "Finance"
+      },
+      "locations": [
+        {
+          "name": "San Francisco, CA",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "California",
+          "stateCode": "CA",
+          "city": "San Francisco",
+          "workplaceType": "HYBRID"
+        }
+      ],
+      "language": "en-US"
+    },
+    {
+      "id": "528f45e5-4c17-4fb7-affe-41e0c12c7c15",
+      "name": " Account Executive, Broker Channel (Dallas) ",
+      "url": "https://ats.rippling.com/rippling/jobs/528f45e5-4c17-4fb7-affe-41e0c12c7c15",
+      "department": {
+        "name": "Sales"
+      },
+      "locations": [
+        {
+          "name": "Remote (Dallas, Texas, US)",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "Texas",
+          "stateCode": "TX",
+          "city": "Dallas",
+          "workplaceType": "REMOTE"
+        }
+      ],
+      "language": "en-US"
+    },
+    {
+      "id": "1584be38-83a9-41a8-94e8-f733332ace4e",
+      "name": "Account Executive, Broker Channel (San Jose / South Bay)",
+      "url": "https://ats.rippling.com/rippling/jobs/1584be38-83a9-41a8-94e8-f733332ace4e",
+      "department": {
+        "name": "Sales"
+      },
+      "locations": [
+        {
+          "name": "San Jose, CA",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "California",
+          "stateCode": "CA",
+          "city": "San Jose",
+          "workplaceType": "REMOTE"
+        },
+        {
+          "name": "Mountain View, CA",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "California",
+          "stateCode": "CA",
+          "city": "Mountain View",
+          "workplaceType": "REMOTE"
+        },
+        {
+          "name": "Palo Alto, CA",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "California",
+          "stateCode": "CA",
+          "city": "Palo Alto",
+          "workplaceType": "REMOTE"
+        },
+        {
+          "name": "Milpitas, CA",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "California",
+          "stateCode": "CA",
+          "city": "Milpitas",
+          "workplaceType": "REMOTE"
+        },
+        {
+          "name": "Sunnyvale, CA",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "California",
+          "stateCode": "CA",
+          "city": "Sunnyvale",
+          "workplaceType": "REMOTE"
+        },
+        {
+          "name": "Santa Clara, CA",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "California",
+          "stateCode": "CA",
+          "city": "Santa Clara",
+          "workplaceType": "REMOTE"
+        },
+        {
+          "name": "Los Gatos, CA",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "California",
+          "stateCode": "CA",
+          "city": "Los Gatos",
+          "workplaceType": "REMOTE"
+        },
+        {
+          "name": "Saratoga, CA",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "California",
+          "stateCode": "CA",
+          "city": "Saratoga",
+          "workplaceType": "REMOTE"
+        },
+        {
+          "name": "Redwood City, CA",
+          "country": "United States",
+          "countryCode": "US",
+          "state": "California",
+          "stateCode": "CA",
+          "city": "Redwood City",
+          "workplaceType": "REMOTE"
+        }
+      ],
+      "language": "en-US"
+    },
+    {
+      "id": "2f69a3b3-54ed-4f9b-8274-0e4ea49adc8f",
+      "name": "Account Executive, LATAM",
+      "url": "https://ats.rippling.com/rippling/jobs/2f69a3b3-54ed-4f9b-8274-0e4ea49adc8f",
+      "department": {
+        "name": "Sales"
+      },
+      "locations": [
+        {
+          "name": "Mexico City",
+          "country": "Mexico",
+          "countryCode": "MX",
+          "state": "",
+          "stateCode": null,
+          "city": "Mexico City",
+          "workplaceType": "HYBRID"
+        }
+      ],
+      "language": "en-US"
+    },
+    {
+      "id": "bcb9eea9-ed0b-49ee-896d-1d48ee0dcb01",
+      "name": "Senior Solutions Consultant ",
+      "url": "https://ats.rippling.com/rippling/jobs/bcb9eea9-ed0b-49ee-896d-1d48ee0dcb01",
+      "department": {
+        "name": "Sales"
+      },
+      "locations": [
+        {
+          "name": "Remote (Germany)",
+          "country": "Germany",
+          "countryCode": "DE",
+          "state": "",
+          "stateCode": null,
+          "city": "",
+          "workplaceType": "REMOTE"
+        }
+      ],
+      "language": "en-GB"
+    }
+  ],
+  "page": 0,
+  "pageSize": 1000,
+  "totalItems": 364,
+  "totalPages": 1
+}

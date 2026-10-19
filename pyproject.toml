@@ -1,0 +1,59 @@
+[project]
+name = "jobboard-mcp"
+version = "0.1.0"
+description = "Read-only MCP server that sweeps public ATS job boards (Greenhouse, Ashby, Lever, Workable, Rippling, Personio, Workday, Oracle) and returns normalized, filtered job data."
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Clay Roberts", email = "hakujouryu@gmail.com" }]
+requires-python = ">=3.12"
+dependencies = [
+    "httpx>=0.28.1",
+    "mcp>=2.3.0",
+    "pydantic>=2.14.1",
+    "rapidfuzz>=3.14.6",
+    "ruamel-yaml>=0.19.1",
+]
+
+[project.scripts]
+jobboard-mcp = "jobboard_mcp.server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/jobboard_mcp"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["live: hits real job board APIs (opt-in: pytest -m live)"]
+addopts = "-m 'not live'"
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.ruff.lint.per-file-ignores]
+# Fixture strings copied from real pages are left unwrapped.
+"tests/*" = ["E501"]
+
+[tool.pyright]
+include = ["src", "tests", "scripts"]
+pythonVersion = "3.12"
+typeCheckingMode = "standard"
+# Pylance strikes deprecated calls through in the editor; make CI fail on them too.
+reportDeprecated = "error"
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.7.0",
+    "pyright>=1.1.414",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "respx>=0.23.1",
+    "ruff>=0.17.1",
+]

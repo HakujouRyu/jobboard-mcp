@@ -1,0 +1,187 @@
+# Example watchlist. On first run the server copies this file to your per-user watchlist
+# (%APPDATA%\jobboard-mcp\watchlist.yaml on Windows, ~/.config/jobboard-mcp/watchlist.yaml
+# elsewhere) and reads and edits that copy from then on. Edit your copy freely; see
+# docs/watchlist.md for the format.
+#
+# Most of these come from hiring-without-whiteboards
+# (https://github.com/poteto/hiring-without-whiteboards), a list of companies that interview with
+# real-world work instead of whiteboard puzzles. Interview notes are paraphrased from that list
+# and may be out of date. Tag `hww` = no-whiteboard interviews.
+#
+# ats: greenhouse | ashby | lever | null.  token: board token, or null if unknown.
+# Entries with no board (careers page only) are skipped by sweeps (status no_board) until
+# resolve_board finds one and update_company records it. add_company appends to the end.
+
+- company: GitLab
+  ats: greenhouse
+  token: gitlab
+  careers_url: https://about.gitlab.com/jobs/
+  domains: [dev tools, open source]
+  tags: [hww]
+  interview_note: Video calls plus a coding exercise on a realistic merge request
+  notes: Remote US
+
+- company: Linear
+  ats: ashby
+  token: linear
+  careers_url: https://linear.app/careers
+  domains: [dev tools]
+  tags: [hww]
+  interview_note: Practical take-home and technical discussion
+  notes: Remote, North America
+
+- company: CircleCI
+  ats: greenhouse
+  token: circleci
+  careers_url: https://circleci.com/careers/
+  domains: [dev tools, ci/cd]
+  tags: [hww]
+  interview_note: Take-home plus pairing on real CircleCI bugs or features
+  notes: Remote US
+
+- company: Render
+  ats: ashby
+  token: render
+  careers_url: https://render.com/careers
+  domains: [cloud infra]
+  tags: [hww]
+  interview_note: Phone screen, then a project based on real day-to-day challenges
+  notes: Remote US
+
+- company: Mozilla
+  ats: greenhouse
+  token: mozilla
+  careers_url: https://www.mozilla.org/careers/
+  domains: [open source]
+  tags: [hww]
+  interview_note: Deep-dive discussions of past problems, no live coding
+  notes: Remote US
+
+- company: Wikimedia Foundation
+  ats: greenhouse
+  token: wikimedia
+  careers_url: https://wikimediafoundation.org/about/jobs/
+  domains: [open source]
+  tags: [hww]
+  interview_note: Discussion of solutions to the team's real problems
+  notes: Board lists every role as plain "Remote", so jobs come back remote unknown.
+
+- company: Buildkite
+  ats: greenhouse
+  token: buildkite
+  careers_url: https://buildkite.com/careers
+  domains: [dev tools, ci/cd]
+  tags: [hww]
+  interview_note: Anonymized writing assessment, video chats, pairing
+  notes: Fully remote; board lists regions ("ANZ Region", "United States - West Coast").
+
+- company: Zapier
+  ats: ashby
+  token: zapier
+  careers_url: https://zapier.com/jobs
+  domains: [automation platform]
+  tags: [hww]
+  interview_note: Take-home, code review of it, technical discussions
+  notes: Remote
+
+- company: Temporal Technologies
+  ats: ashby
+  token: temporal
+  careers_url: https://temporal.io/careers
+  domains: [dev tools, open source]
+  tags: []
+  interview_note: null
+  notes: Fully remote. Pay posted in 3 US tiers. Old Greenhouse board is gone.
+
+- company: ClickHouse
+  ats: ashby
+  token: clickhouse
+  careers_url: https://clickhouse.com/company/careers
+  domains: [open source, observability, ai]
+  tags: []
+  interview_note: null
+  notes: Many roles posted per country. Pay posted in tiers.
+
+- company: Posit
+  ats: greenhouse
+  token: rstudio
+  careers_url: https://posit.co/careers/
+  domains: [open source, data science tooling]
+  tags: [hww]
+  interview_note: Take-home project, code review call with eng lead
+  notes: Board token doesn't match the company name; resolve_board found it from the careers page.
+
+- company: Outreach
+  ats: lever
+  token: outreach
+  domains: [sales tech]
+  tags: []
+  interview_note: null
+  notes: A Lever board, included as an example of that ATS.
+
+- company: Cox Enterprises
+  ats: workday
+  token: cox.wd1/cox_external_career_site_1
+  careers_url: https://jobs.coxenterprises.com/
+  domains: [media, communications]
+  tags: []
+  interview_note: null
+  notes: >-
+    A Workday board, included as an example of that ATS. Workday is read from the careers
+    site's own JSON (source careers_site), so it's slower and can change without notice.
+
+- company: City of Atlanta
+  ats: oracle
+  token: ehxr.fa.us2/cx_1
+  careers_url: https://www.atlantaga.gov/government/departments/human-resources
+  domains: [government]
+  tags: []
+  interview_note: null
+  notes: >-
+    An Oracle Recruiting Cloud board, included as an example of that ATS. Like Workday, it's
+    read from the careers site's own JSON (source careers_site).
+
+- company: Hugging Face
+  ats: workable
+  token: huggingface
+  careers_url: https://apply.workable.com/huggingface/
+  domains: [ai, open source]
+  tags: []
+  interview_note: null
+  notes: A Workable board, included as an example of that ATS. Most roles are remote.
+
+- company: Rippling
+  ats: rippling
+  token: rippling
+  careers_url: https://www.rippling.com/careers/open-roles
+  domains: [hr tech]
+  tags: []
+  interview_note: null
+  notes: >-
+    A Rippling board, included as an example of that ATS. Its documented API lists no
+    pay, posting dates, or descriptions.
+
+- company: Vivid
+  ats: personio
+  token: vivid
+  careers_url: https://vivid.jobs.personio.de/
+  domains: [fintech]
+  tags: []
+  interview_note: null
+  notes: >-
+    A Personio board, included as an example of that ATS. Personio is mostly used in
+    Europe, and most of its roles are there.
+
+- company: GitHub
+  careers_url: https://github.com/about/careers
+  domains: [dev tools]
+  tags: [hww]
+  interview_note: Take-home, code review, technical discussions
+  notes: Careers page only. Swept once resolve_board finds a board.
+
+- company: Automattic
+  careers_url: https://automattic.com/work-with-us/
+  domains: [open source]
+  tags: [hww]
+  interview_note: Short take-home, then a paid trial project
+  notes: Careers page only.

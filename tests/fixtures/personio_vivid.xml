@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<workzag-jobs>
+
+<position>
+    <id>2452785</id>
+    <subcompany>VividTech Limited</subcompany>
+    <office>Limassol</office>
+    <department>Fincrime Prevention Operations (2nd line)</department>
+    <recruitingCategory>Standard (3 stages plus additional Stakeholder Interview)</recruitingCategory>
+    <name>AML Process Owner</name>
+    <jobDescriptions>
+        <jobDescription>
+            <name>About The Role</name>
+            <value>
+                <![CDATA[We are looking for an experienced AML Process Owner to lead and improve our processes within the 2nd tier of the Compliance Operations team. This role suits someone who is eager to build and shape processes at Vivid, thrives in a fast-paced fintech environment, and can independently manage multiple priorities while meeting deadlines.]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Your Mission</name>
+            <value>
+                <![CDATA[<span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">● </span><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">Lead, document, and improve different AML processes, ensuring processes and</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">guidelines remain up to date.</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">● Oversee AML controls, ensuring consistent application across operational teams</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">and compliance with EU regulatory standards.</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">● Collaborate with Legal, Risk, Support, Product, Data, and Engineering teams to</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">introduce automations and process efficiencies.</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">● Proactively spot deficiencies across teams and initiate internal AML training to</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">ensure processes are applied correctly and consistently.</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">● Analyse operational data (with our data team) to spot risk trends and identify</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">potential AML, terrorist financing, or sanctions evasion patterns.</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">● Act as the main point of contact for process questions or escalations and support</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">junior team members when required.</span>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Your Profile</name>
+            <value>
+                <![CDATA[<p><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">● 3+ years of experience in AML operations, ideally in fintech or financial services.</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">● Strong understanding of EU AMLD, FATF, and other relevant AML/CTF frameworks.</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">● Experience with retail and SME customers and complex ownership structures,</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">external requests.</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">● Self-starter with proven ability and track record in analysing operational work in</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">AML operations, identifying process gaps and pro-actively driving improvements.</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">● Well-structured work ethic, disciplined self-starter and able to work independently.</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">● Comfortable managing multiple priorities and deadlines in a fast-paced</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">environment.</span><br style="margin:0px;padding:0px;color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);"><span style="color:rgb(65,65,65);font-family:sans-serif;font-size:16px;font-style:normal;font-weight:400;text-align:left;text-transform:none;background-color:rgb(255,255,255);display:inline;">● Strong communication and problem-solving skills, fluent in English</span></p>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Why Join Vivid?</name>
+            <value>
+                <![CDATA[<ul><li>Competitive salary and benefits package (depending on location).</li><li>Flexible working hours and a hybrid working model.</li><li>Real growth prospects, significant responsibility, and the ability to make an immediate impact from day one.</li></ul>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Compensation range</name>
+            <value>
+                <![CDATA[<span style="color:rgb(66,66,66);font-family:Raleway, sans-serif, Inter, Arial, Helvetica, sans-serif;font-size:14px;font-style:normal;font-weight:400;text-transform:none;background-color:rgb(255,255,255);display:inline;">Final compensation is determined individually, based on your experience, skills and the scope of the role, assessed against objective, gender-neutral criteria.</span>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>About Vivid</name>
+            <value>
+                <![CDATA[<p>At Vivid, we're reimagining how individuals and businesses manage money. Our all-in-one app opens up a world of financial possibilities: invest in global stocks, ETFs, and over 150 cryptocurrencies, earn cashback on everyday purchases, and access personalised insights to make the most of your finances; all tailored to your lifestyle.</p><p>For businesses, Vivid Business offers a powerful suite of tools, including multi-IBAN accounts, high-interest rates, business cashback, team cards, and seamless accounting integrations to streamline operations.</p><p>Our mission? Your success. Everyone deserves the chance to see their finances flourish, and we’re dedicated to empowering our customers to make this a reality.</p><p>Since our 2020 launch in Germany, Vivid has rapidly expanded across Europe, earning the trust of over 500,000 customers looking for a simpler, smarter way to grow their wealth. With over €200 million raised from top investors and a valuation of €775 million, Vivid is where modern finance meets real opportunity. Join us and experience a new way to thrive financially.</p>]]>
+            </value>
+        </jobDescription>
+    </jobDescriptions>
+    <employmentType>permanent</employmentType>
+    <seniority>experienced</seniority>
+    <schedule>full-time</schedule>
+    <yearsOfExperience>2-5</yearsOfExperience>
+    <keywords>KYB,Antifinancial Crime,aml</keywords>
+    <occupation>risk_management</occupation>
+    <occupationCategory>accounting_and_finance</occupationCategory>
+    <createdAt>2025-12-05T21:17:25+00:00</createdAt>
+    <salaryInformation>
+        <min>30000.00</min>
+        <max>40000.00</max>
+        <currencySymbol>€</currencySymbol>
+        <currencyCode>EUR</currencyCode>
+        <type>yearly</type>
+    </salaryInformation>
+</position>
+
+<position>
+    <id>2529293</id>
+    <office>Philippines</office>
+    <department>Fincrime Prevention Operations (1st line)</department>
+    <recruitingCategory>AFC Specialists process (with Test)</recruitingCategory>
+    <name>Financial Crime Prevention Specialist (Remote)</name>
+    <jobDescriptions>
+        <jobDescription>
+            <name>About The Role</name>
+            <value>
+                <![CDATA[We're looking for a passionate individual to join our team and play a vital role in safeguarding our financial systems. In this role, you'll be on the frontlines preventing illegal activities like money laundering, terrorism financing, and fraud. <strong>This position requires a flexible shift schedule</strong>.]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Your Mission</name>
+            <value>
+                <![CDATA[<ul><li>Verifying customer and business identities (KYC and KYB).</li><li>Transactions monitoring.</li><li>Work with requests from partner banks.</li><li>Reporting Suspicious Activities Reports (SARs) to the Chief Compliance Officer.</li></ul>Another key task is adhering to internal procedures and achieving performance metrics, aiming to excel in key performance indicators like processing time and accuracy.]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Your Profile</name>
+            <value>
+                <![CDATA[<ul><li>Quick to learn and enthusiastic about acquiring new insights and skills.</li><li>5+ years of experience in AML/FinCrime.</li><li>Proficiency in English is required.</li><li>Knowledge of global AML/CTF practices.</li><li>Proficiency in KYC.</li><li>Proven experience with Transactions monitoring/EDD process.</li><li>Solid understanding of financial services and their regulatory framework.</li><li>Proficiency in KYB processes.</li><li>Previous experience in FinTech or startup environments is highly beneficial.</li></ul>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Why Join Vivid?</name>
+            <value>
+                <![CDATA[<br><strong>Enhance your expertise and shape the future of FinTech. Join Vivid's talented team and help us revolutionize how businesses think about their finances!<br></strong>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Compensation range</name>
+            <value>
+                <![CDATA[<span style="color:rgb(66,66,66);font-family:Raleway, sans-serif, Inter, Arial, Helvetica, sans-serif;font-size:14px;font-style:normal;font-weight:400;text-transform:none;background-color:rgb(255,255,255);display:inline;">Final compensation is determined individually, based on your experience, skills and the scope of the role, assessed against objective, gender-neutral criteria.</span>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>About Vivid</name>
+            <value>
+                <![CDATA[At Vivid, we're reimagining how individuals and businesses manage money. Our all-in-one app opens up a world of financial possibilities: invest in global stocks, ETFs, and over 150 cryptocurrencies, earn cashback on everyday purchases, and access personalised insights to make the most of your finances—all tailored to your lifestyle.   <br>  <br>For businesses, Vivid Business offers a powerful suite of tools, including multi-IBAN accounts, high-interest rates, business cashback, team cards, and seamless accounting integrations to streamline operations.   <br>  <br>Our mission? Your success. Everyone deserves the chance to see their finances flourish, and we’re dedicated to empowering our customers to make this a reality.   <br>  <br>Since our 2020 launch in Germany, Vivid has rapidly expanded across Europe, earning the trust of over 500,000 customers looking for a simpler, smarter way to grow their wealth. With over €200 million raised from top investors and a valuation of €775 million, Vivid is where modern finance meets real opportunity. Join us and experience a new way to thrive financially.]]>
+            </value>
+        </jobDescription>
+    </jobDescriptions>
+    <employmentType>permanent</employmentType>
+    <seniority>entry-level</seniority>
+    <schedule>full-time</schedule>
+    <yearsOfExperience>1-2</yearsOfExperience>
+    <keywords>Anti Financial Crime,Fintech</keywords>
+    <occupation>other</occupation>
+    <occupationCategory>other</occupationCategory>
+    <createdAt>2026-02-13T11:44:42+00:00</createdAt>
+</position>
+
+<position>
+    <id>2814908</id>
+    <office>Berlin</office>
+    <additionalOffices>
+        <office>Limassol</office>
+        <office>Remote</office>
+        <office>Barcelona</office>
+    </additionalOffices>
+    <department>Marketing</department>
+    <recruitingCategory>Standard (3 stages)</recruitingCategory>
+    <name>GTM Engineer (m/f/d)</name>
+    <jobDescriptions>
+        <jobDescription>
+            <name>About The Role</name>
+            <value>
+                <![CDATA[Vivid is building an outbound sales team for its business account. Sales reps will research prospects, reach out and convert them into active business clients. Your job is the machine behind them: the tooling that selects the right companies, the sequences and nurture chains that warm them up before the first call, and the numbers that show what it costs to win a client this way. <br><br>You own the system, not the individual calls. You build the first version of everything yourself, with AI and no-code tools, and hand it to Sales as a self-serve product. You are the first hire in this function.]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Your Mission</name>
+            <value>
+                <![CDATA[<p><strong>1. Prospecting and sequencing tooling for Sales</strong></p><ul><li>Build a self-serve prospect selection tool: ICP filters by country, industry, size, legal form and intent signals, with enrichment and scoring on top of Vivid's own data.</li><li>Set up the sequencing layer (email, LinkedIn, calls) so a rep can pick a segment, choose a play and launch it without you.</li><li>Own playbooks, templates and routing. Train reps, collect their feedback weekly and keep prospect data clean, deduplicated and GDPR-compliant.</li></ul><p><strong>2. Warm-lead engines with Marketing</strong></p><ul><li>Run outbound and nurture chains for priority segments and hand hot leads to Sales with clear triggers and SLAs.</li><li>Build signal-based plays (new registrations, hiring, funding, pricing-page visits, unconverted inbound) and lifecycle flows in Braze with the CRM team.</li><li>Test messaging, channels and offers per country. Scale what works.</li></ul><p><strong>3. Growth metrics and unit economics</strong></p><ul><li>Define and own the outbound funnel, from prospect sourced to activated business client.</li><li>Build the Snowflake dashboard that Sales and Marketing use as the single source of truth.</li><li>Report cost per meeting, cost per activated client and payback by segment and channel. Decide weekly with the Sales lead what to kill and what to scale.</li></ul><p><strong>4. AI-native, zero to one</strong></p><ul><li>Use LLM APIs and agents for account research, personalisation, lead qualification and reply classification.</li><li>Ship a working v1 in days with Claude, n8n, etc. Measure it, then decide if it needs engineering. No tickets for the first version.</li><li>Own the GTM stack budget and vendor choice for this function.</li></ul>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Your Profile</name>
+            <value>
+                <![CDATA[<ul><li>3+ years in Growth, GTM Ops, RevOps or Sales Ops in B2B SaaS or fintech, including at least one outbound motion you built end-to-end.</li><li>Hands-on with the modern outbound stack: enrichment (Clay, Apollo, Cognism, Sales Navigator), sequencing (lemlist, Outreach, HubSpot Sequences or similar), automation (n8n, Make or Zapier).</li><li>Daily use of LLMs in real workflows: prompting, API calls, agents, an AI coding tool such as Claude Code or Cursor. You can show what you built.</li><li>SQL for building your own segments and reports. You are comfortable with a data warehouse.</li><li>You think in unit economics and can explain why a channel deserves more budget or none.</li><li>You work well with salespeople: you listen, you ship fast, you accept that a play that reps do not use is a failed play.</li><li>Fluent English. German, French, Italian or Spanish is a plus.</li></ul><strong>Nice to have</strong><ul><li>SME banking, payments or fintech experience, ideally with sales into small businesses in Germany, France, Italy or Spain.</li><li>Braze, Snowflake, Python or TypeScript.</li><li>You were the first GTM or growth hire somewhere and built the function from zero.</li></ul>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Why Join Vivid?</name>
+            <value>
+                <![CDATA[<ul><li>You can choose between a Hybrid working model or fully remote set up outside office locations.</li><li>Be part of building and scaling a cutting-edge department, contributing to its success while growing alongside the company through its exciting life stages.</li><li>Collaborate with a team of high-performing talents who are deeply passionate about our product and mission.</li><li>Expand your skills with a dedicated learning budget to fuel your professional growth.</li><li>If you're looking for an exciting new opportunity to make an impact in the world of finance, Vivid is the perfect place for you. Join our talented team of professionals and help us revolutionize how people and companies think about their money!</li></ul>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Compensation range</name>
+            <value>
+                <![CDATA[Final compensation is determined individually, based on your experience, skills and the scope of the role, assessed against objective, gender-neutral criteria.]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>About Vivid</name>
+            <value>
+                <![CDATA[At Vivid, we're on a mission to change how businesses and individuals manage their money across Europe. For businesses, we build tools that actually make a difference: multi-IBAN accounts, high-yield savings, business cashback, team cards, and accounting integrations that save real time — all in one place. And for individuals, we offer a simple way to manage and grow your wealth: access to global stocks, ETFs and 150+ cryptocurrencies, cashback, and personalised financial insights.<br><br>Our mission? Your success. Everyone deserves the chance to see their finances flourish, and we're dedicated to empowering our customers to make this a reality.<br><br>Founded in 2019 in Berlin by Alexander Emeshev and Artem Iamanov, Vivid has quickly grown into one of Germany's top financial platforms for SMEs and private accounts. Since then, we've expanded rapidly across Europe, earning the trust of over 500,000 customers — and with over €200 million raised and a valuation of €775 million, we're just getting started.<br><br>We're building Vivid as an AI-native organization — across every function, from product to compliance to operations. Automation handles a growing share of day-to-day execution. For us, this means our teams can focus on architecture, strategy, and high-impact decision-making. This changes how we work: less manual execution, more ownership in building systems that scale. We want to help define what AI-native looks like in a regulated financial environment — and we're looking for people who want to build that future with us.]]>
+            </value>
+        </jobDescription>
+    </jobDescriptions>
+    <employmentType>fixed_term</employmentType>
+    <seniority>experienced</seniority>
+    <schedule>full-time</schedule>
+    <yearsOfExperience>2-5</yearsOfExperience>
+    <keywords>GTM Engineer,Outbound,Lifecycle</keywords>
+    <occupation>general_and_other_marketing_and_product</occupation>
+    <occupationCategory>marketing_and_product</occupationCategory>
+    <createdAt>2026-09-25T12:49:14+00:00</createdAt>
+    <salaryInformation>
+        <min>80000.00</min>
+        <max>95000.00</max>
+        <currencySymbol>€</currencySymbol>
+        <currencyCode>EUR</currencyCode>
+        <type>yearly</type>
+    </salaryInformation>
+</position>
+
+<position>
+    <id>2818897</id>
+    <office>Remote</office>
+    <additionalOffices>
+        <office>Almaty</office>
+        <office>Limassol</office>
+        <office>Barcelona</office>
+        <office>Serbia</office>
+    </additionalOffices>
+    <department>Security</department>
+    <recruitingCategory>Standard (3 stages)</recruitingCategory>
+    <name>Security Engineer (Hybrid or Remote)</name>
+    <jobDescriptions>
+        <jobDescription>
+            <name>About The Role</name>
+            <value>
+                <![CDATA[<p>We’re looking for a <strong>Security Engineer</strong> to own and improve the security of our internal environment — the identities, SaaS apps, endpoints, AI tooling, and networks our employees use every day. This is a hands-on senior role: we expect you to design controls, find the gaps, and drive the changes that close them — and to build the automation that makes it scale.</p><p>We’re an EMI-licensed fintech in a fully cloud-native AWS environment, we use AI heavily, and we’re growing fast. We need someone who can lead technical initiatives independently, influence our security architecture, challenge approaches that no longer fit, and explain it clearly to engineers and leadership.</p>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Your Mission</name>
+            <value>
+                <![CDATA[<strong>Detection &amp; Response (SIEM) — our top priority</strong><ul><li>Own SIEM alerting end-to-end: ship logs from endpoints, IdP, VPN, SaaS, and cloud; write and tune detection rules; cut false positives.</li><li>Act as first responder for security incidents — investigate, contain, drive to closure with clear runbooks — and feed recurring issues back into preventive controls.</li></ul><strong>Identity, Access &amp; SaaS</strong><ul><li>Administer the IdP (SSO via SAML/OIDC, MFA, conditional access) and run access recertification end-to-end across IdP, SaaS, AWS, and internal tools — scope, evidence, follow-through on revocations.</li><li>Hunt down over-permissive and stale access, enforce least privilege and PAM, catch SoD gaps, and make JML and third-party access work in practice.</li><li>Improve SaaS security posture (Google/Microsoft, Slack, GitHub, others) and apply DLP controls to limit data leakage.</li></ul><strong>Endpoint, Email &amp; Phishing Defense</strong><ul><li>Keep the endpoint stack healthy and well-tuned — MDM, XDR/AV, device-compliance checks for VPN/ZTNA — and define posture requirements (disk encryption, EDR present, OS version) with automated remediation.</li><li>Defend against phishing and spoofing — secure email gateway rules, DMARC/SPF/DKIM — and run phishing simulations and security awareness, acting on the results.</li></ul><strong>Automation &amp; Ownership</strong><ul><li>Build internal tooling and automate repetitive operations — reduce manual work, don't just operate it.</li><li>Own the roadmap for your areas: identify gaps, lead initiatives independently, and raise the bar rather than just maintain it.</li></ul>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Your Profile</name>
+            <value>
+                <![CDATA[<ul><li>5+ years in security operations, corporate/IT security, or endpoint engineering.</li><li>Strong with a SIEM (Splunk, Elastic, Panther, Sumo Logic) — detection engineering and incident response — plus an identity provider (Okta, Entra ID, Google Workspace), access recertification, and least-privilege / PAM.</li><li>Working knowledge of endpoint security (MDM, XDR/EDR/AV) and email / phishing defense.</li><li>Practical experience securing how a company uses AI internally: shadow AI discovery, DLP for AI tools, controls for AI assistants and agents, and a working risk framework for adopting new ones. You've done this for real, not from a vendor pitch deck.</li><li>Strong scripting and automation skills — you build tooling against APIs, not just configure consoles.</li><li>Track record of driving improvements end-to-end and leading initiatives with little oversight. </li><li>Сlear written and spoken English for engineers and leadership.</li></ul>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Why Join Vivid?</name>
+            <value>
+                <![CDATA[<ul><li>We have a hybrid model in our Limassol office, or fully remote outside office locations. </li><li>We support relocation to Cyprus (visa, package) when needed.</li><li>Learning &amp; development budget to support your professional growth. </li><li>Fully paid vacation and sick leave. </li><li>Sports compensation. </li><li>Real growth prospects, significant responsibility, and the ability to make an immediate impact from day one. </li></ul><strong>Enhance your expertise and shape the future of FinTech. Join Vivid's talented team and help us revolutionize how businesses think about their finances!</strong>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Compensation range</name>
+            <value>
+                <![CDATA[Final compensation is determined individually, based on your experience, skills and the scope of the role, assessed against objective, gender-neutral criteria.]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>About Vivid</name>
+            <value>
+                <![CDATA[At Vivid, we're on a mission to change how businesses and individuals manage their money across Europe. For businesses, we build tools that actually make a difference: multi-IBAN accounts, high-yield savings, business cashback, team cards, and accounting integrations that save real time — all in one place. And for individuals, we offer a simple way to manage and grow your wealth: access to global stocks, ETFs and 150+ cryptocurrencies, cashback, and personalised financial insights.<br><br>Our mission? Your success. Everyone deserves the chance to see their finances flourish, and we're dedicated to empowering our customers to make this a reality.<br><br>Founded in 2019 in Berlin by Alexander Emeshev and Artem Iamanov, Vivid has quickly grown into one of Germany's top financial platforms for SMEs and private accounts. Since then, we've expanded rapidly across Europe, earning the trust of over 500,000 customers — and with over €200 million raised and a valuation of €775 million, we're just getting started. <br><br>We're building Vivid as an AI-native organization — across every function, from product to compliance to operations. Automation handles a growing share of day-to-day execution. For us, this means our teams can focus on architecture, strategy, and high-impact decision-making. This changes how we work: less manual execution, more ownership in building systems that scale. We want to help define what AI-native looks like in a regulated financial environment — and we're looking for people who want to build that future with us.]]>
+            </value>
+        </jobDescription>
+    </jobDescriptions>
+    <employmentType>permanent</employmentType>
+    <seniority>experienced</seniority>
+    <schedule>full-time</schedule>
+    <yearsOfExperience>5-7</yearsOfExperience>
+    <keywords>Security,Security Engineer,Information Security Engineer,Information Security</keywords>
+    <occupation>security_intelligence_analysis</occupation>
+    <occupationCategory>security_and_protective_services</occupationCategory>
+    <createdAt>2026-09-29T11:43:47+00:00</createdAt>
+    <salaryInformation>
+        <min>80000.00</min>
+        <currencySymbol>€</currencySymbol>
+        <currencyCode>EUR</currencyCode>
+        <type>yearly</type>
+    </salaryInformation>
+</position>
+
+<position>
+    <id>2786658</id>
+    <subcompany>Vivid Money GmbH</subcompany>
+    <office>Berlin</office>
+    <additionalOffices>
+        <office>Germany</office>
+        <office>Hamburg</office>
+        <office>München</office>
+        <office>Frankfurt</office>
+    </additionalOffices>
+    <department>Commercial Department</department>
+    <recruitingCategory>Standard (3 stages)</recruitingCategory>
+    <name>Founding Sales Development Representative (SDR DACH)</name>
+    <jobDescriptions>
+        <jobDescription>
+            <name>About The Role</name>
+            <value>
+                <![CDATA[<p>Vivid Money is redefining how modern businesses, growing SMEs, and financial institutions manage and optimize their capital. From high-yield Interest Accounts and multi-currency infrastructure to treasury tools and team cards, we provide the modern financial platform that traditional banks make too slow and expensive.</p><p>We are expanding our business presence across Germany.</p><p>We aren’t looking for an SDR to just follow a pre-written playbook; we are looking for our <strong>Founding SDR</strong> for the <strong>DACH market.</strong> Working directly alongside our Founding Account Executive, you will be employee number one on the SDR side, responsible for building the outbound engine from scratch. Your core focus will be opening doors with SMB decision-makers (CEOs, CFOs, Finance Directors), while strategically mapping and testing outreach to adjacent personas like holding structures, PE/VC portfolio leads, and family offices.</p><p>If you want the autonomy of a founding team member, want to write the prospecting playbook, and want to establish the top-of-funnel blueprint for Vivid in Germany, this role is for you.</p>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Your Mission</name>
+            <value>
+                <![CDATA[<ul><li><strong>Build the Outbound Engine:</strong> Architect, build, and test our cold outreach sequences across phone, email, and LinkedIn targeting SMB decision-makers across Germany.</li><li><strong>Map &amp; Test New Personas: </strong>Experiment with outreach strategies for secondary personas, including holding companies, VC/PE portfolio managers, and corporate service providers, to help define our expanded ICP.</li><li><strong>Generate High-Volume Pipeline: </strong>Own top-of-funnel growth by sourcing, qualifying, and booking high-intent discovery meetings for the Founding Account Executive.</li><li><strong>Design the Playbook: </strong>Partner directly with Sales Leadership to document what works, establishing the framework, templates, and best practices for future SDR hires.</li><li><strong>Leverage AI &amp; Sales Infrastructure: </strong>Help select, implement, and optimize our AI-native prospecting stack, utilizing AI tools to automate research, trigger tracking, and hyper-personalized messaging.</li><li><strong>Continuous Feedback Loop: </strong>Gather market feedback from prospect interactions to help refine product positioning, objections handling, and GTM messaging.</li></ul>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Your Profile</name>
+            <value>
+                <![CDATA[<ul><li><strong>1–3 years of outbound prospecting experience</strong> (SDR/BDR) in B2B FinTech, SaaS, or financial services, preferably within the DACH market.</li><li><strong>Founding/Builder mindset: </strong>High agency, comfortable with ambiguity, and motivated by creating processes from scratch rather than just executing existing ones.</li><li><strong>Persona curiosity:</strong> Ability to speak the language of SMB founders and CFOs, with a strong interest in learning how different corporate entities and treasury setups operate.</li><li><strong>Tech-savvy &amp; AI-native: </strong>Active user of modern sales stacks and AI prospecting tools to maximize outreach efficiency.</li><li><strong>Tenacious &amp; resilient: </strong>Motivated by raw pipeline creation, testing new angles, and iterating quickly based on response data.</li><li><strong>Languages: </strong>Full professional fluency in German and English is required.</li></ul>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Why Join Vivid?</name>
+            <value>
+                <![CDATA[<ul><li>Hybrid or remote way of work. You can work from our Berlin office or fully remote from other locations. </li><li>Direct influence on go-to-market strategy and revenue growth. </li><li>Significant ownership from day one and strong growth opportunities. </li><li>AI-first culture – we use it every day, not just talk about it.</li><li>Learning &amp; development budget to support your professional growth. </li><li>Fully paid vacation and sick leave. </li><li>Sports compensation. </li><li>Real growth prospects, significant responsibility, and the ability to make an immediate impact from day one.</li></ul>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Compensation range</name>
+            <value>
+                <![CDATA[Final compensation is determined individually, based on your experience, skills, and the scope of the role, assessed against objective, gender-neutral criteria.]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>About Vivid</name>
+            <value>
+                <![CDATA[At Vivid, we're on a mission to change how businesses and individuals manage their money across Europe. For businesses, we build tools that actually make a difference: multi-IBAN accounts, high-yield savings, business cashback, team cards, and accounting integrations that save real time — all in one place. And for individuals, we offer a simple way to manage and grow your wealth: access to global stocks, ETFs and 150+ cryptocurrencies, cashback, and personalised financial insights.<br><br>Our mission? Your success. Everyone deserves the chance to see their finances flourish, and we're dedicated to empowering our customers to make this a reality.<br><br>Founded in 2019 in Berlin by Alexander Emeshev and Artem Iamanov, Vivid has quickly grown into one of Germany's top financial platforms for SMEs and private accounts. Since then, we've expanded rapidly across Europe, earning the trust of over 500,000 customers — and with over €200 million raised and a valuation of €775 million, we're just getting started.<br><br>We're building Vivid as an AI-native organization — across every function, from product to compliance to operations. Automation handles a growing share of day-to-day execution. For us, this means our teams can focus on architecture, strategy, and high-impact decision-making. This changes how we work: less manual execution, more ownership in building systems that scale. We want to help define what AI-native looks like in a regulated financial environment — and we're looking for people who want to build that future with us.]]>
+            </value>
+        </jobDescription>
+    </jobDescriptions>
+    <employmentType>permanent</employmentType>
+    <seniority>experienced</seniority>
+    <schedule>full-time</schedule>
+    <yearsOfExperience>2-5</yearsOfExperience>
+    <keywords>sales,SDR,Sales Development Representative</keywords>
+    <occupation>other</occupation>
+    <occupationCategory>other</occupationCategory>
+    <createdAt>2026-09-08T14:31:12+00:00</createdAt>
+    <salaryInformation>
+        <min>60000.00</min>
+        <max>70000.00</max>
+        <currencySymbol>€</currencySymbol>
+        <currencyCode>EUR</currencyCode>
+        <type>yearly</type>
+    </salaryInformation>
+</position>
+
+<position>
+    <id>2781380</id>
+    <office>Austria</office>
+    <department>Growth</department>
+    <recruitingCategory>Standard (3 stages)</recruitingCategory>
+    <name>Branch Manager – Austria (m/f/d)</name>
+    <jobDescriptions>
+        <jobDescription>
+            <name>About The Role</name>
+            <value>
+                <![CDATA[Vivid Money S.A. is <strong>establishing a branch in Austria</strong>, and we are looking for a <strong>Branch Manager</strong>, a person who will build it and grow it. You will own Vivid's commercial success in Austria and you will be the legal representative of the branch towards the competent authorities. <br>You will join before the branch is operational. The first phase is a build: working alongside our Luxembourg and Group teams on the passport notification and local registrations, standing up local operations, and hiring your first team. The second phase is growth: acquisition, partnerships and market share in Austria. This is a build and grow role, not a caretaker role. <br><br>The role requires genuine local presence in <strong>Austria</strong>.]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Your Mission</name>
+            <value>
+                <![CDATA[<p><strong>Business</strong><strong> development and growth</strong></p><ul><li>Own the commercial plan for Austria: build it, and deliver it against acquisition, market share and revenue targets.</li><li>Take Vivid's SME and private propositions to market in Austria, adapting positioning, pricing input and go-to-market to local conditions.</li><li>Lead negotiations for strategic partnerships and distribution in Austria, from first contact to signature.</li><li>Build and own the relationships that matter in the market: partners, intermediaries, industry bodies and press.</li><li>Track market trends, competitor activity and customer needs, and translate them into concrete product and go-to-market recommendations to Group teams.</li><li>Represent Vivid in Austria at industry events, conferences and forums, and with the media.</li><li>Build the local team: define the first roles, hire, onboard and lead.</li></ul><p><strong>Build the branch</strong></p><ul><li>Work with the Luxembourg team and local counsel on the branch passport notification to the FMA, and on your own notification and fitness assessment.</li><li>Complete the registrations required to operate: tax, social security and any local licensing formalities.</li><li>Stand up the branch's local operating arrangements — premises, local reporting, and the local control environment — in coordination with Group functions.</li><li>Set up the branch's local obligations on complaints handling, out-of-court dispute resolution and consumer protection.</li><li>Own the launch plan and sequencing, and hold the go-live decision jointly with Luxembourg.</li></ul><p><strong>Represent Vivid and stay compliant</strong></p><ul><li>Act as the legal representative of the branch towards the FMA and other competent authorities: regulatory correspondence, supervisory visits, inspections and audits.</li><li>Serve as the branch's point of contact with the regulator and the Austrian FIU, responsible for accurate and timely regulatory communication.</li><li>Keep the branch's regulatory standing current and ensure ongoing compliance with the conditions of Vivid Money S.A.'s passported permissions.</li><li>Hold the appointed MLRO role for the branch, supported by dedicated first line operations and Group second line, who carry day-to-day monitoring, alert triage and policy drafting. The decisions the appointment reserves to you remain yours.</li><li>Report suspicious activity, ensuring submissions are timely, accurate and complete.</li><li>Own the branch-level AML/CFT business-wide risk assessment, with drafting support from Group Compliance.</li><li>Ensure local AML/CFT and sanctions processes for onboarding and ongoing monitoring meet local requirements and are applied consistently, escalating where local rules go beyond group standards.</li></ul>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Your Profile</name>
+            <value>
+                <![CDATA[<p>We are open on background, and expect strong candidates to come from one of two directions. What we're looking for either way:</p><ul><li>At least 5 years in financial services or fintech, with a commercial track record — market entry, business development or partnerships — and results you can point to.</li><li>Experience of building something from a standing start, rather than inheriting a running operation.</li><li>Comfortable holding a position of personal regulatory accountability, and prepared to take a decision that is commercially unwelcome.</li><li>Resident in Austria, or willing to relocate, with genuine local presence. Regular travel to Luxembourg and Berlin.</li><li>Degree or professional qualification in business, finance, law, compliance or a related field.</li><li>Fluent in German and English, written and spoken.</li></ul><p><strong>Either — a compliance background</strong></p><ul><li>Experience as an appointed MLRO, or in a directly equivalent appointed role, at a regulated institution.</li><li>Hands-on AML/CFT experience including real customer cases, escalations and SAR/STR reporting, and direct interaction with an FIU and a regulator.</li><li>The appetite to spend most of your time growing a business, not just running a control function.</li></ul><p><strong>Or — a commercial background</strong></p><ul><li>Senior commercial or country-management experience at a regulated financial institution or fintech.</li><li>Sufficient AML/CFT grounding to hold the appointment credibly from day one, with the support described above.</li></ul>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Why Join Vivid?</name>
+            <value>
+                <![CDATA[<ul><li>Ownership of a market: you build the branch, hire the team, and own the growth. </li><li>Direct line to the CEO and Authorised Management of the regulated entity. </li><li>An ambitious, experienced team across Luxembourg, Berlin and our European markets. </li><li>Vivid Prime account free of charge. </li><li>Learning and development budget to support your professional growth. </li><li>A senior-level position with a competitive benefits package.</li></ul><br><strong>Enhance your expertise and shape the future of FinTech. Join Vivid's talented team and help us revolutionize how businesses think about their finances!</strong>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Compensation range</name>
+            <value>
+                <![CDATA[Final compensation is determined individually, based on your experience, skills and the scope of the role, assessed against objective, gender-neutral criteria.<br><br>We believe the people who build Vivid should own a piece of it. Your total compensation reflects that: a strong fixed base, and <strong>equity</strong> via our Employee Stock Option Program. Real upside for real impact.]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>About Vivid</name>
+            <value>
+                <![CDATA[At Vivid, we're on a mission to change how businesses and individuals manage their money across Europe. For businesses, we build tools that actually make a difference: multi-IBAN accounts, high-yield savings, business cashback, team cards, and accounting integrations that save real time — all in one place. And for individuals, we offer a simple way to manage and grow your wealth: access to global stocks, ETFs and 150+ cryptocurrencies, cashback, and personalised financial insights.<br><br>Our mission? Your success. Everyone deserves the chance to see their finances flourish, and we're dedicated to empowering our customers to make this a reality.<br><br>Founded in 2019 in Berlin by Alexander Emeshev and Artem Iamanov, Vivid has quickly grown into one of Germany's top financial platforms for SMEs and private accounts. Since then, we've expanded rapidly across Europe, earning the trust of over 500,000 customers — and with over €200 million raised and a valuation of €775 million, we're just getting started.<br><br>We're building Vivid as an AI-native organization — across every function, from product to compliance to operations. Automation handles a growing share of day-to-day execution. For us, this means our teams can focus on architecture, strategy, and high-impact decision-making. This changes how we work: less manual execution, more ownership in building systems that scale. We want to help define what AI-native looks like in a regulated financial environment — and we're looking for people who want to build that future with us.]]>
+            </value>
+        </jobDescription>
+    </jobDescriptions>
+    <employmentType>permanent</employmentType>
+    <seniority>experienced</seniority>
+    <schedule>full-time</schedule>
+    <yearsOfExperience>5-7</yearsOfExperience>
+    <keywords>Business Development </keywords>
+    <occupation>general_and_other_marketing_and_product</occupation>
+    <occupationCategory>marketing_and_product</occupationCategory>
+    <createdAt>2026-09-03T19:15:48+00:00</createdAt>
+</position>
+
+<position>
+    <id>2707648</id>
+    <subcompany>Vivid Money GmbH</subcompany>
+    <office>Berlin</office>
+    <additionalOffices>
+        <office>Germany</office>
+        <office>Hamburg</office>
+        <office>München</office>
+        <office>Frankfurt</office>
+    </additionalOffices>
+    <department>Commercial Department</department>
+    <recruitingCategory>Standard (3 stages)</recruitingCategory>
+    <name>New Business Account Executive (DACH market)</name>
+    <jobDescriptions>
+        <jobDescription>
+            <name>About The Role</name>
+            <value>
+                <![CDATA[Vivid Money is redefining how modern corporates, holding structures, and financial institutions manage and optimize their capital. From institutional-grade Treasury products (high-yield Interest Accounts, Money Market Funds, and ETFs) to multi-currency infrastructure and FX solutions, we provide the financial architecture that traditional banks make too slow and expensive.<br>We are expanding our institutional footprint in Germany.<br>We aren’t looking for a standard software sales rep; we are looking for a New Business Account Executive who understands the fabric of the German financial ecosystem. You will be employee number one on the ground, tasked with unlocking high-value segments: PE/VC funds, holding companies (Soparfis), family offices, and corporate service providers.<br>If you have the network to navigate corporate Germany, understand structured finance/treasury needs, and want the autonomy to build a market from scratch, this role is for you.]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Your Mission</name>
+            <value>
+                <![CDATA[<ul><li><strong>Originate Institutional Pipeline</strong>: Identify and engage decision-makers across Germanys unique B2B landscape, focusing on PE/VC funds, corporate holding structures, asset managers, and corporates.</li><li><strong>Leverage Channel Partnerships</strong>: Build strategic relationships with local multipliers—accountants, tax advisors, law firms—who manage hundreds of entities requiring modern treasury setups.</li><li><strong>Navigate Complex Sales Cycles</strong>: Run the end-to-end commercial cycle for high-value accounts, from sophisticated discovery and structured treasury pitches to compliance onboarding and closing.</li><li><strong>Position Vivid as a Yield Partner</strong>: Educate fund managers and corporate treasurers on how to leverage Vivid’s Treasury and MMF solutions to optimize returns on their cash reserves and dry powder.</li><li><strong>Shape the German Playbook</strong>: Partner directly with the Sales Leadership team to refine our Ideal Customer Profile (ICP), localized messaging, and regulatory positioning for the German market.</li><li><strong>Represent the Brand</strong>: Act as the face of Vivid Money GmbH at major financial services, fund industry, and fintech events in Germany.</li></ul>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Your Profile</name>
+            <value>
+                <![CDATA[<ul><li><strong>5+ years of B2B/Institutional sales experience</strong> within the German financial ecosystem (e.g., Private Banking, Corporate Banking, Fund Services, FinTech, or Treasury/Asset Management).</li><li><strong>Deep local knowledge</strong>: You thoroughly understand Germanys financial structures (Soparfis, RAIFs, SICAVs) and know how these entities manage liquidity and banking relationships.</li><li><strong>An established network</strong>: You have an existing book of contacts or a proven ability to network into CFOs, Fund Operations leads, Managing Directors, and Domiciliation Agents.</li><li><strong>Technical fluency</strong>: You can speak confidently about FX, money market funds, yield generation, and compliance/KYB processes for complex corporate structures.</li><li><strong>Entrepreneurial mindset</strong>: You thrive in an "AI-first," high-autonomy environment where the playbook is yours to write.</li><li><strong>Languages</strong>: Full professional fluency in English and German is required. </li></ul>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Why Join Vivid?</name>
+            <value>
+                <![CDATA[<ul><li>Hybrid or remote way of work. You can work from our Berlin office or fully remote from other locations. </li><li>Direct influence on go-to-market strategy and revenue growth. </li><li>Significant ownership from day one and strong growth opportunities. </li><li>AI-first culture – we use it every day, not just talk about it.</li><li>Learning &amp; development budget to support your professional growth. </li><li>Fully paid vacation and sick leave. </li><li>Sports compensation. </li><li>Real growth prospects, significant responsibility, and the ability to make an immediate impact from day one.</li></ul>]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>Compensation range</name>
+            <value>
+                <![CDATA[Total target compensation: <strong>from</strong> €120,000 gross annually (base salary + performance-related bonus). Final compensation is determined individually, based on your experience, skills, and the scope of the role, assessed against objective, gender-neutral criteria.]]>
+            </value>
+        </jobDescription>
+        <jobDescription>
+            <name>About Vivid</name>
+            <value>
+                <![CDATA[At Vivid, we're on a mission to change how businesses and individuals manage their money across Europe. For businesses, we build tools that actually make a difference: multi-IBAN accounts, high-yield savings, business cashback, team cards, and accounting integrations that save real time — all in one place. And for individuals, we offer a simple way to manage and grow your wealth: access to global stocks, ETFs and 150+ cryptocurrencies, cashback, and personalised financial insights.<br><br>Our mission? Your success. Everyone deserves the chance to see their finances flourish, and we're dedicated to empowering our customers to make this a reality.<br><br>Founded in 2019 in Berlin by Alexander Emeshev and Artem Iamanov, Vivid has quickly grown into one of Germany's top financial platforms for SMEs and private accounts. Since then, we've expanded rapidly across Europe, earning the trust of over 500,000 customers — and with over €200 million raised and a valuation of €775 million, we're just getting started.<br><br>We're building Vivid as an AI-native organization — across every function, from product to compliance to operations. Automation handles a growing share of day-to-day execution. For us, this means our teams can focus on architecture, strategy, and high-impact decision-making. This changes how we work: less manual execution, more ownership in building systems that scale. We want to help define what AI-native looks like in a regulated financial environment — and we're looking for people who want to build that future with us.]]>
+            </value>
+        </jobDescription>
+    </jobDescriptions>
+    <employmentType>permanent</employmentType>
+    <seniority>experienced</seniority>
+    <schedule>full-time</schedule>
+    <keywords>sales,outbound</keywords>
+    <occupation>other</occupation>
+    <occupationCategory>other</occupationCategory>
+    <createdAt>2026-07-10T10:27:33+00:00</createdAt>
+    <salaryInformation>
+        <min>120000.00</min>
+        <currencySymbol>€</currencySymbol>
+        <currencyCode>EUR</currencyCode>
+        <type>yearly</type>
+    </salaryInformation>
+</position>
+
+</workzag-jobs>

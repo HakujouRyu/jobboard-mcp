@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<workzag-jobs>
+
+<position>
+    <id>254619</id>
+    <office>Ulm</office>
+    <department>Installation</department>
+    <recruitingCategory>Installation</recruitingCategory>
+    <name>Anlagenmechaniker SHK (m/w/d) -  Region Ulm</name>
+    <jobDescriptions></jobDescriptions>
+    <employmentType>permanent</employmentType>
+    <seniority>experienced</seniority>
+    <schedule>full-time</schedule>
+    <yearsOfExperience>1-2</yearsOfExperience>
+    <keywords>Anlagenmechaniker SHK,Heizungsbauer,Vollzeit,mobiles Arbeiten,erneuerbare Energien,HeyJobs</keywords>
+    <occupation>hvac</occupation>
+    <occupationCategory>building_construction_and_skilled_trades</occupationCategory>
+    <createdAt>2020-09-14T10:11:57+00:00</createdAt>
+    <salaryInformation>
+        <min>3700.00</min>
+        <max>4400.00</max>
+        <currencySymbol>€</currencySymbol>
+        <currencyCode>EUR</currencyCode>
+        <type>monthly</type>
+    </salaryInformation>
+</position>
+
+<position>
+    <id>2841855</id>
+    <subcompany>Thermondo GmbH</subcompany>
+    <office>Berlin (Zentrale)</office>
+    <department>People &amp; Culture</department>
+    <recruitingCategory>Central</recruitingCategory>
+    <name>Werkstudent People Operations &amp; Automation (m/w/d)</name>
+    <jobDescriptions></jobDescriptions>
+    <employmentType>working_student</employmentType>
+    <seniority>entry-level</seniority>
+    <schedule>part-time</schedule>
+    <keywords>Werkstudent,Personalwesen,Berlin,greentech,People,Personalabteilung,HR</keywords>
+    <occupation>hr_systems_administration</occupation>
+    <occupationCategory>human_resources</occupationCategory>
+    <createdAt>2026-10-14T09:24:24+00:00</createdAt>
+    <salaryInformation>
+        <min>15.00</min>
+        <max>18.00</max>
+        <currencySymbol>€</currencySymbol>
+        <currencyCode>EUR</currencyCode>
+        <type>hourly</type>
+    </salaryInformation>
+</position>
+
+<position>
+    <id>2119725</id>
+    <subcompany>Thermondo GmbH</subcompany>
+    <office>Berlin (Zentrale)</office>
+    <department>Partnermanagement</department>
+    <recruitingCategory>Central</recruitingCategory>
+    <name>Partnermanagement Intern (m/w/d)</name>
+    <jobDescriptions></jobDescriptions>
+    <employmentType>intern</employmentType>
+    <seniority>student</seniority>
+    <schedule>full-time</schedule>
+    <yearsOfExperience>lt-1</yearsOfExperience>
+    <occupation>general_and_other_project_and_program_management</occupation>
+    <occupationCategory>project_and_program_management</occupationCategory>
+    <createdAt>2025-05-20T15:21:33+00:00</createdAt>
+</position>
+
+<position>
+    <id>2692963</id>
+    <subcompany>Thermondo GmbH</subcompany>
+    <office>Neumünster</office>
+    <department>Installation</department>
+    <recruitingCategory>Installation</recruitingCategory>
+    <name>Anlagenmechaniker SHK  (m/w/d) - Mobiles Arbeiten</name>
+    <jobDescriptions></jobDescriptions>
+    <employmentType>permanent</employmentType>
+    <seniority>experienced</seniority>
+    <schedule>full-time</schedule>
+    <yearsOfExperience>1-2</yearsOfExperience>
+    <keywords>Anlagenmechaniker SHK,Heizungsbauer,Vollzeit,mobiles Arbeiten,erneuerbare Energien,HeyJobs</keywords>
+    <occupation>hvac</occupation>
+    <occupationCategory>building_construction_and_skilled_trades</occupationCategory>
+    <createdAt>2026-06-30T16:55:43+00:00</createdAt>
+</position>
+
+<position>
+    <id>2813871</id>
+    <subcompany>Thermondo GmbH</subcompany>
+    <office>Berlin (Zentrale)</office>
+    <additionalOffices>
+        <office>Remote</office>
+    </additionalOffices>
+    <department>Venture Development</department>
+    <recruitingCategory>Central</recruitingCategory>
+    <name>Remote Heizungsbaumeister / Technischer Bauleiter – Wärmepumpensysteme MFH (m/w/d)</name>
+    <jobDescriptions></jobDescriptions>
+    <employmentType>permanent</employmentType>
+    <seniority>experienced</seniority>
+    <schedule>full-time</schedule>
+    <keywords>Bauleitung,Betriebsleitung,B2B,Partnermanagement,SHK,SHK Meister,Meister,Techniker,Remote,Wärmepumpen,greentech,Gebietsleitung</keywords>
+    <occupation>site_superintendent</occupation>
+    <occupationCategory>building_construction_and_skilled_trades</occupationCategory>
+    <createdAt>2026-09-24T16:37:49+00:00</createdAt>
+</position>
+
+</workzag-jobs>
