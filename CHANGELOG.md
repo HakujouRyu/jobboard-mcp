@@ -62,6 +62,9 @@ All notable changes are recorded here. The format follows
   The job board APIs aren't paced.
 - Careers pages are fetched only where the site's robots.txt allows. A disallowed page shows
   up in `resolve_board`'s `pages_checked` with the reason, and token probing still runs.
+- `resolve_board`'s `pages_checked` also gives the reason for a careers page that failed to
+  load (a timeout or connection error, for example) and the status of one that came back as
+  an error page, such as `(HTTP 404)`. An error page is still read for links.
 - `sweep_boards` has no built-in filters. `title_exclude` used to default to intern, internship,
   new grad, and principal, and `remote` to `remote_us` and `remote_global`. Both now default to
   no filtering, so pass your preferences on each call.

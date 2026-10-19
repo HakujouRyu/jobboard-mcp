@@ -263,9 +263,10 @@ Before each of those requests, redirects included, the client checks the site's 
 - `crawl-delay` is ignored; the concurrency caps above still apply.
 
 A refused URL raises `Blocked`, which is never retried, and `resolve_board` lists the page in
-`pages_checked` with the reason. Because connections are pinned by IP, the careers-page client
-keeps no connections alive (another site on the same IP would otherwise reuse one), and it
-ignores proxy environment variables (a proxy would do its own DNS lookup and skip the check).
+`pages_checked` with the reason, as it does for a page that fails to load. Because connections
+are pinned by IP, the careers-page client keeps no connections alive (another site on the same
+IP would otherwise reuse one), and it ignores proxy environment variables (a proxy would do its
+own DNS lookup and skip the check).
 
 ## Board resolution
 

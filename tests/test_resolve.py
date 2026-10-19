@@ -135,7 +135,10 @@ async def test_posit_follows_link_from_404_page_to_embed(http: HttpClient) -> No
     assert (r.ats, r.token, r.confidence, r.jobs) == (Ats.GREENHOUSE, "rstudio", Confidence.HIGH, 8)
     assert any("links to greenhouse board 'rstudio'" in e for e in r.evidence)
     assert any("company name 'Posit'" in e for e in r.evidence)
-    assert r.pages_checked == ["https://posit.co/careers/", "https://posit.co/about/careers"]
+    assert r.pages_checked == [
+        "https://posit.co/careers/ (HTTP 404)",
+        "https://posit.co/about/careers",
+    ]
 
 
 @respx.mock
@@ -258,7 +261,16 @@ async def test_unreachable_careers_page_still_probes(http: HttpClient) -> None:
     not_found_everywhere_else(respx.mock)
     r = await resolve_board(http, "Down", "https://down.test/careers")
     assert (r.ats, r.token, r.confidence) == (Ats.ASHBY, "down", Confidence.MEDIUM)
-    assert r.pages_checked == ["https://down.test/careers"]
+    assert r.pages_checked == ["https://down.test/careers (ConnectError: refused)"]
+
+
+@respx.mock
+async def test_error_status_careers_page_is_listed_with_status(http: HttpClient) -> None:
+    respx.get("https://walled.test/careers").mock(return_value=httpx.Response(403, text="no"))
+    not_found_everywhere_else(respx.mock)
+    r = await resolve_board(http, "Walled", "https://walled.test/careers")
+    assert r.ats is None
+    assert r.pages_checked == ["https://walled.test/careers (HTTP 403)"]
 
 
 @respx.mock
