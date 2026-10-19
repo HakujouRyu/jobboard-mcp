@@ -154,9 +154,10 @@ async def test_live_stdio_roundtrip() -> None:
         tools = await session.list_tools()
         assert {"sweep_boards", "get_posting", "add_company"} <= {t.name for t in tools.tools}
         result = await session.call_tool("sweep_boards", {"companies": ["Linear"]})
-        assert isinstance(result, CallToolResult) and not result.is_error
+        assert isinstance(result, CallToolResult) and not result.is_error, result.content
         assert result.structured_content is not None
-        assert result.structured_content["per_company"][0]["status"] == "ok"
+        linear = result.structured_content["per_company"][0]
+        assert linear["status"] == "ok", linear
 
 
 # ------------------------------------------------------------------ M2
@@ -164,8 +165,9 @@ async def test_live_stdio_roundtrip() -> None:
 
 async def test_live_resolve_posit_old_name_token(service: JobBoardService) -> None:
     r = await service.resolve_board("Posit", "https://posit.co/careers/")
-    assert (r.ats, r.token) == (Ats.GREENHOUSE, "rstudio")
-    assert r.confidence is not None and r.confidence.value == "high"
+    # The token is only reachable through the careers-page link, so show what the scan saw.
+    assert (r.ats, r.token) == (Ats.GREENHOUSE, "rstudio"), r.model_dump_json(indent=1)
+    assert r.confidence is not None and r.confidence.value == "high", r.model_dump_json(indent=1)
 
 
 async def test_live_find_company_posting_round_trip(service: JobBoardService) -> None:
@@ -174,9 +176,10 @@ async def test_live_find_company_posting_round_trip(service: JobBoardService) ->
     listing = await ADAPTERS[Ats.ASHBY].list_jobs(service.http, "Linear", "linear")
     target = listing.jobs[0]
     found = await service.find_company_posting("Linear", target.title)
-    assert found.board_found
-    assert target.title in {c.job.title for c in found.candidates}
-    assert found.candidates[0].score >= 90
+    assert found.board_found, found.model_dump_json(indent=1)
+    scores = [(c.score, c.job.title) for c in found.candidates]
+    assert target.title in {title for _, title in scores}, scores
+    assert scores[0][0] >= 90, scores
 
 
 async def test_live_is_posting_live(service: JobBoardService) -> None:
@@ -196,9 +199,10 @@ async def test_live_is_posting_live(service: JobBoardService) -> None:
         # Workday boards are searched; "engineer" keeps this to a page or two.
         search = ["engineer"] if ats is Ats.WORKDAY else []
         job = (await ADAPTERS[ats].list_jobs(service.http, token, token, search=search)).jobs[0]
-        assert (await service.is_posting_live(url=job.url)).live, job.url
+        check = await service.is_posting_live(url=job.url)
+        assert check.live, f"{job.url}: {check.reason}"
     gone = await service.is_posting_live(ats=Ats.GREENHOUSE, token="gitlab", job_id="1")
-    assert gone.live is False
+    assert gone.live is False, gone.reason
 
 
 async def test_live_stdio_readonly_hides_write_tools() -> None:
