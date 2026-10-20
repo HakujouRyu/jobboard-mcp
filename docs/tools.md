@@ -275,7 +275,7 @@ alone would have missed it.
     "board reports company name 'Posit'"
   ],
   "alternatives": [],
-  "pages_checked": ["https://posit.co/careers/", "https://posit.co/about/careers"]
+  "pages_checked": ["https://posit.co/careers/ (HTTP 404)", "https://posit.co/about/careers"]
 }
 ```
 
@@ -294,8 +294,9 @@ unsupported ATS the pages mention (SmartRecruiters, BambooHR, and so on).
 
 Careers pages are only fetched from public addresses over `http`/`https` on the default port,
 and only where the site's robots.txt allows, redirects included (see
-[architecture.md](architecture.md#careers-pages)). A page that's refused still counts as
-checked, with the reason, and the token probes still run:
+[architecture.md](architecture.md#careers-pages)). A page that's refused or fails to load
+still counts as checked, with the reason, and the token probes still run. An error page, such
+as `(HTTP 404)`, is listed with its status and still read for links:
 
 ```json
 "pages_checked": [
