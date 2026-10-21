@@ -164,7 +164,7 @@ async def test_live_stdio_roundtrip() -> None:
 
 
 async def test_live_resolve_posit_old_name_token(service: JobBoardService) -> None:
-    r = await service.resolve_board("Posit", "https://posit.co/careers/")
+    r = await service.resolve_board("Posit", "https://posit.co/about/careers/")
     # The token is only reachable through the careers-page link, so show what the scan saw.
     assert (r.ats, r.token) == (Ats.GREENHOUSE, "rstudio"), r.model_dump_json(indent=1)
     assert r.confidence is not None and r.confidence.value == "high", r.model_dump_json(indent=1)
