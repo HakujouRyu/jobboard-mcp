@@ -17,7 +17,7 @@ from mcp.types import CallToolResult
 
 from jobboard_mcp.config import EXAMPLE_WATCHLIST, Settings
 from jobboard_mcp.filters import SweepFilters
-from jobboard_mcp.models import Ats, CompanyStatus, Remote
+from jobboard_mcp.models import Ats, CompanyStatus, Remote, SweepResult
 from jobboard_mcp.service import JobBoardService
 
 pytestmark = pytest.mark.live
@@ -68,6 +68,14 @@ async def test_live_watchlist_mostly_ok(service: JobBoardService) -> None:
     assert len(ok) / len(with_board) >= 0.8, [c.model_dump() for c in with_board]
 
 
+def per_company(result: SweepResult) -> str:
+    """One line per board, so a failed assertion says which board did what."""
+    return "\n".join(
+        f"{c.company}: {c.status.value}" + (f" ({c.error})" if c.error else "")
+        for c in result.per_company
+    )
+
+
 async def test_live_acceptance_cold_and_warm(service: JobBoardService) -> None:
     boards = fast_boards(service)
     started = time.perf_counter()
@@ -76,10 +84,16 @@ async def test_live_acceptance_cold_and_warm(service: JobBoardService) -> None:
     started = time.perf_counter()
     warm = await service.sweep(acceptance_filters(service), companies=boards)
     warm_s = time.perf_counter() - started
-    print(f"\ncold {cold_s:.2f}s, warm {warm_s:.2f}s, {len(cold.jobs)} jobs")
-    assert cold_s < 20
-    assert warm_s < 2
-    assert warm.cache_hits == sum(c.status is CompanyStatus.OK for c in warm.per_company)
+    summary = (
+        f"cold {cold_s:.2f}s, warm {warm_s:.2f}s, {len(cold.jobs)} jobs\n"
+        f"cold:\n{per_company(cold)}\nwarm ({warm.cache_hits} cache hits):\n{per_company(warm)}"
+    )
+    print(f"\n{summary}")
+    # Only a board that answered cold is cached, so name any that didn't.
+    assert all(c.status is CompanyStatus.OK for c in cold.per_company), summary
+    assert cold_s < 20, summary
+    assert warm_s < 2, summary
+    assert warm.cache_hits == sum(c.status is CompanyStatus.OK for c in warm.per_company), summary
     assert [j.id for j in warm.jobs] == [j.id for j in cold.jobs]
 
 
