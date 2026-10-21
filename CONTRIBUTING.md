@@ -48,14 +48,15 @@ failed before you change any code.
 ### CI
 
 GitHub Actions runs the three checks above on every PR and every push to `main`
-([ci.yml](.github/workflows/ci.yml)). The tests run on Linux, Windows, and macOS, each with
-Python 3.12 (the oldest supported) and 3.14 (the newest). Lint and type checks run once, and so
+([ci.yml](.github/workflows/ci.yml)). The tests run twice: on Linux with Python 3.12 (the oldest
+supported) and on Windows with 3.14 (the newest). Lint and type checks run once, and so
 does zizmor, which audits the workflows themselves. Actions are pinned to commit SHAs, and
 Dependabot keeps the pins current. The
 `checks` job passes only when all of those do, and it's the one a merge waits on.
 
-[live.yml](.github/workflows/live.yml) runs the live tests on every push to `main` and every
-Monday, since boards change without any commit here. A failure opens an issue labeled
+[live.yml](.github/workflows/live.yml) runs the live tests every Monday, and by hand from the
+Actions tab, since boards change without any commit here. It doesn't run on merges, so run them
+locally before merging a change that needs them. A failure opens an issue labeled
 `live-tests`, or comments on the one already open, and the next passing run closes it. GitHub
 turns off scheduled workflows after 60 days without a commit, so on a quiet repo, re-enable it
 from the Actions tab or run it by hand.

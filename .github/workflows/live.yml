@@ -1,12 +1,11 @@
-# Live tests against the real board APIs: after every merge, and weekly, because boards change
-# without any commit here. A failure on main opens an issue (or comments on the open one), and the
+# Live tests against the real board APIs, weekly and by hand, because boards change without any
+# commit here. A merge is covered by the offline tests; run the live ones locally before merging
+# a change to an adapter or the HTTP code. A failure on main opens an issue (or comments on the open one), and the
 # next passing run closes it. A failure can mean a board changed rather than a bug. See "Checks"
 # in CONTRIBUTING.md.
 name: Live tests
 
 on:
-  push:
-    branches: [main]
   schedule:
     - cron: "17 9 * * 1" # Mondays 09:17 UTC, off the hour when GitHub's scheduler is busiest
   workflow_dispatch:

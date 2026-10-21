@@ -43,7 +43,9 @@ jobs:
       - name: Type check
         run: uv run pyright
 
-  # The oldest supported Python and the newest, on every OS.
+  # Two jobs cover both OS families and both ends of the supported Python range. The
+  # platform-specific code takes the platform as an argument, so it's tested on either; what
+  # differs for real is file I/O and subprocesses, and macOS behaves like Linux for those.
   test:
     name: test (${{ matrix.os }}, ${{ matrix.python }})
     runs-on: ${{ matrix.os }}
@@ -51,8 +53,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python: ["3.12", "3.14"]
+        include:
+          - { os: ubuntu-latest, python: "3.12" }
+          - { os: windows-latest, python: "3.14" }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
