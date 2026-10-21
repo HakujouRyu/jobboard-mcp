@@ -7,7 +7,10 @@ pointed at internal addresses. ``GuardedTransport`` checks every request, redire
 - the host must resolve only to public addresses;
 - the connection goes to the address that was checked ("pinning"), so a DNS answer that
   changes between the check and the connect (DNS rebinding) can't slip through. TLS still
-  verifies the certificate against the real hostname, via httpcore's ``sni_hostname``.
+  verifies the certificate against the real hostname, via httpcore's ``sni_hostname``;
+- if the first address can't be reached, the connection tries the first one of the other
+  family (IPv4 or IPv6), as a browser would. A host without an IPv6 route would otherwise
+  fail every site that publishes IPv6 addresses.
 
 Job board API requests don't go through here: their hosts are fixed in the adapters.
 """
@@ -31,10 +34,18 @@ class BlockedURL(httpx.RequestError):
 
 
 async def resolve_host(host: str, port: int) -> list[str]:
-    """Every address ``host`` resolves to."""
+    """Every address ``host`` resolves to, in the system resolver's order of preference."""
     infos = await asyncio.get_running_loop().getaddrinfo(host, port, type=socket.SOCK_STREAM)
     # IPv6 link-local results can carry a scope ("fe80::1%eth0"); the address is what we check.
-    return sorted({str(info[4][0]).split("%")[0] for info in infos})
+    return list(dict.fromkeys(str(info[4][0]).split("%")[0] for info in infos))
+
+
+def connect_order(addresses: list[str]) -> list[str]:
+    """The first address, then the first of the other family if there is one."""
+    first = addresses[0]
+    version = ipaddress.ip_address(first).version
+    other = next((a for a in addresses if ipaddress.ip_address(a).version != version), None)
+    return [first] if other is None else [first, other]
 
 
 def is_public(address: str) -> bool:
@@ -101,14 +112,24 @@ class GuardedTransport(httpx.AsyncBaseTransport):
             raise BlockedURL(f"{url.host} resolves to a non-public address ({private[0]})")
         if not self.pin or literal:
             return await self._inner.handle_async_request(request)
-        pinned = httpx.Request(
+        *fallbacks, last = connect_order(addresses)
+        for address in fallbacks:
+            try:
+                return await self._inner.handle_async_request(self._pinned(request, address))
+            except (httpx.ConnectError, httpx.ConnectTimeout):
+                # Nothing was sent yet, so the next address gets the same request.
+                continue
+        return await self._inner.handle_async_request(self._pinned(request, last))
+
+    @staticmethod
+    def _pinned(request: httpx.Request, address: str) -> httpx.Request:
+        return httpx.Request(
             request.method,
-            url.copy_with(host=addresses[0]),
+            request.url.copy_with(host=address),
             headers=request.headers,  # keeps the original Host header
             stream=request.stream,
-            extensions={**request.extensions, "sni_hostname": url.host},
+            extensions={**request.extensions, "sni_hostname": request.url.host},
         )
-        return await self._inner.handle_async_request(pinned)
 
     async def aclose(self) -> None:
         await self._inner.aclose()

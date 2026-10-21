@@ -10,7 +10,14 @@ from jobboard_mcp.config import Settings
 from jobboard_mcp.http import Blocked, HttpClient
 from jobboard_mcp.models import Ats
 from jobboard_mcp.resolve import resolve_board
-from jobboard_mcp.urlguard import BlockedURL, GuardedTransport, Resolver, check_shape, is_public
+from jobboard_mcp.urlguard import (
+    BlockedURL,
+    GuardedTransport,
+    Resolver,
+    check_shape,
+    connect_order,
+    is_public,
+)
 
 PUBLIC = "93.184.215.14"
 
@@ -145,6 +152,52 @@ async def test_pinning_connects_to_the_checked_address() -> None:
     assert sent.extensions["sni_hostname"] == "jobs.example.com"
     # Callers still see the URL they asked for.
     assert str(response.url) == "https://jobs.example.com/careers?x=1"
+
+
+V6 = "2606:4700:4700::1111"
+
+
+@pytest.mark.parametrize(
+    ("addresses", "order"),
+    [
+        ([PUBLIC], [PUBLIC]),
+        ([V6, PUBLIC, "8.8.8.8"], [V6, PUBLIC]),
+        ([PUBLIC, "8.8.8.8", V6], [PUBLIC, V6]),
+        ([PUBLIC, "8.8.8.8"], [PUBLIC]),
+    ],
+)
+def test_connect_order_is_one_address_per_family(addresses: list[str], order: list[str]) -> None:
+    assert connect_order(addresses) == order
+
+
+@pytest.mark.parametrize("error", [httpx.ConnectError, httpx.ConnectTimeout])
+async def test_unreachable_family_falls_back_to_the_other(
+    error: type[httpx.TransportError],
+) -> None:
+    # A runner without an IPv6 route, for a host whose resolver lists IPv6 first.
+    tried: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        tried.append(request.url.host)
+        if request.url.host == V6:
+            raise error("no route to host", request=request)
+        return httpx.Response(200, text="ok")
+
+    transport = guarded(handler, {"jobs.example.com": [V6, PUBLIC]}, pin=True)
+    async with httpx.AsyncClient(transport=transport) as client:
+        response = await client.get("https://jobs.example.com/careers")
+    assert response.text == "ok"
+    assert tried == [V6, PUBLIC]
+
+
+async def test_last_connect_error_propagates() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        raise httpx.ConnectError(f"refused by {request.url.host}", request=request)
+
+    transport = guarded(handler, {"jobs.example.com": [V6, PUBLIC]}, pin=True)
+    async with httpx.AsyncClient(transport=transport) as client:
+        with pytest.raises(httpx.ConnectError, match=f"refused by {PUBLIC}"):
+            await client.get("https://jobs.example.com/careers")
 
 
 async def test_dns_failure_is_a_connect_error() -> None:

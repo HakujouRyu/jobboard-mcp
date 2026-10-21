@@ -78,7 +78,7 @@ flowchart LR
 | [directory.py](../src/jobboard_mcp/directory.py) | Looks a company up in `boards_greenhouse.tsv`, the bundled list of 4,168 Greenhouse boards by company name (from ats-jobs-mcp; see [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md)). Rebuilt by `scripts/build_board_directory.py`. |
 | [watchlist.py](../src/jobboard_mcp/watchlist.py) | Loads and validates the YAML, and makes comment-preserving, atomic edits. |
 | [http.py](../src/jobboard_mcp/http.py) | `HttpClient`: cache, conditional requests, retries, request sharing, and concurrency caps for every outbound request. |
-| [urlguard.py](../src/jobboard_mcp/urlguard.py) | Keeps careers-page fetches on the public internet: checks every request and redirect, and pins the connection to the checked address. |
+| [urlguard.py](../src/jobboard_mcp/urlguard.py) | Keeps careers-page fetches on the public internet: checks every request and redirect, and pins the connection to a checked address. |
 | [robots.py](../src/jobboard_mcp/robots.py) | Pure functions: parses robots.txt and decides whether a path may be fetched (RFC 9309). `HttpClient` fetches and caches the file. |
 | [config.py](../src/jobboard_mcp/config.py) | `Settings` from environment variables, and JSON logging to stderr. |
 | [models.py](../src/jobboard_mcp/models.py) | Pydantic models for jobs, watchlist entries, and every tool result. |
@@ -250,7 +250,9 @@ hosts are fixed in the adapters. Personio's host is the company's own subdomain 
    and IPv4-mapped forms of these are refused.
 3. The request connects to the checked address, with the original `Host` header and TLS name
    (`sni_hostname`), so a DNS answer that changes between the check and the connect can't get
-   through.
+   through. Addresses keep the system resolver's order. If the first one can't be connected
+   to, the request tries the first address of the other family (IPv4 or IPv6) once, so a
+   machine with no IPv6 route still reaches sites that publish IPv6 addresses.
 
 Before each of those requests, redirects included, the client checks the site's robots.txt
 (RFC 9309), fetched once per origin and cached for `CACHE_TTL_SECONDS`, at most a day:

@@ -92,6 +92,10 @@ All notable changes are recorded here. The format follows
 
 ### Fixed
 
+- Careers pages on sites that publish IPv6 addresses failed with "All connection attempts
+  failed" on machines without an IPv6 route, such as GitHub Actions runners. Addresses now
+  keep the system resolver's order instead of being sorted as text, and a page whose first
+  address can't be reached tries one of the other family.
 - Pay written with dots as thousands separators (`€68.000–€91.000`) was read as hourly.
 - `find_company_posting` found a watched company only by its exact name, so "Temporal" missed
   "Temporal Technologies", got a guessed board, and gave its jobs different fingerprints than

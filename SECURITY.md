@@ -34,7 +34,8 @@ worth a look:
 - **Read-only mode.** With `WATCHLIST_READONLY=true`, no tool should be able to change anything.
 
 Careers-page fetches are restricted to public addresses, checked on every redirect and pinned to
-the checked address, and are made only where the site's robots.txt allows (see
+a checked address (falling back to one of the other family only if the first can't connect),
+and are made only where the site's robots.txt allows (see
 [docs/architecture.md](docs/architecture.md#careers-pages)). A way around either check is a
 vulnerability.
 
