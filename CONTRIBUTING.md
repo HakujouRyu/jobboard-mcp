@@ -41,7 +41,7 @@ uv run pyright
 uv run pytest -m live               # hits the real board APIs
 ```
 
-Run them when you change an adapter, `http.py`, or `resolve.py`. They depend on real boards,
+Run them when you change an adapter, `http.py`, `urlguard.py`, or `resolve.py`. They depend on real boards,
 which change, so a live failure can mean a board changed rather than a bug. Look at which one
 failed before you change any code.
 
@@ -54,12 +54,8 @@ does zizmor, which audits the workflows themselves. Actions are pinned to commit
 Dependabot keeps the pins current. The
 `checks` job passes only when all of those do, and it's the one a merge waits on.
 
-[live.yml](.github/workflows/live.yml) runs the live tests every Monday, and by hand from the
-Actions tab, since boards change without any commit here. It doesn't run on merges, so run them
-locally before merging a change that needs them. A failure opens an issue labeled
-`live-tests`, or comments on the one already open, and the next passing run closes it. GitHub
-turns off scheduled workflows after 60 days without a commit, so on a quiet repo, re-enable it
-from the Actions tab or run it by hand.
+The live tests don't run in CI, so run them locally before merging a change that needs them.
+Boards change without any commit here, so it's also worth running them now and then.
 
 ## Ground rules
 

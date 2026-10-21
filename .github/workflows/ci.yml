@@ -1,5 +1,5 @@
 # The three checks CONTRIBUTING.md requires before a merge, on every PR and on main. Live tests
-# run separately (live.yml), since a real board changing shouldn't block a PR.
+# don't run in CI; run them locally (see "Checks" in CONTRIBUTING.md).
 name: CI
 
 on:
@@ -43,9 +43,7 @@ jobs:
       - name: Type check
         run: uv run pyright
 
-  # Two jobs cover both OS families and both ends of the supported Python range. The
-  # platform-specific code takes the platform as an argument, so it's tested on either; what
-  # differs for real is file I/O and subprocesses, and macOS behaves like Linux for those.
+  # Two jobs cover both OS families and both ends of the supported Python range.
   test:
     name: test (${{ matrix.os }}, ${{ matrix.python }})
     runs-on: ${{ matrix.os }}
