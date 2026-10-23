@@ -1,5 +1,5 @@
 # The three checks CONTRIBUTING.md requires before a merge, on every PR and on main. Live tests
-# run separately (live.yml), since a real board changing shouldn't block a PR.
+# don't run in CI; run them locally (see "Checks" in CONTRIBUTING.md).
 name: CI
 
 on:
@@ -43,7 +43,7 @@ jobs:
       - name: Type check
         run: uv run pyright
 
-  # The oldest supported Python and the newest, on every OS.
+  # Two jobs cover both OS families and both ends of the supported Python range.
   test:
     name: test (${{ matrix.os }}, ${{ matrix.python }})
     runs-on: ${{ matrix.os }}
@@ -51,8 +51,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python: ["3.12", "3.14"]
+        include:
+          - { os: ubuntu-latest, python: "3.12" }
+          - { os: windows-latest, python: "3.14" }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

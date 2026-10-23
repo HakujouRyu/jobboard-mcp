@@ -156,8 +156,8 @@ trimmed copies of these responses (whole job objects, fewer of them).
 
 Workday has no documented public jobs API. Each careers site loads its jobs from JSON under
 `https://{tenant}.{wdN}.myworkdayjobs.com/wday/cxs/{tenant}/{site}`, with no sign-in. These
-endpoints are undocumented and can change without notice; the weekly live tests are what would
-catch it. Checked against Ecolab, Home Depot, Equifax, Fiserv, Cox, and QBE.
+endpoints are undocumented and can change without notice; the live tests are what would catch
+it. Checked against Ecolab, Home Depot, Equifax, Fiserv, Cox, and QBE.
 
 - **robots.txt** disallows the human-facing pages (`/{site}/`, `/refreshFacet/`) and leaves
   `/wday/cxs/` open. It answers `Accept: text/plain` alone with **406**, which would read as "no
